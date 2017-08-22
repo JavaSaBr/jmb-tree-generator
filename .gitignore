@@ -2,3 +2,5 @@
 /.gradle/
 /.idea/
 *.so
+/embedded-plugins/
+/out/
