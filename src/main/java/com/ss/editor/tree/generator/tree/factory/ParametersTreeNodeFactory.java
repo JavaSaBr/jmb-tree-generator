@@ -1,10 +1,11 @@
 package com.ss.editor.tree.generator.tree.factory;
 
 import static com.ss.rlib.util.ClassUtils.unsafeCast;
-import com.ss.editor.tree.generator.parameters.MaterialParameters;
-import com.ss.editor.tree.generator.parameters.ProjectParameters;
-import com.ss.editor.tree.generator.tree.node.MaterialParametersTreeNode;
-import com.ss.editor.tree.generator.tree.node.ProjectParametersTreeNode;
+import com.simsilica.arboreal.BranchParameters;
+import com.simsilica.arboreal.LevelOfDetailParameters;
+import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.tree.generator.parameters.*;
+import com.ss.editor.tree.generator.tree.node.*;
 import com.ss.editor.ui.control.tree.node.TreeNode;
 import com.ss.editor.ui.control.tree.node.TreeNodeFactory;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,18 @@ public class ParametersTreeNodeFactory implements TreeNodeFactory {
             return unsafeCast(new ProjectParametersTreeNode((ProjectParameters) element, objectId));
         } else if (element instanceof MaterialParameters) {
             return unsafeCast(new MaterialParametersTreeNode((MaterialParameters) element, objectId));
+        } else if (element instanceof TreeParameters) {
+            return unsafeCast(new TreeParametersTreeNode((TreeParameters) element, objectId));
+        } else if (element instanceof LodsParameters) {
+            return unsafeCast(new LodsParametersTreeNode((LodsParameters) element, objectId));
+        } else if (element instanceof RootsParameters) {
+            return unsafeCast(new RootsParametersTreeNode((RootsParameters) element, objectId));
+        } else if (element instanceof BranchesParameters) {
+            return unsafeCast(new BranchesParametersTreeNode((BranchesParameters) element, objectId));
+        } else if (element instanceof LevelOfDetailParameters) {
+            return unsafeCast(new LodParametersTreeNode((LevelOfDetailParameters) element, objectId));
+        } else if (element instanceof BranchParameters) {
+            return unsafeCast(new BranchParametersTreeNode((BranchParameters) element, objectId));
         }
 
         return null;

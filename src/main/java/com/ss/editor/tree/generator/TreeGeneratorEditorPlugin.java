@@ -5,9 +5,11 @@ import com.ss.editor.manager.FileIconManager;
 import com.ss.editor.plugin.EditorPlugin;
 import com.ss.editor.tree.generator.creator.TreeGeneratorFileCreator;
 import com.ss.editor.tree.generator.editor.TreeGeneratorFileEditor;
+import com.ss.editor.tree.generator.property.ParametersPropertyBuilder;
 import com.ss.editor.tree.generator.tree.factory.ParametersTreeNodeFactory;
 import com.ss.editor.ui.component.creator.FileCreatorRegistry;
 import com.ss.editor.ui.component.editor.EditorRegistry;
+import com.ss.editor.ui.control.property.builder.PropertyBuilderRegistry;
 import com.ss.editor.ui.control.tree.node.TreeNodeFactoryRegistry;
 import com.ss.rlib.plugin.PluginContainer;
 import com.ss.rlib.plugin.annotation.PluginDescription;
@@ -48,11 +50,18 @@ public class TreeGeneratorEditorPlugin extends EditorPlugin {
         registry.register(TreeGeneratorFileEditor.DESCRIPTION);
     }
 
-    @FromAnyThread
     @Override
+    @FromAnyThread
     public void register(@NotNull final TreeNodeFactoryRegistry registry) {
         super.register(registry);
         registry.register(ParametersTreeNodeFactory.getInstance());
+    }
+
+    @Override
+    @FromAnyThread
+    public void register(@NotNull final PropertyBuilderRegistry registry) {
+        super.register(registry);
+        registry.register(ParametersPropertyBuilder.getInstance());
     }
 
     @Override

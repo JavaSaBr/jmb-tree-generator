@@ -30,6 +30,7 @@ public class ProjectParametersTreeNode extends ParametersTreeNode<ProjectParamet
 
         final Array<TreeNode<?>> children = ArrayFactory.newArray(TreeNode.class);
         children.add(FACTORY_REGISTRY.createFor(element.getMaterialParameters()));
+        children.add(FACTORY_REGISTRY.createFor(element.getTreeParameters()));
 
         return children;
     }

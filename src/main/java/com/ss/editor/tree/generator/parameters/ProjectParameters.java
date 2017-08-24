@@ -33,6 +33,11 @@ public class ProjectParameters extends Parameters {
     @NotNull
     private MaterialParameters materialParameters;
 
+    /**
+     * The flag of showing wire.
+     */
+    private boolean showWire;
+
     public ProjectParameters() {
     }
 
@@ -70,6 +75,20 @@ public class ProjectParameters extends Parameters {
         return materialParameters;
     }
 
+    /**
+     * @return true if need to show wire.
+     */
+    public boolean isShowWire() {
+        return showWire;
+    }
+
+    /**
+     * @param showWire true if need to show wire.
+     */
+    public void setShowWire(final boolean showWire) {
+        this.showWire = showWire;
+    }
+
     @Override
     public void cloneFields(@NotNull final Cloner cloner, @NotNull final Object original) {
         materialParameters = cloner.clone(materialParameters);
@@ -81,6 +100,7 @@ public class ProjectParameters extends Parameters {
         final OutputCapsule out = ex.getCapsule(this);
         out.write(treeParameters, "treeParameters", null);
         out.write(materialParameters, "materialParameters", null);
+        out.write(showWire, "showWire", false);
     }
 
     @Override
@@ -88,5 +108,6 @@ public class ProjectParameters extends Parameters {
         final InputCapsule in = im.getCapsule(this);
         materialParameters = (MaterialParameters) in.readSavable("materialParameters", null);
         treeParameters = (TreeParameters) in.readSavable("treeParameters", null);
+        showWire = in.readBoolean("showWire", false);
     }
 }

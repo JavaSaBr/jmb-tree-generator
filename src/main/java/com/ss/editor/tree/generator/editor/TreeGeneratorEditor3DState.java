@@ -53,12 +53,6 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     private final Node treeNode;
 
     /**
-     * The camera node.
-     */
-    @Nullable
-    private Node cameraNode;
-
-    /**
      * The project parameters.
      */
     @Nullable
@@ -81,16 +75,6 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
 
         final Node modelNode = getModelNode();
         modelNode.attachChild(treeNode);
-    }
-
-    @Override
-    protected @NotNull Node getNodeForCamera() {
-
-        if (cameraNode == null) {
-            cameraNode = new Node("CameraNode");
-        }
-
-        return cameraNode;
     }
 
     @Override
@@ -150,10 +134,22 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         EXECUTOR_MANAGER.addJMETask(this::generateImpl);
     }
 
+    /**
+     * @return the tree node.
+     */
+    @FromAnyThread
+    private @NotNull Node getTreeNode() {
+        return treeNode;
+    }
+
+    @JMEThread
     private void generateImpl() {
 
         final LodSwitchControl lodControl = treeNode.getControl(LodSwitchControl.class);
         lodControl.clearLevels();
+
+        final Node treeNode = getTreeNode();
+        treeNode.detachAllChildren();
 
         final ProjectParameters parameters = getParameters();
         final TreeParameters treeParameters = parameters.getTreeParameters();
@@ -165,9 +161,11 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         final Material flatWireMaterial =  makeWareMateial(flatMaterial.clone());
         final Material impostorWireMaterial = makeWareMateial(impostorMaterial.clone());
 
+        updateMaterials();
+
         final LevelGeometry[] levels = new LevelGeometry[treeParameters.getLodCount()];
         final TreeGenerator treeGen = new TreeGenerator();
-        final Tree tree = treeGen.generateTree(seed, treeParameters);
+        final Tree tree = treeGen.generateTree(treeParameters.getSeed(), treeParameters);
 
         final AtomicReference<BoundingBox> trunkBoundsRef = new AtomicReference<>();
         final AtomicReference<BoundingBox> leafBoundsRef = new AtomicReference<>();
@@ -208,18 +206,51 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
             }
         }
 
-        boolean showWire = false;
-
+        treeNode.setLocalScale(treeParameters.getBaseScale());
         // Add in the new ones
         for (int i = 0; i < levels.length; i++) {
             final LevelGeometry level = levels[i];
             level.attach(lodControl);
-            if (!showWire && level.wireGeom != null) {
+            if (!parameters.isShowWire() && level.wireGeom != null) {
                 level.wireGeom.setCullHint(Spatial.CullHint.Always);
             }
         }
 
         lods = levels;
+    }
+
+    @JMEThread
+    private void updateMaterials() {
+
+        final ProjectParameters parameters = getParameters();
+        final TreeParameters treeParameters = parameters.getTreeParameters();
+        final MaterialParameters materialParameters = parameters.getMaterialParameters();
+        final Material treeMaterial = materialParameters.getTreeMaterial();
+        final Material leafMaterial = materialParameters.getLeafMaterial();
+        final Material impostorMaterial = materialParameters.getImpostorMaterial();
+        final Material flatMaterial = materialParameters.getFlatMaterial();
+
+        if (treeMaterial.getKey() == null) {
+            treeMaterial.setFloat("FlexHeight", treeParameters.getFlexHeight());
+            treeMaterial.setFloat("TrunkFlexibility", treeParameters.getTrunkFlexibility());
+            treeMaterial.setFloat("BranchFlexibility", treeParameters.getBranchFlexibility());
+        }
+
+        if (leafMaterial.getKey() == null) {
+            leafMaterial.setFloat("FlexHeight", treeParameters.getFlexHeight());
+            leafMaterial.setFloat("TrunkFlexibility", treeParameters.getTrunkFlexibility());
+            leafMaterial.setFloat("BranchFlexibility", treeParameters.getBranchFlexibility());
+        }
+
+        if (flatMaterial.getKey() == null) {
+            flatMaterial.setFloat("FlexHeight", treeParameters.getFlexHeight());
+            flatMaterial.setFloat("TrunkFlexibility", treeParameters.getTrunkFlexibility());
+            flatMaterial.setFloat("BranchFlexibility", treeParameters.getBranchFlexibility());
+        }
+
+        if (impostorMaterial.getKey() == null) {
+            impostorMaterial.setFloat("TrunkFlexibility", treeParameters.getTrunkFlexibility());
+        }
     }
 
     private void generateLeafs(@NotNull final TreeParameters treeParameters, @NotNull final Material leafMaterial,

@@ -1,7 +1,9 @@
 package com.ss.editor.tree.generator.editor;
 
 import static com.ss.rlib.util.ObjectUtils.notNull;
+import com.jme3.export.binary.BinaryExporter;
 import com.jme3.export.binary.BinaryImporter;
+import com.ss.editor.annotation.BackgroundThread;
 import com.ss.editor.annotation.FXThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.plugin.api.editor.Advanced3DFileEditorWithSplitRightTool;
@@ -11,15 +13,18 @@ import com.ss.editor.tree.generator.tree.ParametersNodeTree;
 import com.ss.editor.ui.component.editor.EditorDescription;
 import com.ss.editor.ui.component.editor.state.EditorState;
 import com.ss.editor.ui.component.tab.EditorToolComponent;
+import com.ss.editor.ui.control.property.PropertyEditor;
+import com.ss.editor.ui.control.tree.node.TreeNode;
 import com.ss.editor.ui.css.CSSClasses;
 import com.ss.rlib.ui.util.FXUtils;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -54,6 +59,9 @@ public class TreeGeneratorFileEditor extends
     private ProjectParameters parameters;
 
     @Nullable
+    private PropertyEditor<ParametersChangeConsumer> propertyEditor;
+
+    @Nullable
     private Consumer<Object> selectionHandler;
 
     @Override
@@ -79,13 +87,29 @@ public class TreeGeneratorFileEditor extends
 
         selectionHandler = this::selectFromTree;
         parametersTree = new ParametersNodeTree(selectionHandler, this);
+        propertyEditor = new PropertyEditor<>(this);
+        propertyEditor.prefHeightProperty().bind(root.heightProperty());
 
-        container.addComponent(buildSplitComponent(parametersTree, new Pane(), root), "Tree");
+        container.addComponent(buildSplitComponent(parametersTree, propertyEditor, root), "Tree");
 
         FXUtils.addClassTo(parametersTree.getTreeView(), CSSClasses.TRANSPARENT_TREE_VIEW);
     }
 
     private void selectFromTree(final Object object) {
+
+        Object parent = null;
+        Object element;
+
+        if (object instanceof TreeNode<?>) {
+            final TreeNode treeNode = (TreeNode) object;
+            final TreeNode parentNode = treeNode.getParent();
+            parent = parentNode == null ? null : parentNode.getElement();
+            element = treeNode.getElement();
+        } else {
+            element = object;
+        }
+
+        propertyEditor.buildFor(element, parent);
     }
 
     @Override
@@ -107,9 +131,30 @@ public class TreeGeneratorFileEditor extends
     }
 
     @Override
+    @BackgroundThread
+    protected void doSave(@NotNull final Path toStore) {
+        super.doSave(toStore);
+
+        final BinaryExporter exporter = BinaryExporter.getInstance();
+
+        try (final OutputStream out = Files.newOutputStream(toStore)) {
+            exporter.save(parameters, out);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     @FXThread
     protected boolean needToolbar() {
         return true;
+    }
+
+    @Override
+    @FXThread
+    protected void createToolbar(@NotNull final HBox container) {
+        super.createToolbar(container);
+        FXUtils.addToPane(createSaveAction(), container);
     }
 
     @FXThread
@@ -119,5 +164,11 @@ public class TreeGeneratorFileEditor extends
 
     private @NotNull ProjectParameters getParameters() {
         return notNull(parameters);
+    }
+
+    @Override
+    @FXThread
+    public void notifyFXChangeProperty(@NotNull final Object object, @NotNull final String propertyName) {
+        getEditor3DState().generate();
     }
 }
