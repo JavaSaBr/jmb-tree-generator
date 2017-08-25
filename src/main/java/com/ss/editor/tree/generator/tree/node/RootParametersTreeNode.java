@@ -2,25 +2,25 @@ package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.tree.generator.tree.action.DeleteBranchAction;
+import com.ss.editor.tree.generator.tree.action.DeleteRootAction;
 import com.ss.editor.ui.control.tree.NodeTree;
 import javafx.collections.ObservableList;
 import javafx.scene.control.MenuItem;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The implementation of presentation branch parameters node in the {@link ParametersTreeNode}
+ * The implementation of presentation root parameters node in the {@link ParametersTreeNode}
  *
  * @author JavaSaBr
  */
-public class BranchParametersTreeNode extends ParametersTreeNode<BranchParameters> {
+public class RootParametersTreeNode extends ParametersTreeNode<BranchParameters> {
 
     @NotNull
     private String name;
 
-    public BranchParametersTreeNode(@NotNull final BranchParameters element, final long objectId) {
+    public RootParametersTreeNode(@NotNull final BranchParameters element, final long objectId) {
         super(element, objectId);
-        this.name = "Branch";
+        this.name = "Root";
     }
 
     @Override
@@ -29,10 +29,10 @@ public class BranchParametersTreeNode extends ParametersTreeNode<BranchParameter
 
         final BranchParameters branchParameters = getElement();
         final TreeParameters parent = (TreeParameters) branchParameters.getParent();
-        final BranchParameters[] branches = parent.getBranches();
+        final BranchParameters[] roots = parent.getRoots();
 
-        if (branches[0] != branchParameters) {
-            items.add(new DeleteBranchAction(nodeTree, this));
+        if (roots[0] != branchParameters) {
+            items.add(new DeleteRootAction(nodeTree, this));
         }
     }
 

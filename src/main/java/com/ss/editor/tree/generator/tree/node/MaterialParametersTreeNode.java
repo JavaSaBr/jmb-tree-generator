@@ -20,21 +20,13 @@ public class MaterialParametersTreeNode extends ParametersTreeNode<MaterialParam
 
     @Override
     public @NotNull String getName() {
-        return "Materials";
+        return getElement().getName();
     }
 
     @Override
     public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
-
-        final @NotNull MaterialParameters element = getElement();
-
-        final Array<TreeNode<?>> children = ArrayFactory.newArray(TreeNode.class);
-        children.add(FACTORY_REGISTRY.createFor(element.getTreeMaterial()));
-        children.add(FACTORY_REGISTRY.createFor(element.getLeafMaterial()));
-        children.add(FACTORY_REGISTRY.createFor(element.getFlatMaterial()));
-        children.add(FACTORY_REGISTRY.createFor(element.getImpostorMaterial()));
-
-        return children;
+        final TreeNode<?> node = FACTORY_REGISTRY.createFor(getElement().getMaterial());
+        return ArrayFactory.asArray(node);
     }
 
     @Override

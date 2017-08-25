@@ -3,10 +3,13 @@ package com.ss.editor.tree.generator.tree.node;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.tree.generator.parameters.LodsParameters;
+import com.ss.editor.tree.generator.tree.action.CreateLodAction;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
 import com.ss.rlib.util.array.Array;
 import com.ss.rlib.util.array.ArrayFactory;
+import javafx.collections.ObservableList;
+import javafx.scene.control.MenuItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -44,6 +47,12 @@ public class LodsParametersTreeNode extends ParametersTreeNode<LodsParameters> {
         }
 
         return children;
+    }
+
+    @Override
+    public void fillContextMenu(@NotNull final NodeTree<?> nodeTree, @NotNull final ObservableList<MenuItem> items) {
+        super.fillContextMenu(nodeTree, items);
+        items.add(new CreateLodAction(nodeTree, this));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.ss.editor.tree.generator.tree;
 
-import com.ss.editor.tree.generator.editor.ParametersChangeConsumer;
+import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.NodeTreeCell;
 import org.jetbrains.annotations.NotNull;
@@ -13,15 +13,15 @@ import java.util.function.Consumer;
  *
  * @author JavaSaBr
  */
-public class ParametersNodeTree extends NodeTree<ParametersChangeConsumer> {
+public class ParametersNodeTree extends NodeTree<ChangeConsumer> {
 
     public ParametersNodeTree(@NotNull final Consumer<Object> selectionHandler,
-                              @Nullable final ParametersChangeConsumer consumer) {
+                              @Nullable final ChangeConsumer consumer) {
         super(selectionHandler, consumer);
     }
 
     @Override
-    protected @NotNull NodeTreeCell<ParametersChangeConsumer, ?> createNodeTreeCell() {
+    protected @NotNull NodeTreeCell<ChangeConsumer, ?> createNodeTreeCell() {
         return new ParametersTreeCell(this);
     }
 }

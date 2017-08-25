@@ -1,18 +1,18 @@
 package com.ss.editor.tree.generator.property;
 
+import com.jme3.asset.MaterialKey;
+import com.jme3.material.Material;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters.ReductionType;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.tree.generator.editor.ParametersChangeConsumer;
+import com.ss.editor.model.undo.editor.ChangeConsumer;
+import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.control.property.PropertyControl;
 import com.ss.editor.ui.control.property.builder.PropertyBuilder;
 import com.ss.editor.ui.control.property.builder.impl.AbstractPropertyBuilder;
-import com.ss.editor.ui.control.property.impl.BooleanPropertyControl;
-import com.ss.editor.ui.control.property.impl.EnumPropertyControl;
-import com.ss.editor.ui.control.property.impl.FloatPropertyControl;
-import com.ss.editor.ui.control.property.impl.IntegerPropertyControl;
+import com.ss.editor.ui.control.property.impl.*;
 import com.ss.rlib.ui.util.FXUtils;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author JavaSaBr
  */
-public class ParametersPropertyBuilder extends AbstractPropertyBuilder<ParametersChangeConsumer> {
+public class ParametersPropertyBuilder extends AbstractPropertyBuilder<ChangeConsumer> {
 
     @NotNull
     private static final ParametersPropertyBuilder INSTANCE = new ParametersPropertyBuilder();
@@ -33,12 +33,12 @@ public class ParametersPropertyBuilder extends AbstractPropertyBuilder<Parameter
     }
 
     protected ParametersPropertyBuilder() {
-        super(ParametersChangeConsumer.class);
+        super(ChangeConsumer.class);
     }
 
     @Override
     protected void buildForImpl(@NotNull final Object object, @Nullable final Object parent,
-                                @NotNull final VBox container, @NotNull final ParametersChangeConsumer changeConsumer) {
+                                @NotNull final VBox container, @NotNull final ChangeConsumer changeConsumer) {
         super.buildForImpl(object, parent, container, changeConsumer);
 
         if (object instanceof ProjectParameters) {
@@ -46,7 +46,7 @@ public class ParametersPropertyBuilder extends AbstractPropertyBuilder<Parameter
             final ProjectParameters parameters = (ProjectParameters) object;
             final boolean showWire = parameters.isShowWire();
 
-            final PropertyControl<ParametersChangeConsumer, ProjectParameters, Boolean> showWireControl =
+            final PropertyControl<ChangeConsumer, ProjectParameters, Boolean> showWireControl =
                     new BooleanPropertyControl<>(showWire, "Show wire", changeConsumer);
             showWireControl.setApplyHandler(ProjectParameters::setShowWire);
             showWireControl.setSyncHandler(ProjectParameters::isShowWire);
@@ -60,11 +60,20 @@ public class ParametersPropertyBuilder extends AbstractPropertyBuilder<Parameter
             buildProperties((LevelOfDetailParameters) object, container, changeConsumer);
         } else if (object instanceof BranchParameters) {
             buildProperties((BranchParameters) object, container, changeConsumer);
+        } else if (object instanceof MaterialParameters) {
+
+            final MaterialParameters parameters = (MaterialParameters) object;
+            final Material material = parameters.getMaterial();
+
+            final MaterialKeyPropertyControl<ChangeConsumer, MaterialParameters> materialControl =
+                    new MaterialKeyPropertyControl<>((MaterialKey) material.getKey(), "Material", changeConsumer);
+
+            FXUtils.addToPane(materialControl, container);
         }
     }
 
     private void buildProperties(@NotNull final BranchParameters parameters, @NotNull final VBox container,
-                                 @NotNull final ParametersChangeConsumer changeConsumer) {
+                                 @NotNull final ChangeConsumer changeConsumer) {
 
         final boolean enabled = parameters.isEnabled();
         final boolean hasEndJoint = parameters.isHasEndJoint();
@@ -84,53 +93,53 @@ public class ParametersPropertyBuilder extends AbstractPropertyBuilder<Parameter
         final int radialSegments = parameters.getRadialSegments();
         final int sideJointCount = parameters.getSideJointCount();
 
-        final PropertyControl<ParametersChangeConsumer, BranchParameters, Boolean> enabledControl =
+        final PropertyControl<ChangeConsumer, BranchParameters, Boolean> enabledControl =
                 new BooleanPropertyControl<>(enabled, "Enabled", changeConsumer);
         enabledControl.setApplyHandler(BranchParameters::setEnabled);
         enabledControl.setSyncHandler(BranchParameters::isEnabled);
         enabledControl.setEditObject(parameters);
 
-        final PropertyControl<ParametersChangeConsumer, BranchParameters, Boolean> inheritControl =
+        final PropertyControl<ChangeConsumer, BranchParameters, Boolean> inheritControl =
                 new BooleanPropertyControl<>(inherit, "Inherit", changeConsumer);
         inheritControl.setApplyHandler(BranchParameters::setInherit);
         inheritControl.setSyncHandler(BranchParameters::isInherit);
         inheritControl.setEditObject(parameters);
 
-        final PropertyControl<ParametersChangeConsumer, BranchParameters, Boolean> hasEndJointControl =
+        final PropertyControl<ChangeConsumer, BranchParameters, Boolean> hasEndJointControl =
                 new BooleanPropertyControl<>(hasEndJoint, "Has end joint", changeConsumer);
         hasEndJointControl.setApplyHandler(BranchParameters::setHasEndJoint);
         hasEndJointControl.setSyncHandler(BranchParameters::isHasEndJoint);
         hasEndJointControl.setEditObject(parameters);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> gravityControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> gravityControl =
                 new FloatPropertyControl<>(gravity, "Gravity", changeConsumer);
         gravityControl.setApplyHandler(BranchParameters::setGravity);
         gravityControl.setSyncHandler(BranchParameters::getGravity);
         gravityControl.setEditObject(parameters);
         gravityControl.setScrollPower(0.3F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> inclinationControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> inclinationControl =
                 new FloatPropertyControl<>(inclination, "Inclination", changeConsumer);
         inclinationControl.setApplyHandler(BranchParameters::setInclination);
         inclinationControl.setSyncHandler(BranchParameters::getInclination);
         inclinationControl.setEditObject(parameters);
         inclinationControl.setScrollPower(0.3F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> lengthScaleControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> lengthScaleControl =
                 new FloatPropertyControl<>(lengthScale, "Length scale", changeConsumer);
         lengthScaleControl.setApplyHandler(BranchParameters::setLengthScale);
         lengthScaleControl.setSyncHandler(BranchParameters::getLengthScale);
         lengthScaleControl.setEditObject(parameters);
         lengthScaleControl.setScrollPower(0.3F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> radiusScaleControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> radiusScaleControl =
                 new FloatPropertyControl<>(radiusScale, "Radius scale", changeConsumer);
         radiusScaleControl.setApplyHandler(BranchParameters::setRadiusScale);
         radiusScaleControl.setSyncHandler(BranchParameters::getRadiusScale);
         radiusScaleControl.setEditObject(parameters);
         radiusScaleControl.setScrollPower(0.3F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> segmentVariationControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> segmentVariationControl =
                 new FloatPropertyControl<>(segmentVariation, "Segment variation", changeConsumer);
         segmentVariationControl.setApplyHandler(BranchParameters::setSegmentVariation);
         segmentVariationControl.setSyncHandler(BranchParameters::getSegmentVariation);
@@ -138,33 +147,54 @@ public class ParametersPropertyBuilder extends AbstractPropertyBuilder<Parameter
         segmentVariationControl.setScrollPower(0.3F);
         segmentVariationControl.setMinMax(0F, 1F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> sideJointStartAngleControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> sideJointStartAngleControl =
                 new FloatPropertyControl<>(sideJointStartAngle, "Side joint start angle", changeConsumer);
         sideJointStartAngleControl.setApplyHandler(BranchParameters::setSideJointStartAngle);
         sideJointStartAngleControl.setSyncHandler(BranchParameters::getSideJointStartAngle);
         sideJointStartAngleControl.setEditObject(parameters);
         sideJointStartAngleControl.setScrollPower(0.3F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> taperControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> taperControl =
                 new FloatPropertyControl<>(taper, "Taper", changeConsumer);
         taperControl.setApplyHandler(BranchParameters::setTaper);
         taperControl.setSyncHandler(BranchParameters::getTaper);
         taperControl.setEditObject(parameters);
         taperControl.setScrollPower(0.3F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> tipRotationControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> tipRotationControl =
                 new FloatPropertyControl<>(tipRotation, "Tip rotation", changeConsumer);
         tipRotationControl.setApplyHandler(BranchParameters::setTipRotation);
         tipRotationControl.setSyncHandler(BranchParameters::getTipRotation);
         tipRotationControl.setEditObject(parameters);
         tipRotationControl.setScrollPower(0.3F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, BranchParameters> twistControl =
+        final FloatPropertyControl<ChangeConsumer, BranchParameters> twistControl =
                 new FloatPropertyControl<>(twist, "Twist", changeConsumer);
         twistControl.setApplyHandler(BranchParameters::setTwist);
         twistControl.setSyncHandler(BranchParameters::getTwist);
         twistControl.setEditObject(parameters);
         twistControl.setScrollPower(0.3F);
+
+        final IntegerPropertyControl<ChangeConsumer, BranchParameters> lengthSegmentsControl =
+                new IntegerPropertyControl<>(lengthSegments, "Length segments", changeConsumer);
+        lengthSegmentsControl.setApplyHandler(BranchParameters::setLengthSegments);
+        lengthSegmentsControl.setSyncHandler(BranchParameters::getLengthSegments);
+        lengthSegmentsControl.setEditObject(parameters);
+        lengthSegmentsControl.setMinMax(0, 100);
+
+        final IntegerPropertyControl<ChangeConsumer, BranchParameters> radialSegmentsControl =
+                new IntegerPropertyControl<>(radialSegments, "Radial segments", changeConsumer);
+        radialSegmentsControl.setApplyHandler(BranchParameters::setRadialSegments);
+        radialSegmentsControl.setSyncHandler(BranchParameters::getRadialSegments);
+        radialSegmentsControl.setEditObject(parameters);
+        radialSegmentsControl.setMinMax(0, 100);
+
+        final IntegerPropertyControl<ChangeConsumer, BranchParameters> sideJointCountControl =
+                new IntegerPropertyControl<>(sideJointCount, "Side joint count", changeConsumer);
+        sideJointCountControl.setApplyHandler(BranchParameters::setSideJointCount);
+        sideJointCountControl.setSyncHandler(BranchParameters::getSideJointCount);
+        sideJointCountControl.setEditObject(parameters);
+        sideJointCountControl.setMinMax(0, 100);
 
         FXUtils.addToPane(enabledControl, container);
         FXUtils.addToPane(inheritControl, container);
@@ -178,10 +208,13 @@ public class ParametersPropertyBuilder extends AbstractPropertyBuilder<Parameter
         FXUtils.addToPane(taperControl, container);
         FXUtils.addToPane(tipRotationControl, container);
         FXUtils.addToPane(twistControl, container);
+        FXUtils.addToPane(lengthSegmentsControl, container);
+        FXUtils.addToPane(radialSegmentsControl, container);
+        FXUtils.addToPane(sideJointCountControl, container);
     }
 
     private void buildProperties(@NotNull final LevelOfDetailParameters parameters, @NotNull final VBox container,
-                                 @NotNull final ParametersChangeConsumer changeConsumer) {
+                                 @NotNull final ChangeConsumer changeConsumer) {
 
         final ReductionType reduction = parameters.getReduction();
 
@@ -190,32 +223,32 @@ public class ParametersPropertyBuilder extends AbstractPropertyBuilder<Parameter
         final int maxRadialSegments = parameters.getMaxRadialSegments();
         final int rootDepth = parameters.getRootDepth();
 
-        final PropertyControl<ParametersChangeConsumer, LevelOfDetailParameters, ReductionType> reductionControl =
+        final PropertyControl<ChangeConsumer, LevelOfDetailParameters, ReductionType> reductionControl =
                 new EnumPropertyControl<>(reduction, "Reduction", changeConsumer);
         reductionControl.setApplyHandler(LevelOfDetailParameters::setReduction);
         reductionControl.setSyncHandler(LevelOfDetailParameters::getReduction);
         reductionControl.setEditObject(parameters);
 
-        final FloatPropertyControl<ParametersChangeConsumer, LevelOfDetailParameters> distanceControl =
+        final FloatPropertyControl<ChangeConsumer, LevelOfDetailParameters> distanceControl =
                 new FloatPropertyControl<>(distance, "Distance", changeConsumer);
         distanceControl.setApplyHandler(LevelOfDetailParameters::setDistance);
         distanceControl.setSyncHandler(LevelOfDetailParameters::getDistance);
         distanceControl.setMinMax(0, Float.MAX_VALUE);
         distanceControl.setEditObject(parameters);
 
-        final PropertyControl<ParametersChangeConsumer, LevelOfDetailParameters, Integer> branchDepthControl =
+        final PropertyControl<ChangeConsumer, LevelOfDetailParameters, Integer> branchDepthControl =
                 new IntegerPropertyControl<>(branchDepth, "Branch depth", changeConsumer);
         branchDepthControl.setApplyHandler(LevelOfDetailParameters::setBranchDepth);
         branchDepthControl.setSyncHandler(LevelOfDetailParameters::getBranchDepth);
         branchDepthControl.setEditObject(parameters);
 
-        final PropertyControl<ParametersChangeConsumer, LevelOfDetailParameters, Integer> maxRadialSegmentsControl =
+        final PropertyControl<ChangeConsumer, LevelOfDetailParameters, Integer> maxRadialSegmentsControl =
                 new IntegerPropertyControl<>(maxRadialSegments, "Max radial segments", changeConsumer);
         maxRadialSegmentsControl.setApplyHandler(LevelOfDetailParameters::setMaxRadialSegments);
         maxRadialSegmentsControl.setSyncHandler(LevelOfDetailParameters::getMaxRadialSegments);
         maxRadialSegmentsControl.setEditObject(parameters);
 
-        final PropertyControl<ParametersChangeConsumer, LevelOfDetailParameters, Integer> rootDepthControl =
+        final PropertyControl<ChangeConsumer, LevelOfDetailParameters, Integer> rootDepthControl =
                 new IntegerPropertyControl<>(rootDepth, "Root depth", changeConsumer);
         rootDepthControl.setApplyHandler(LevelOfDetailParameters::setRootDepth);
         rootDepthControl.setSyncHandler(LevelOfDetailParameters::getRootDepth);
@@ -228,109 +261,110 @@ public class ParametersPropertyBuilder extends AbstractPropertyBuilder<Parameter
         FXUtils.addToPane(rootDepthControl, container);
     }
 
-    private void buildProperties(@NotNull final TreeParameters treeParameters, @NotNull final VBox container,
-                                 @NotNull final ParametersChangeConsumer changeConsumer) {
+    private void buildProperties(@NotNull final TreeParameters parameters, @NotNull final VBox container,
+                                 @NotNull final ChangeConsumer changeConsumer) {
 
-        final boolean generateLeaves = treeParameters.getGenerateLeaves();
-        final float leafScale = treeParameters.getLeafScale();
-        final float textureVScale = treeParameters.getTextureVScale();
-        final float trunkHeight = treeParameters.getTrunkHeight();
-        final float trunkRadius = treeParameters.getTrunkRadius();
-        final float yOffset = treeParameters.getYOffset();
-        final float baseScale = treeParameters.getBaseScale();
-        final float flexHeight = treeParameters.getFlexHeight();
-        final float branchFlexibility = treeParameters.getBranchFlexibility();
-        final float trunkFlexibility = treeParameters.getTrunkFlexibility();
-        final int seed = treeParameters.getSeed();
-        final int textureURepeat = treeParameters.getTextureURepeat();
+        final boolean generateLeaves = parameters.getGenerateLeaves();
+        final float leafScale = parameters.getLeafScale();
+        final float textureVScale = parameters.getTextureVScale();
+        final float trunkHeight = parameters.getTrunkHeight();
+        final float trunkRadius = parameters.getTrunkRadius();
+        final float yOffset = parameters.getYOffset();
+        final float baseScale = parameters.getBaseScale();
+        final float flexHeight = parameters.getFlexHeight();
+        final float branchFlexibility = parameters.getBranchFlexibility();
+        final float trunkFlexibility = parameters.getTrunkFlexibility();
+        final int seed = parameters.getSeed();
+        final int textureURepeat = parameters.getTextureURepeat();
 
-        final PropertyControl<ParametersChangeConsumer, TreeParameters, Boolean> generateLeavesControl =
+        final PropertyControl<ChangeConsumer, TreeParameters, Boolean> generateLeavesControl =
                 new BooleanPropertyControl<>(generateLeaves, "Generate Leaves", changeConsumer);
         generateLeavesControl.setApplyHandler(TreeParameters::setGenerateLeaves);
         generateLeavesControl.setSyncHandler(TreeParameters::getGenerateLeaves);
-        generateLeavesControl.setEditObject(treeParameters);
+        generateLeavesControl.setEditObject(parameters);
 
-        final FloatPropertyControl<ParametersChangeConsumer, TreeParameters> leafScaleControl =
+        final FloatPropertyControl<ChangeConsumer, TreeParameters> leafScaleControl =
                 new FloatPropertyControl<>(leafScale, "Leaf scale", changeConsumer);
         leafScaleControl.setApplyHandler(TreeParameters::setLeafScale);
         leafScaleControl.setSyncHandler(TreeParameters::getLeafScale);
-        leafScaleControl.setEditObject(treeParameters);
+        leafScaleControl.setEditObject(parameters);
         leafScaleControl.setMinMax(0.01F, Integer.MAX_VALUE);
         leafScaleControl.setScrollPower(1F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, TreeParameters> textureVScaleControl =
+        final FloatPropertyControl<ChangeConsumer, TreeParameters> textureVScaleControl =
                 new FloatPropertyControl<>(textureVScale, "Texture V scale", changeConsumer);
         textureVScaleControl.setApplyHandler(TreeParameters::setTextureVScale);
         textureVScaleControl.setSyncHandler(TreeParameters::getTextureVScale);
-        textureVScaleControl.setEditObject(treeParameters);
+        textureVScaleControl.setEditObject(parameters);
         textureVScaleControl.setMinMax(0.01F, Integer.MAX_VALUE);
         textureVScaleControl.setScrollPower(0.4F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, TreeParameters> trunkHeightControl =
+        final FloatPropertyControl<ChangeConsumer, TreeParameters> trunkHeightControl =
                 new FloatPropertyControl<>(trunkHeight, "Trunk height", changeConsumer);
         trunkHeightControl.setApplyHandler(TreeParameters::setTrunkHeight);
         trunkHeightControl.setSyncHandler(TreeParameters::getTrunkHeight);
-        trunkHeightControl.setEditObject(treeParameters);
+        trunkHeightControl.setEditObject(parameters);
         trunkHeightControl.setMinMax(0.01F, Integer.MAX_VALUE);
         trunkHeightControl.setScrollPower(3F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, TreeParameters> trunkRadiusControl =
+        final FloatPropertyControl<ChangeConsumer, TreeParameters> trunkRadiusControl =
                 new FloatPropertyControl<>(trunkRadius, "Trunk radius", changeConsumer);
         trunkRadiusControl.setApplyHandler(TreeParameters::setTrunkRadius);
         trunkRadiusControl.setSyncHandler(TreeParameters::getTrunkRadius);
-        trunkRadiusControl.setEditObject(treeParameters);
+        trunkRadiusControl.setEditObject(parameters);
         trunkRadiusControl.setMinMax(0.01F, Integer.MAX_VALUE);
         trunkRadiusControl.setScrollPower(0.5F);
 
-        final PropertyControl<ParametersChangeConsumer, TreeParameters, Float> yOffsetControl =
+        final PropertyControl<ChangeConsumer, TreeParameters, Float> yOffsetControl =
                 new FloatPropertyControl<>(yOffset, "Y offset", changeConsumer);
         yOffsetControl.setApplyHandler(TreeParameters::setYOffset);
         yOffsetControl.setSyncHandler(TreeParameters::getYOffset);
-        yOffsetControl.setEditObject(treeParameters);
+        yOffsetControl.setEditObject(parameters);
 
-        final FloatPropertyControl<ParametersChangeConsumer, TreeParameters> baseScaleControl =
+        final FloatPropertyControl<ChangeConsumer, TreeParameters> baseScaleControl =
                 new FloatPropertyControl<>(baseScale, "Base scale", changeConsumer);
         baseScaleControl.setApplyHandler(TreeParameters::setBaseScale);
         baseScaleControl.setSyncHandler(TreeParameters::getBaseScale);
-        baseScaleControl.setEditObject(treeParameters);
+        baseScaleControl.setEditObject(parameters);
         baseScaleControl.setMinMax(0.01F, Integer.MAX_VALUE);
         baseScaleControl.setScrollPower(0.5F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, TreeParameters> flexHeightControl =
+        final FloatPropertyControl<ChangeConsumer, TreeParameters> flexHeightControl =
                 new FloatPropertyControl<>(flexHeight, "Flex height", changeConsumer);
         flexHeightControl.setApplyHandler(TreeParameters::setFlexHeight);
         flexHeightControl.setSyncHandler(TreeParameters::getFlexHeight);
-        flexHeightControl.setEditObject(treeParameters);
+        flexHeightControl.setEditObject(parameters);
         flexHeightControl.setMinMax(0.01F, Integer.MAX_VALUE);
         flexHeightControl.setScrollPower(2F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, TreeParameters> trunkFlexibilityControl =
+        final FloatPropertyControl<ChangeConsumer, TreeParameters> trunkFlexibilityControl =
                 new FloatPropertyControl<>(trunkFlexibility, "Trunk flexibility", changeConsumer);
         trunkFlexibilityControl.setApplyHandler(TreeParameters::setTrunkFlexibility);
         trunkFlexibilityControl.setSyncHandler(TreeParameters::getTrunkFlexibility);
-        trunkFlexibilityControl.setEditObject(treeParameters);
+        trunkFlexibilityControl.setEditObject(parameters);
         trunkFlexibilityControl.setMinMax(0.01F, Integer.MAX_VALUE);
         trunkFlexibilityControl.setScrollPower(2F);
 
-        final FloatPropertyControl<ParametersChangeConsumer, TreeParameters> branchFlexibilityControl =
+        final FloatPropertyControl<ChangeConsumer, TreeParameters> branchFlexibilityControl =
                 new FloatPropertyControl<>(branchFlexibility, "Branch flexibility", changeConsumer);
         branchFlexibilityControl.setApplyHandler(TreeParameters::setBranchFlexibility);
         branchFlexibilityControl.setSyncHandler(TreeParameters::getBranchFlexibility);
-        branchFlexibilityControl.setEditObject(treeParameters);
+        branchFlexibilityControl.setEditObject(parameters);
         branchFlexibilityControl.setMinMax(0.01F, Integer.MAX_VALUE);
         branchFlexibilityControl.setScrollPower(2F);
 
-        final PropertyControl<ParametersChangeConsumer, TreeParameters, Integer> seedControl =
+        final PropertyControl<ChangeConsumer, TreeParameters, Integer> seedControl =
                 new IntegerPropertyControl<>(seed, "Seed", changeConsumer);
         seedControl.setApplyHandler(TreeParameters::setSeed);
         seedControl.setSyncHandler(TreeParameters::getSeed);
-        seedControl.setEditObject(treeParameters);
+        seedControl.setEditObject(parameters);
 
-        final IntegerPropertyControl<ParametersChangeConsumer, TreeParameters> textureURepeatControl =
+        final IntegerPropertyControl<ChangeConsumer, TreeParameters> textureURepeatControl =
                 new IntegerPropertyControl<>(textureURepeat, "Texture U repeat", changeConsumer);
         textureURepeatControl.setApplyHandler(TreeParameters::setTextureURepeat);
         textureURepeatControl.setSyncHandler(TreeParameters::getTextureURepeat);
-        textureURepeatControl.setEditObject(treeParameters);
+        textureURepeatControl.setEditObject(parameters);
+        textureURepeatControl.setMinMax(0, Integer.MAX_VALUE);
 
         FXUtils.addToPane(generateLeavesControl, container);
         FXUtils.addToPane(leafScaleControl, container);

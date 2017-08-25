@@ -31,7 +31,7 @@ public class ProjectParameters extends Parameters {
      * The material parameters.
      */
     @NotNull
-    private MaterialParameters materialParameters;
+    private MaterialsParameters materialParameters;
 
     /**
      * The flag of showing wire.
@@ -42,17 +42,17 @@ public class ProjectParameters extends Parameters {
     }
 
     public ProjectParameters(@NotNull final AssetManager assetManager) {
-        this.materialParameters = new MaterialParameters(assetManager);
+        this.materialParameters = new MaterialsParameters(assetManager);
         this.materialParameters.setParent(this);
         this.treeParameters = new TreeParameters();
         this.treeParameters.setParent(this);
         this.treeParameters.setGenerateLeaves(true);
 
-        for (final BranchParameters branchParameters : treeParameters.getEffectiveBranches()) {
+        for (final BranchParameters branchParameters : treeParameters.getBranches()) {
             branchParameters.setParent(treeParameters);
         }
 
-        for (final BranchParameters branchParameters : treeParameters.getEffectiveRoots()) {
+        for (final BranchParameters branchParameters : treeParameters.getRoots()) {
             branchParameters.setParent(treeParameters);
         }
 
@@ -71,7 +71,7 @@ public class ProjectParameters extends Parameters {
     /**
      * @return the material parameters.
      */
-    public @NotNull MaterialParameters getMaterialParameters() {
+    public @NotNull MaterialsParameters getMaterialParameters() {
         return materialParameters;
     }
 
@@ -99,14 +99,14 @@ public class ProjectParameters extends Parameters {
     public void write(@NotNull final JmeExporter ex) throws IOException {
         final OutputCapsule out = ex.getCapsule(this);
         out.write(treeParameters, "treeParameters", null);
-        out.write(materialParameters, "materialParameters", null);
+        out.write(materialParameters, "materialsParameters", null);
         out.write(showWire, "showWire", false);
     }
 
     @Override
     public void read(@NotNull final JmeImporter im) throws IOException {
         final InputCapsule in = im.getCapsule(this);
-        materialParameters = (MaterialParameters) in.readSavable("materialParameters", null);
+        materialParameters = (MaterialsParameters) in.readSavable("materialsParameters", null);
         treeParameters = (TreeParameters) in.readSavable("treeParameters", null);
         showWire = in.readBoolean("showWire", false);
     }

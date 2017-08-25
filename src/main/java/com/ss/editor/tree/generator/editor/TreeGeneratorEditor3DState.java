@@ -16,7 +16,7 @@ import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.annotation.JMEThread;
 import com.ss.editor.model.EditorCamera;
 import com.ss.editor.plugin.api.editor.part3d.AdvancedPBRWithStudioSky3DEditorState;
-import com.ss.editor.tree.generator.parameters.MaterialParameters;
+import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.rlib.geom.util.AngleUtils;
 import org.jetbrains.annotations.NotNull;
@@ -153,7 +153,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
 
         final ProjectParameters parameters = getParameters();
         final TreeParameters treeParameters = parameters.getTreeParameters();
-        final MaterialParameters materialParameters = parameters.getMaterialParameters();
+        final MaterialsParameters materialParameters = parameters.getMaterialParameters();
         final Material treeMaterial = materialParameters.getTreeMaterial();
         final Material leafMaterial = materialParameters.getLeafMaterial();
         final Material impostorMaterial = materialParameters.getImpostorMaterial();
@@ -224,7 +224,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
 
         final ProjectParameters parameters = getParameters();
         final TreeParameters treeParameters = parameters.getTreeParameters();
-        final MaterialParameters materialParameters = parameters.getMaterialParameters();
+        final MaterialsParameters materialParameters = parameters.getMaterialParameters();
         final Material treeMaterial = materialParameters.getTreeMaterial();
         final Material leafMaterial = materialParameters.getLeafMaterial();
         final Material impostorMaterial = materialParameters.getImpostorMaterial();

@@ -3,9 +3,12 @@ package com.ss.editor.tree.generator.editor;
 import static com.ss.rlib.util.ObjectUtils.notNull;
 import com.jme3.export.binary.BinaryExporter;
 import com.jme3.export.binary.BinaryImporter;
+import com.simsilica.arboreal.BranchParameters;
+import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.ss.editor.annotation.BackgroundThread;
 import com.ss.editor.annotation.FXThread;
 import com.ss.editor.annotation.FromAnyThread;
+import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.plugin.api.editor.Advanced3DFileEditorWithSplitRightTool;
 import com.ss.editor.tree.generator.TreeGeneratorEditorPlugin;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
@@ -15,6 +18,7 @@ import com.ss.editor.ui.component.editor.state.EditorState;
 import com.ss.editor.ui.component.tab.EditorToolComponent;
 import com.ss.editor.ui.control.property.PropertyEditor;
 import com.ss.editor.ui.control.tree.node.TreeNode;
+import com.ss.editor.ui.control.tree.node.TreeNodeFactoryRegistry;
 import com.ss.editor.ui.css.CSSClasses;
 import com.ss.rlib.ui.util.FXUtils;
 import javafx.scene.layout.HBox;
@@ -37,7 +41,13 @@ import java.util.function.Supplier;
  */
 public class TreeGeneratorFileEditor extends
         Advanced3DFileEditorWithSplitRightTool<TreeGeneratorEditor3DState, TreeGeneratorEditorState> implements
-        ParametersChangeConsumer {
+        ChangeConsumer {
+
+    /**
+     * The tree node factory
+     */
+    @NotNull
+    private static final TreeNodeFactoryRegistry FACTORY_REGISTRY = TreeNodeFactoryRegistry.getInstance();
 
     /**
      * The constant DESCRIPTION.
@@ -59,7 +69,7 @@ public class TreeGeneratorFileEditor extends
     private ProjectParameters parameters;
 
     @Nullable
-    private PropertyEditor<ParametersChangeConsumer> propertyEditor;
+    private PropertyEditor<ChangeConsumer> propertyEditor;
 
     @Nullable
     private Consumer<Object> selectionHandler;
@@ -169,6 +179,40 @@ public class TreeGeneratorFileEditor extends
     @Override
     @FXThread
     public void notifyFXChangeProperty(@NotNull final Object object, @NotNull final String propertyName) {
+        getEditor3DState().generate();
+    }
+
+    @Override
+    @FXThread
+    public void notifyFXAddedChild(@NotNull final Object parent, @NotNull final Object added, final int index,
+                                   final boolean needSelect) {
+
+        final ParametersNodeTree parametersTree = getParametersTree();
+
+        if (added instanceof BranchParameters || added instanceof LevelOfDetailParameters) {
+            parametersTree.refreshChildren(parent);
+        } else {
+            parametersTree.notifyAdded(parent, added, index);
+        }
+
+        if (needSelect) {
+            parametersTree.select(added);
+        }
+
+        getEditor3DState().generate();
+    }
+
+
+    @Override
+    @FXThread
+    public void notifyFXRemovedChild(@NotNull final Object parent, @NotNull final Object removed) {
+
+        if (removed instanceof BranchParameters || removed instanceof LevelOfDetailParameters) {
+            getParametersTree().refreshChildren(parent);
+        } else {
+            getParametersTree().notifyRemoved(parent, removed);
+        }
+
         getEditor3DState().generate();
     }
 }

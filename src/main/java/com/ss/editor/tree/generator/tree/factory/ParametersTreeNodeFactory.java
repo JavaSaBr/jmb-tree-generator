@@ -30,8 +30,8 @@ public class ParametersTreeNodeFactory implements TreeNodeFactory {
 
         if (element instanceof ProjectParameters) {
             return unsafeCast(new ProjectParametersTreeNode((ProjectParameters) element, objectId));
-        } else if (element instanceof MaterialParameters) {
-            return unsafeCast(new MaterialParametersTreeNode((MaterialParameters) element, objectId));
+        } else if (element instanceof MaterialsParameters) {
+            return unsafeCast(new MaterialsParametersTreeNode((MaterialsParameters) element, objectId));
         } else if (element instanceof TreeParameters) {
             return unsafeCast(new TreeParametersTreeNode((TreeParameters) element, objectId));
         } else if (element instanceof LodsParameters) {
@@ -44,6 +44,8 @@ public class ParametersTreeNodeFactory implements TreeNodeFactory {
             return unsafeCast(new LodParametersTreeNode((LevelOfDetailParameters) element, objectId));
         } else if (element instanceof BranchParameters) {
             return unsafeCast(new BranchParametersTreeNode((BranchParameters) element, objectId));
+        } else if (element instanceof MaterialParameters) {
+            return unsafeCast(new MaterialParametersTreeNode((MaterialParameters) element, objectId));
         }
 
         return null;
