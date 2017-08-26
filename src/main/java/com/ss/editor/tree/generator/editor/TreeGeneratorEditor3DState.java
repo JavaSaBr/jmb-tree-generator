@@ -205,8 +205,8 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         // Add in the new ones
         for (int i = 0; i < levels.length; i++) {
             final LevelGeometry level = levels[i];
-            TangentGenerator.useMikktspaceGenerator(level.levelNode);
             level.attach(lodControl);
+            TangentGenerator.useMikktspaceGenerator(level.levelNode);
             if (!parameters.isShowWire() && level.wireGeom != null) {
                 level.wireGeom.setCullHint(Spatial.CullHint.Always);
             }
