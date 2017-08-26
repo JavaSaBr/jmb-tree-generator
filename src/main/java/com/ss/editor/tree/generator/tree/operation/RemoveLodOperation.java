@@ -15,12 +15,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RemoveLodOperation extends AbstractEditorOperation<ChangeConsumer> {
 
+    /**
+     * The tree parameters.
+     */
     @NotNull
     private final TreeParameters treeParameters;
 
+    /**
+     * The lods parameters.
+     */
     @NotNull
     private final LodsParameters lodsParameters;
 
+    /**
+     * The level of details to remove.
+     */
     @NotNull
     private final LevelOfDetailParameters removed;
 

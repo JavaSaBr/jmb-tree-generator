@@ -5,6 +5,7 @@ import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.FXThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.LodsParameters;
 import com.ss.editor.tree.generator.tree.operation.RemoveLodOperation;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author JavaSaBr
  */
-public class DeleteLodAction extends AbstractNodeAction<ChangeConsumer>  {
+public class DeleteLodAction extends AbstractNodeAction<ChangeConsumer> {
 
     public DeleteLodAction(@NotNull final NodeTree<?> nodeTree, @NotNull final TreeNode<?> node) {
         super(nodeTree, node);
@@ -25,7 +26,7 @@ public class DeleteLodAction extends AbstractNodeAction<ChangeConsumer>  {
 
     @Override
     protected @NotNull String getName() {
-        return "Delete";
+        return PluginMessages.TREE_GENERATOR_EDITOR_ACTION_DELETE;
     }
 
     @Override

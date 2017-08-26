@@ -1,5 +1,6 @@
 package com.ss.editor.tree.generator.tree.node;
 
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -21,19 +22,35 @@ public class MaterialsParametersTreeNode extends ParametersTreeNode<MaterialsPar
 
     @Override
     public @NotNull String getName() {
-        return "Materials";
+        return PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIALS;
     }
 
     @Override
     public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
 
-        final @NotNull MaterialsParameters materialsParameters = getElement();
+        final MaterialsParameters parameters = getElement();
+
+        final MaterialParameters treeMaterial =
+                new MaterialParameters(parameters::setTreeMaterial, parameters::getTreeMaterial,
+                        PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_TREE);
+
+        final MaterialParameters leafMaterial =
+                new MaterialParameters(parameters::setLeafMaterial, parameters::getLeafMaterial,
+                        PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_LEAF);
+
+        final MaterialParameters flatMaterial =
+                new MaterialParameters(parameters::setFlatMaterial, parameters::getFlatMaterial,
+                        PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_FLAT);
+
+        final MaterialParameters impostorMaterial =
+                new MaterialParameters(parameters::setImpostorMaterial, parameters::getImpostorMaterial,
+                        PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_IMPOSTOR);
 
         final Array<TreeNode<?>> children = ArrayFactory.newArray(TreeNode.class);
-        children.add(FACTORY_REGISTRY.createFor(new MaterialParameters(materialsParameters.getTreeMaterial(), "Tree material")));
-        children.add(FACTORY_REGISTRY.createFor(new MaterialParameters(materialsParameters.getLeafMaterial(), "Leaf material")));
-        children.add(FACTORY_REGISTRY.createFor(new MaterialParameters(materialsParameters.getFlatMaterial(), "Flat material")));
-        children.add(FACTORY_REGISTRY.createFor(new MaterialParameters(materialsParameters.getImpostorMaterial(), "Impostor material")));
+        children.add(FACTORY_REGISTRY.createFor(treeMaterial));
+        children.add(FACTORY_REGISTRY.createFor(leafMaterial));
+        children.add(FACTORY_REGISTRY.createFor(flatMaterial));
+        children.add(FACTORY_REGISTRY.createFor(impostorMaterial));
 
         return children;
     }

@@ -15,12 +15,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RemoveBranchOperation extends AbstractEditorOperation<ChangeConsumer> {
 
+    /**
+     * The tree parameters.
+     */
     @NotNull
     private final TreeParameters treeParameters;
 
+    /**
+     * The branches parameters.
+     */
     @NotNull
     private final BranchesParameters branchesParameters;
 
+    /**
+     * The branch to remove.
+     */
     @NotNull
     private final BranchParameters removed;
 

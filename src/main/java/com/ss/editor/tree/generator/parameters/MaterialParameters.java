@@ -4,12 +4,27 @@ import com.jme3.material.Material;
 import com.simsilica.arboreal.Parameters;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 /**
  * The implementation of parameters to configure material of a tree.
  *
  * @author JavaSaBr
  */
 public class MaterialParameters extends Parameters {
+
+    /**
+     * The material change handler.
+     */
+    @NotNull
+    private final Consumer<@NotNull Material> changeHandler;
+
+    /**
+     * The material sync handler.
+     */
+    @NotNull
+    private final Supplier<@NotNull Material> syncHandler;
 
     /**
      * The material.
@@ -23,8 +38,12 @@ public class MaterialParameters extends Parameters {
     @NotNull
     private final String name;
 
-    public MaterialParameters(@NotNull final Material material, @NotNull final String name) {
-        this.material = material;
+    public MaterialParameters(@NotNull final Consumer<@NotNull Material> changeHandler,
+                              @NotNull final Supplier<@NotNull Material> syncHandler,
+                              @NotNull final String name) {
+        this.changeHandler = changeHandler;
+        this.syncHandler = syncHandler;
+        this.material = syncHandler.get();
         this.name = name;
     }
 
@@ -40,5 +59,19 @@ public class MaterialParameters extends Parameters {
      */
     public @NotNull String getName() {
         return name;
+    }
+
+    /**
+     * @return the material change handler.
+     */
+    public @NotNull Consumer<@NotNull Material> getChangeHandler() {
+        return changeHandler;
+    }
+
+    /**
+     * @return the material sync handler.
+     */
+    public @NotNull Supplier<@NotNull Material> getSyncHandler() {
+        return syncHandler;
     }
 }

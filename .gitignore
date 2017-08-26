@@ -4,3 +4,4 @@
 *.so
 /embedded-plugins/
 /out/
+/deploy-plugin/

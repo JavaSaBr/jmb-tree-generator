@@ -4,6 +4,7 @@ import com.jme3.export.binary.BinaryExporter;
 import com.ss.editor.annotation.BackgroundThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.plugin.api.file.creator.GenericFileCreator;
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.TreeGeneratorEditorPlugin;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.component.creator.FileCreatorDescription;
@@ -29,14 +30,14 @@ public class TreeGeneratorFileCreator extends GenericFileCreator {
     public static final FileCreatorDescription DESCRIPTION = new FileCreatorDescription();
 
     static {
-        DESCRIPTION.setFileDescription("Create j3sa file");
+        DESCRIPTION.setFileDescription(PluginMessages.TREE_GENERATOR_CREATOR_DESCRIPTION);
         DESCRIPTION.setConstructor(TreeGeneratorFileCreator::new);
     }
 
     @Override
     @FromAnyThread
     protected @NotNull String getTitleText() {
-        return super.getTitleText();
+        return PluginMessages.TREE_GENERATOR_CREATOR_TITLE;
     }
 
     @Override

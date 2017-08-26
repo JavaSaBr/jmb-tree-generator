@@ -2,6 +2,7 @@ package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.tree.action.DeleteLodAction;
 import com.ss.editor.ui.control.tree.NodeTree;
 import javafx.collections.ObservableList;
@@ -22,7 +23,7 @@ public class LodParametersTreeNode extends ParametersTreeNode<LevelOfDetailParam
 
     public LodParametersTreeNode(@NotNull final LevelOfDetailParameters element, final long objectId) {
         super(element, objectId);
-        this.name = "Level of Details";
+        this.name = PluginMessages.TREE_GENERATOR_EDITOR_NODE_LOD;
     }
 
     @Override

@@ -15,18 +15,26 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddRootOperation extends AbstractEditorOperation<ChangeConsumer> {
 
+    /**
+     * The tree parameters.
+     */
     @NotNull
     private final TreeParameters treeParameters;
 
+    /**
+     * The roots parameters.
+     */
     @NotNull
     private final RootsParameters rootsParameters;
 
+    /**
+     * The new root.
+     */
     @NotNull
     private final BranchParameters newRoot;
 
     public AddRootOperation(@NotNull final TreeParameters treeParameters,
-                            @NotNull final RootsParameters rootsParameters,
-                            @NotNull final BranchParameters newRoot) {
+                            @NotNull final RootsParameters rootsParameters, @NotNull final BranchParameters newRoot) {
         this.treeParameters = treeParameters;
         this.rootsParameters = rootsParameters;
         this.newRoot = newRoot;

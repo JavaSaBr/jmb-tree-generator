@@ -2,6 +2,7 @@ package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.tree.action.DeleteRootAction;
 import com.ss.editor.ui.control.tree.NodeTree;
 import javafx.collections.ObservableList;
@@ -20,7 +21,7 @@ public class RootParametersTreeNode extends ParametersTreeNode<BranchParameters>
 
     public RootParametersTreeNode(@NotNull final BranchParameters element, final long objectId) {
         super(element, objectId);
-        this.name = "Root";
+        this.name = PluginMessages.TREE_GENERATOR_EDITOR_NODE_ROOT;
     }
 
     @Override

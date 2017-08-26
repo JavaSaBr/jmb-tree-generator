@@ -15,12 +15,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RemoveRootOperation extends AbstractEditorOperation<ChangeConsumer> {
 
+    /**
+     * The tree parameters.
+     */
     @NotNull
     private final TreeParameters treeParameters;
 
+    /**
+     * The roots parameters.
+     */
     @NotNull
     private final RootsParameters rootsParameters;
 
+    /**
+     * The root to remove.
+     */
     @NotNull
     private final BranchParameters removed;
 

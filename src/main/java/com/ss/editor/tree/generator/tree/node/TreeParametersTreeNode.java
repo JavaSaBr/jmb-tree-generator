@@ -1,6 +1,7 @@
 package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.BranchesParameters;
 import com.ss.editor.tree.generator.parameters.LodsParameters;
 import com.ss.editor.tree.generator.parameters.RootsParameters;
@@ -23,7 +24,7 @@ public class TreeParametersTreeNode extends ParametersTreeNode<TreeParameters> {
 
     @Override
     public @NotNull String getName() {
-        return "Tree settings";
+        return PluginMessages.TREE_GENERATOR_EDITOR_NODE_TREE;
     }
 
     @Override

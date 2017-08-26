@@ -15,12 +15,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddBranchOperation extends AbstractEditorOperation<ChangeConsumer> {
 
+    /**
+     * The tree parameters.
+     */
     @NotNull
     private final TreeParameters treeParameters;
 
+    /**
+     * The branches parameters.
+     */
     @NotNull
     private final BranchesParameters branchesParameters;
 
+    /**
+     * The new branch.
+     */
     @NotNull
     private final BranchParameters newBranch;
 

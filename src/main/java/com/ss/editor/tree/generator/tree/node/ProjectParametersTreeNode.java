@@ -1,5 +1,6 @@
 package com.ss.editor.tree.generator.tree.node;
 
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
@@ -20,7 +21,7 @@ public class ProjectParametersTreeNode extends ParametersTreeNode<ProjectParamet
 
     @Override
     public @NotNull String getName() {
-        return "Main";
+        return PluginMessages.TREE_GENERATOR_EDITOR_NODE_SETTINGS;
     }
 
     @Override

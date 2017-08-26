@@ -5,6 +5,7 @@ import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.FXThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.BranchesParameters;
 import com.ss.editor.tree.generator.tree.operation.AddBranchOperation;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author JavaSaBr
  */
-public class CreateBranchAction extends AbstractNodeAction<ChangeConsumer>  {
+public class CreateBranchAction extends AbstractNodeAction<ChangeConsumer> {
 
     public CreateBranchAction(@NotNull final NodeTree<?> nodeTree, @NotNull final TreeNode<?> node) {
         super(nodeTree, node);
@@ -25,7 +26,7 @@ public class CreateBranchAction extends AbstractNodeAction<ChangeConsumer>  {
 
     @Override
     protected @NotNull String getName() {
-        return "Add new branch";
+        return PluginMessages.TREE_GENERATOR_EDITOR_ACTION_ADD_BRANCH;
     }
 
     @Override

@@ -5,22 +5,33 @@ import com.jme3.export.binary.BinaryExporter;
 import com.jme3.export.binary.BinaryImporter;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
+import com.ss.editor.FileExtensions;
 import com.ss.editor.annotation.BackgroundThread;
 import com.ss.editor.annotation.FXThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.plugin.api.editor.Advanced3DFileEditorWithSplitRightTool;
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.TreeGeneratorEditorPlugin;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
-import com.ss.editor.tree.generator.tree.ParametersNodeTree;
+import com.ss.editor.ui.Icons;
+import com.ss.editor.ui.component.asset.tree.context.menu.action.DeleteFileAction;
+import com.ss.editor.ui.component.asset.tree.context.menu.action.NewFileAction;
+import com.ss.editor.ui.component.asset.tree.context.menu.action.RenameFileAction;
 import com.ss.editor.ui.component.editor.EditorDescription;
 import com.ss.editor.ui.component.editor.state.EditorState;
 import com.ss.editor.ui.component.tab.EditorToolComponent;
 import com.ss.editor.ui.control.property.PropertyEditor;
+import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
-import com.ss.editor.ui.control.tree.node.TreeNodeFactoryRegistry;
 import com.ss.editor.ui.css.CSSClasses;
+import com.ss.editor.ui.util.DynamicIconSupport;
+import com.ss.editor.ui.util.UIUtils;
+import com.ss.editor.util.EditorUtil;
 import com.ss.rlib.ui.util.FXUtils;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +43,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -43,11 +55,9 @@ public class TreeGeneratorFileEditor extends
         Advanced3DFileEditorWithSplitRightTool<TreeGeneratorEditor3DState, TreeGeneratorEditorState> implements
         ChangeConsumer {
 
-    /**
-     * The tree node factory
-     */
     @NotNull
-    private static final TreeNodeFactoryRegistry FACTORY_REGISTRY = TreeNodeFactoryRegistry.getInstance();
+    private static final Predicate<Class<?>> ACTION_TESTER = type -> type == NewFileAction.class ||
+            type == DeleteFileAction.class || type == RenameFileAction.class;
 
     /**
      * The constant DESCRIPTION.
@@ -55,22 +65,34 @@ public class TreeGeneratorFileEditor extends
     @NotNull
     public static final EditorDescription DESCRIPTION = new EditorDescription();
 
-    @Nullable
-    private ParametersNodeTree parametersTree;
-
     static {
         DESCRIPTION.setConstructor(TreeGeneratorFileEditor::new);
-        DESCRIPTION.setEditorName("Tree Generator");
+        DESCRIPTION.setEditorName(PluginMessages.TREE_GENERATOR_EDITOR_NAME);
         DESCRIPTION.setEditorId(TreeGeneratorFileEditor.class.getSimpleName());
         DESCRIPTION.addExtension(TreeGeneratorEditorPlugin.PROJECT_EXTENSION);
     }
 
+    /**
+     * The parameters tree.
+     */
+    @Nullable
+    private NodeTree<ChangeConsumer> parametersTree;
+
+    /**
+     * The project parameters.
+     */
     @Nullable
     private ProjectParameters parameters;
 
+    /**
+     * The property editor.
+     */
     @Nullable
     private PropertyEditor<ChangeConsumer> propertyEditor;
 
+    /**
+     * The selection handler.
+     */
     @Nullable
     private Consumer<Object> selectionHandler;
 
@@ -96,16 +118,22 @@ public class TreeGeneratorFileEditor extends
         super.createToolComponents(container, root);
 
         selectionHandler = this::selectFromTree;
-        parametersTree = new ParametersNodeTree(selectionHandler, this);
+        parametersTree = new NodeTree<>(selectionHandler, this);
         propertyEditor = new PropertyEditor<>(this);
         propertyEditor.prefHeightProperty().bind(root.heightProperty());
 
-        container.addComponent(buildSplitComponent(parametersTree, propertyEditor, root), "Tree");
+        container.addComponent(buildSplitComponent(parametersTree, propertyEditor, root), PluginMessages.TREE_GENERATOR_EDITOR_TREE_TOOL);
 
         FXUtils.addClassTo(parametersTree.getTreeView(), CSSClasses.TRANSPARENT_TREE_VIEW);
     }
 
-    private void selectFromTree(final Object object) {
+    /**
+     * Handle selected object from node tree.
+     *
+     * @param object the selected object.
+     */
+    @FXThread
+    private void selectFromTree(@Nullable final Object object) {
 
         Object parent = null;
         Object element;
@@ -119,7 +147,14 @@ public class TreeGeneratorFileEditor extends
             element = object;
         }
 
-        propertyEditor.buildFor(element, parent);
+        getPropertyEditor().buildFor(element, parent);
+    }
+
+    /**
+     * @return the property editor.
+     */
+    private @NotNull PropertyEditor<ChangeConsumer> getPropertyEditor() {
+        return notNull(propertyEditor);
     }
 
     @Override
@@ -164,14 +199,56 @@ public class TreeGeneratorFileEditor extends
     @FXThread
     protected void createToolbar(@NotNull final HBox container) {
         super.createToolbar(container);
+
+        final Button exportAction = new Button();
+        exportAction.setTooltip(new Tooltip(PluginMessages.TREE_GENERATOR_EDITOR_EXPORT_ACTION));
+        exportAction.setOnAction(event -> export());
+        exportAction.setGraphic(new ImageView(Icons.EXPORT_16));
+
+        FXUtils.addClassesTo(exportAction, CSSClasses.FLAT_BUTTON, CSSClasses.FILE_EDITOR_TOOLBAR_BUTTON);
+        DynamicIconSupport.addSupport(exportAction);
+
         FXUtils.addToPane(createSaveAction(), container);
+        FXUtils.addToPane(exportAction, container);
     }
 
+    /**
+     * Open Save As Dialog to export the tree.
+     */
     @FXThread
-    private @NotNull ParametersNodeTree getParametersTree() {
+    private void export() {
+        UIUtils.openSaveAsDialog(this::export, FileExtensions.JME_OBJECT, ACTION_TESTER);
+    }
+
+    /**
+     * Export the tree to the file.
+     *
+     * @param path the file.
+     */
+    @FXThread
+    private void export(@NotNull final Path path) {
+
+        final BinaryExporter exporter = BinaryExporter.getInstance();
+
+        try (final OutputStream out = Files.newOutputStream(path)) {
+            exporter.save(getEditor3DState().getTreeNode(), out);
+        } catch (final IOException e) {
+            EditorUtil.handleException(LOGGER, this, e);
+        }
+    }
+
+    /**
+     * @return the parameters tree.
+     */
+    @FXThread
+    private @NotNull NodeTree<ChangeConsumer> getParametersTree() {
         return notNull(parametersTree);
     }
 
+    /**
+     * @return the project parameters.
+     */
+    @FromAnyThread
     private @NotNull ProjectParameters getParameters() {
         return notNull(parameters);
     }
@@ -187,7 +264,7 @@ public class TreeGeneratorFileEditor extends
     public void notifyFXAddedChild(@NotNull final Object parent, @NotNull final Object added, final int index,
                                    final boolean needSelect) {
 
-        final ParametersNodeTree parametersTree = getParametersTree();
+        final NodeTree<ChangeConsumer> parametersTree = getParametersTree();
 
         if (added instanceof BranchParameters || added instanceof LevelOfDetailParameters) {
             parametersTree.refreshChildren(parent);
@@ -201,7 +278,6 @@ public class TreeGeneratorFileEditor extends
 
         getEditor3DState().generate();
     }
-
 
     @Override
     @FXThread

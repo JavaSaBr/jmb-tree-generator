@@ -15,17 +15,25 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddLodOperation extends AbstractEditorOperation<ChangeConsumer> {
 
+    /**
+     * The tree parameters.
+     */
     @NotNull
     private final TreeParameters treeParameters;
 
+    /**
+     * The lods parameters.
+     */
     @NotNull
     private final LodsParameters lodsParameters;
 
+    /**
+     * The new level of details.
+     */
     @NotNull
     private final LevelOfDetailParameters newLevel;
 
-    public AddLodOperation(@NotNull final TreeParameters treeParameters,
-                           @NotNull final LodsParameters lodsParameters,
+    public AddLodOperation(@NotNull final TreeParameters treeParameters, @NotNull final LodsParameters lodsParameters,
                            @NotNull final LevelOfDetailParameters newLevel) {
         this.treeParameters = treeParameters;
         this.lodsParameters = lodsParameters;

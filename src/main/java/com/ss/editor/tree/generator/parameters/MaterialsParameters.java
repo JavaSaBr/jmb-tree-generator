@@ -62,7 +62,7 @@ public class MaterialsParameters extends Parameters {
         barkBumps.setWrap(WrapMode.Repeat);
 
         final Texture leafAtlas = assetManager.loadTexture("Textures/leaf-atlas.png");
-        leafAtlas.setWrap(WrapMode.Repeat);;
+        leafAtlas.setWrap(WrapMode.Repeat);
 
         final Texture noise = assetManager.loadTexture("Textures/noise-x3-512.png");
         noise.setWrap(WrapMode.Repeat);
@@ -115,10 +115,24 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * @param treeMaterial the tree material.
+     */
+    public void setTreeMaterial(@NotNull final Material treeMaterial) {
+        this.treeMaterial = treeMaterial;
+    }
+
+    /**
      * @return the flat material.
      */
     public @NotNull Material getFlatMaterial() {
         return flatMaterial;
+    }
+
+    /**
+     * @param flatMaterial the flat material.
+     */
+    public void setFlatMaterial(@NotNull final Material flatMaterial) {
+        this.flatMaterial = flatMaterial;
     }
 
     /**
@@ -129,10 +143,24 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * @param impostorMaterial the impostor material.
+     */
+    public void setImpostorMaterial(@NotNull final Material impostorMaterial) {
+        this.impostorMaterial = impostorMaterial;
+    }
+
+    /**
      * @return the leaf material.
      */
     public @NotNull Material getLeafMaterial() {
         return leafMaterial;
+    }
+
+    /**
+     * @param leafMaterial the leaf material.
+     */
+    public void setLeafMaterial(@NotNull final Material leafMaterial) {
+        this.leafMaterial = leafMaterial;
     }
 
     @Override

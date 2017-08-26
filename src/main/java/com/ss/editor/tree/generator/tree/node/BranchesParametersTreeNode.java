@@ -2,6 +2,7 @@ package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.BranchesParameters;
 import com.ss.editor.tree.generator.tree.action.CreateBranchAction;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -25,7 +26,7 @@ public class BranchesParametersTreeNode extends ParametersTreeNode<BranchesParam
 
     @Override
     public @NotNull String getName() {
-        return "Branches";
+        return PluginMessages.TREE_GENERATOR_EDITOR_NODE_BRANCHES;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class BranchesParametersTreeNode extends ParametersTreeNode<BranchesParam
 
         for (int i = 0; i < children.size(); i++) {
             final BranchParametersTreeNode node = (BranchParametersTreeNode) children.get(i);
-            node.setName("Branch #" + i);
+            node.setName(PluginMessages.TREE_GENERATOR_EDITOR_NODE_BRANCH + " #" + i);
         }
 
         return children;
