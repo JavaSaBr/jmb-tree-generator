@@ -96,25 +96,25 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
             result.add(new SimpleProperty<>(BOOLEAN, PluginMessages.TREE_GENERATOR_PROPERTY_HAS_END_JOINT, parameters,
                     BranchParameters::isHasEndJoint,
                     BranchParameters::setHasEndJoint));
-            result.add(new SimpleProperty<>(FLOAT, Messages.MODEL_PROPERTY_GRAVITY, 0.3F, parameters,
+            result.add(new SimpleProperty<>(FLOAT, Messages.MODEL_PROPERTY_GRAVITY, 0.01F, parameters,
                     BranchParameters::getGravity,
                     BranchParameters::setGravity));
-            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_INCLINATION, 0.3F, parameters,
+            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_INCLINATION, 0.1F, parameters,
                     BranchParameters::getInclination,
                     BranchParameters::setInclination));
-            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_LENGTH_SCALE, 0.3F, parameters,
+            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_LENGTH_SCALE, 0.01F, parameters,
                     BranchParameters::getLengthScale,
                     BranchParameters::setLengthScale));
-            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_RADIUS_SCALE, 0.3F, parameters,
+            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_RADIUS_SCALE, 0.05F, parameters,
                     BranchParameters::getRadiusScale,
                     BranchParameters::setRadiusScale));
-            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_SEGMENT_VARIATION, 0.3F, 0F, 1F, parameters,
+            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_SEGMENT_VARIATION, 0.01F, 0F, 1F, parameters,
                     BranchParameters::getSegmentVariation,
                     BranchParameters::setSegmentVariation));
             result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_SIDE_JOINT_START_ANGLE, 0.3F, parameters,
                     BranchParameters::getSideJointStartAngle,
                     BranchParameters::setSideJointStartAngle));
-            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_TAPER, 0.3F, parameters,
+            result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_TAPER, 0.05F, parameters,
                     BranchParameters::getTaper,
                     BranchParameters::setTaper));
             result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_TIP_ROTATION, 0.3F, parameters,
