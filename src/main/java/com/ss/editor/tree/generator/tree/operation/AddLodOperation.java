@@ -44,7 +44,7 @@ public class AddLodOperation extends AbstractEditorOperation<ChangeConsumer> {
     @FXThread
     protected void redoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJMETask(() -> {
-            treeParameters.addLod(newLevel, -1);
+            treeParameters.addLodLevel(newLevel, -1);
             EXECUTOR_MANAGER.addFXTask(() -> editor.notifyFXAddedChild(lodsParameters, newLevel, -1, true));
         });
     }

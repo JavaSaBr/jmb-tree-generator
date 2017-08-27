@@ -259,7 +259,7 @@ public class TreeGeneratorFileEditor extends
     public void notifyFXChangeProperty(@NotNull final Object object, @NotNull final String propertyName) {
 
         if (object instanceof MaterialParameters) {
-            getParametersTree().refreshChildren(object);
+            getParametersTree().refresh(object);
         }
 
         getPropertyEditor().syncFor(object);
@@ -274,7 +274,7 @@ public class TreeGeneratorFileEditor extends
         final NodeTree<ChangeConsumer> parametersTree = getParametersTree();
 
         if (added instanceof BranchParameters || added instanceof LevelOfDetailParameters) {
-            parametersTree.refreshChildren(parent);
+            parametersTree.refresh(parent);
         } else {
             parametersTree.notifyAdded(parent, added, index);
         }
@@ -291,7 +291,7 @@ public class TreeGeneratorFileEditor extends
     public void notifyFXRemovedChild(@NotNull final Object parent, @NotNull final Object removed) {
 
         if (removed instanceof BranchParameters || removed instanceof LevelOfDetailParameters) {
-            getParametersTree().refreshChildren(parent);
+            getParametersTree().refresh(parent);
         } else {
             getParametersTree().notifyRemoved(parent, removed);
         }

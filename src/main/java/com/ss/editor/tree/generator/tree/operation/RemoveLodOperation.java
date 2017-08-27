@@ -59,7 +59,7 @@ public class RemoveLodOperation extends AbstractEditorOperation<ChangeConsumer> 
     @FXThread
     protected void undoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJMETask(() -> {
-            treeParameters.addLod(removed, index);
+            treeParameters.addLodLevel(removed, index);
             EXECUTOR_MANAGER.addFXTask(() -> editor.notifyFXAddedChild(lodsParameters, removed, index, false));
         });
     }
