@@ -13,6 +13,7 @@ import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.plugin.api.editor.Advanced3DFileEditorWithSplitRightTool;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.TreeGeneratorEditorPlugin;
+import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.Icons;
 import com.ss.editor.ui.component.asset.tree.context.menu.action.DeleteFileAction;
@@ -256,6 +257,12 @@ public class TreeGeneratorFileEditor extends
     @Override
     @FXThread
     public void notifyFXChangeProperty(@NotNull final Object object, @NotNull final String propertyName) {
+
+        if (object instanceof MaterialParameters) {
+            getParametersTree().refreshChildren(object);
+        }
+
+        getPropertyEditor().syncFor(object);
         getEditor3DState().generate();
     }
 

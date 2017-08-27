@@ -4,6 +4,7 @@ import static com.ss.editor.extension.property.EditablePropertyType.*;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.MaterialKey;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
@@ -24,8 +25,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
  * The implementation of {@link PropertyBuilder} to build property controls for {@link com.simsilica.arboreal.Parameters} objects.
@@ -33,6 +35,33 @@ import java.util.function.Supplier;
  * @author JavaSaBr
  */
 public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<ChangeConsumer> {
+
+    @NotNull
+    private static final BiConsumer<MaterialParameters, MaterialKey> MATERIAL_APPLY_HANDLER = (parameters, materialKey) -> {
+
+        final AssetManager assetManager = EDITOR.getAssetManager();
+        final Consumer<@NotNull Material> changeHandler = parameters.getChangeHandler();
+
+        if (materialKey == null) {
+
+            final Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+            material.setColor("Color", ColorRGBA.Gray);
+
+            changeHandler.accept(material);
+            parameters.setMaterial(material);
+
+        } else {
+            final Material material = assetManager.loadAsset(materialKey);
+            changeHandler.accept(material);
+            parameters.setMaterial(material);
+        }
+    };
+
+    @NotNull
+    private static final Function<MaterialParameters, MaterialKey> MATERIAL_SYNC_HANDLER = parameters -> {
+        final Material material = parameters.getSyncHandler().get();
+        return (MaterialKey) material.getKey();
+    };
 
     @NotNull
     private static final ParametersPropertyBuilder INSTANCE = new ParametersPropertyBuilder();
@@ -189,18 +218,9 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
             final Material material = parameters.getMaterial();
 
             final MaterialKeyPropertyControl<ChangeConsumer, MaterialParameters> materialControl =
-                    new MaterialKeyPropertyControl<>((MaterialKey) material.getKey(), "Material", changeConsumer);
-            materialControl.setApplyHandler((materialParameters, materialKey) -> {
-                final AssetManager assetManager = EDITOR.getAssetManager();
-                final Consumer<Material> changeHandler = parameters.getChangeHandler();
-                changeHandler.accept(assetManager.loadAsset(materialKey));
-            });
-            materialControl.setSyncHandler(params -> {
-                final Supplier<Material> syncHandler = params.getSyncHandler();
-                final Material currentMaterial = syncHandler.get();
-                return (MaterialKey) currentMaterial.getKey();
-            });
-
+                    new MaterialKeyPropertyControl<>((MaterialKey) material.getKey(), Messages.MODEL_PROPERTY_MATERIAL, changeConsumer);
+            materialControl.setApplyHandler(MATERIAL_APPLY_HANDLER);
+            materialControl.setSyncHandler(MATERIAL_SYNC_HANDLER);
             materialControl.setEditObject(parameters);
 
             FXUtils.addToPane(materialControl, container);

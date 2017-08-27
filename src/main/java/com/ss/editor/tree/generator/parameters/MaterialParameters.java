@@ -26,17 +26,18 @@ public class MaterialParameters extends Parameters {
     @NotNull
     private final Supplier<@NotNull Material> syncHandler;
 
-    /**
-     * The material.
-     */
-    @NotNull
-    private final Material material;
 
     /**
      * The material name.
      */
     @NotNull
     private final String name;
+
+    /**
+     * The material.
+     */
+    @NotNull
+    private Material material;
 
     public MaterialParameters(@NotNull final Consumer<@NotNull Material> changeHandler,
                               @NotNull final Supplier<@NotNull Material> syncHandler,
@@ -52,6 +53,13 @@ public class MaterialParameters extends Parameters {
      */
     public @NotNull Material getMaterial() {
         return material;
+    }
+
+    /**
+     * @param material the material.
+     */
+    public void setMaterial(@NotNull final Material material) {
+        this.material = material;
     }
 
     /**
