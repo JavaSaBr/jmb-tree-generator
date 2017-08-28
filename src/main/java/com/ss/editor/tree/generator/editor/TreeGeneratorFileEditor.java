@@ -15,6 +15,7 @@ import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.TreeGeneratorEditorPlugin;
 import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
+import com.ss.editor.tree.generator.property.ParametersPropertyEditor;
 import com.ss.editor.ui.Icons;
 import com.ss.editor.ui.component.asset.tree.context.menu.action.DeleteFileAction;
 import com.ss.editor.ui.component.asset.tree.context.menu.action.NewFileAction;
@@ -120,7 +121,7 @@ public class TreeGeneratorFileEditor extends
 
         selectionHandler = this::selectFromTree;
         parametersTree = new NodeTree<>(selectionHandler, this);
-        propertyEditor = new PropertyEditor<>(this);
+        propertyEditor = new ParametersPropertyEditor(this);
         propertyEditor.prefHeightProperty().bind(root.heightProperty());
 
         container.addComponent(buildSplitComponent(parametersTree, propertyEditor, root), PluginMessages.TREE_GENERATOR_EDITOR_TREE_TOOL);

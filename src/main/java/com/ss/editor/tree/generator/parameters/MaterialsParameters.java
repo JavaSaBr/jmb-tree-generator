@@ -1,6 +1,7 @@
 package com.ss.editor.tree.generator.parameters;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.asset.AssetNotFoundException;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
@@ -175,20 +176,57 @@ public class MaterialsParameters extends Parameters {
     @Override
     public void write(@NotNull final JmeExporter ex) throws IOException {
         super.write(ex);
+
         final OutputCapsule out = ex.getCapsule(this);
         out.write(treeMaterial, "treeMaterial", null);
         out.write(flatMaterial, "flatMaterial", null);
         out.write(impostorMaterial, "impostorMaterial", null);
         out.write(leafMaterial, "leafMaterial", null);
+        out.write(treeMaterial.getAssetName(), "treeMaterialName", null);
+        out.write(flatMaterial.getAssetName(), "flatMaterialName", null);
+        out.write(impostorMaterial.getAssetName(), "impostorMaterialName", null);
+        out.write(leafMaterial.getAssetName(), "leafMaterialName", null);
     }
 
     @Override
     public void read(@NotNull final JmeImporter im) throws IOException {
         super.read(im);
+
+        final AssetManager assetManager = im.getAssetManager();
         final InputCapsule in = im.getCapsule(this);
+
         treeMaterial = (Material) in.readSavable("treeMaterial", null);
         flatMaterial = (Material) in.readSavable("flatMaterial", null);
         impostorMaterial = (Material) in.readSavable("impostorMaterial", null);
         leafMaterial = (Material) in.readSavable("leafMaterial", null);
+
+        String matName = in.readString("treeMaterialName", null);
+        if (matName != null) {
+            try {
+                treeMaterial = assetManager.loadMaterial(matName);
+            } catch (final AssetNotFoundException ex) {
+            }
+        }
+        matName = in.readString("flatMaterialName", null);
+        if (matName != null) {
+            try {
+                flatMaterial = assetManager.loadMaterial(matName);
+            } catch (final AssetNotFoundException ex) {
+            }
+        }
+        matName = in.readString("impostorMaterialName", null);
+        if (matName != null) {
+            try {
+                impostorMaterial = assetManager.loadMaterial(matName);
+            } catch (final AssetNotFoundException ex) {
+            }
+        }
+        matName = in.readString("leafMaterialName", null);
+        if (matName != null) {
+            try {
+                leafMaterial = assetManager.loadMaterial(matName);
+            } catch (final AssetNotFoundException ex) {
+            }
+        }
     }
 }
