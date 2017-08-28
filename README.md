@@ -6,6 +6,9 @@ This plugin is embedded in the Editor since 1.1.0 version.
 
 #### It requires jME SpaceShift Editor 1.1.0 or higher.
 
+##### if you want to use generated trees in your project, you need to include the library
+https://github.com/JavaSaBr/SimArboreal
+
 This plugin is in plugins list of the editor:
 
 ![Installed plugin](http://i.imgur.com/nTWXgs2.png)
