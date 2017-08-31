@@ -179,15 +179,13 @@ public class TreeGeneratorFileEditor extends
 
     @Override
     @BackgroundThread
-    protected void doSave(@NotNull final Path toStore) {
+    protected void doSave(@NotNull final Path toStore) throws IOException {
         super.doSave(toStore);
 
         final BinaryExporter exporter = BinaryExporter.getInstance();
 
         try (final OutputStream out = Files.newOutputStream(toStore)) {
             exporter.save(parameters, out);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

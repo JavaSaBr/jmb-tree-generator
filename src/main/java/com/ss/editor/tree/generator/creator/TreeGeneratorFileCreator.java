@@ -48,15 +48,13 @@ public class TreeGeneratorFileCreator extends GenericFileCreator {
 
     @Override
     @BackgroundThread
-    protected void writeData(@NotNull final VarTable vars, @NotNull final Path resultFile) {
+    protected void writeData(@NotNull final VarTable vars, @NotNull final Path resultFile) throws IOException {
         super.writeData(vars, resultFile);
 
         final BinaryExporter exporter = BinaryExporter.getInstance();
 
         try (final OutputStream out = Files.newOutputStream(resultFile)) {
             exporter.save(new ProjectParameters(EDITOR.getAssetManager()), out);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
         }
     }
 }
