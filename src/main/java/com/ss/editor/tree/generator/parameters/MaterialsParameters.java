@@ -10,9 +10,9 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Texture;
-import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.clone.Cloner;
 import com.simsilica.arboreal.Parameters;
+import com.ss.editor.Editor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -51,22 +51,25 @@ public class MaterialsParameters extends Parameters {
     public MaterialsParameters() {
     }
 
-    public MaterialsParameters(@NotNull final AssetManager assetManager) {
+    public void loadDefault() {
+
+        final Editor editor = Editor.getInstance();
+        final AssetManager assetManager = editor.getAssetManager();
 
         final Texture bark = assetManager.loadTexture("Textures/bark128.jpg");
-        bark.setWrap(WrapMode.Repeat);
+        bark.setWrap(Texture.WrapMode.Repeat);
 
         final Texture barkNormals = assetManager.loadTexture("Textures/bark128-norm.jpg");
-        barkNormals.setWrap(WrapMode.Repeat);
+        barkNormals.setWrap(Texture.WrapMode.Repeat);
 
         final Texture barkBumps = assetManager.loadTexture("Textures/bark128-bump.png");
-        barkBumps.setWrap(WrapMode.Repeat);
+        barkBumps.setWrap(Texture.WrapMode.Repeat);
 
         final Texture leafAtlas = assetManager.loadTexture("Textures/leaf-atlas.png");
-        leafAtlas.setWrap(WrapMode.Repeat);
+        leafAtlas.setWrap(Texture.WrapMode.Repeat);
 
         final Texture noise = assetManager.loadTexture("Textures/noise-x3-512.png");
-        noise.setWrap(WrapMode.Repeat);
+        noise.setWrap(Texture.WrapMode.Repeat);
 
         treeMaterial = new Material(assetManager, "MatDefs/TreeLighting.j3md");
         treeMaterial.setColor("Diffuse", ColorRGBA.White);
@@ -105,6 +108,69 @@ public class MaterialsParameters extends Parameters {
         leafMaterial.setBoolean("UseWind", false);
         leafMaterial.setTexture("WindNoise", noise);
         leafMaterial.setFloat("AlphaDiscardThreshold", 0.5f);
+        leafMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+    }
+
+    public void loadPBR() {
+
+        final Editor editor = Editor.getInstance();
+        final AssetManager assetManager = editor.getAssetManager();
+
+        final Texture bark = assetManager.loadTexture("Textures/pbr/bark_diffuse.png");
+        bark.setWrap(Texture.WrapMode.Repeat);
+
+        final Texture barkNormals = assetManager.loadTexture("Textures/pbr/bark_normal.png");
+        barkNormals.setWrap(Texture.WrapMode.Repeat);
+
+        final Texture barkRoughness = assetManager.loadTexture("Textures/pbr/bark_rough.png");
+        barkRoughness.setWrap(Texture.WrapMode.Repeat);
+
+        final Texture leafDiffuse = assetManager.loadTexture("Textures/pbr/crone_diffuse.png");
+        leafDiffuse.setWrap(Texture.WrapMode.Repeat);
+
+        final Texture leafNormal = assetManager.loadTexture("Textures/pbr/crone_normal.png");
+        leafNormal.setWrap(Texture.WrapMode.Repeat);
+
+        final Texture leafRoughness = assetManager.loadTexture("Textures/pbr/crone_rough.png");
+        leafRoughness.setWrap(Texture.WrapMode.Repeat);
+
+        final Texture noise = assetManager.loadTexture("Textures/noise-x3-512.png");
+        noise.setWrap(Texture.WrapMode.Repeat);
+
+        treeMaterial = new Material(assetManager, "MatDefs/TreePBRLighting.j3md");
+        treeMaterial.setFloat("Metallic", 0.1F);
+        treeMaterial.setBoolean("UseWind", false);
+        treeMaterial.setTexture("WindNoise", noise);
+        treeMaterial.setTexture("BaseColorMap", bark);
+        treeMaterial.setTexture("RoughnessMap", barkRoughness);
+        treeMaterial.setTexture("NormalMap", barkNormals);
+
+        flatMaterial = new Material(assetManager, "MatDefs/AxisBillboardPBRLighting.j3md");
+        flatMaterial.setFloat("Metallic", 0.1F);
+        flatMaterial.setTexture("BaseColorMap", bark);
+        flatMaterial.setTexture("RoughnessMap", barkRoughness);
+        flatMaterial.setBoolean("UseWind", false);
+        flatMaterial.setTexture("WindNoise", noise);
+        flatMaterial.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Off);
+
+        impostorMaterial = new Material(assetManager, "MatDefs/IndexedBillboardLighting.j3md");
+        impostorMaterial.setColor("Diffuse", ColorRGBA.White);
+        impostorMaterial.setColor("Ambient", ColorRGBA.White);
+        impostorMaterial.setBoolean("UseMaterialColors", true);
+        impostorMaterial.setFloat("AlphaDiscardThreshold", 0.5f);
+        impostorMaterial.setBoolean("UseWind", false);
+        impostorMaterial.setTexture("WindNoise", noise);
+        impostorMaterial.getAdditionalRenderState().setFaceCullMode(RenderState.FaceCullMode.Off);
+        impostorMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+
+        leafMaterial = new Material(assetManager, "MatDefs/LeafPBRLighting.j3md");
+        leafMaterial.setFloat("Metallic", 0.1F);
+        leafMaterial.setTexture("BaseColorMap", leafDiffuse);
+        leafMaterial.setTexture("NormalMap", leafNormal);
+        leafMaterial.setTexture("RoughnessMap", leafRoughness);
+        leafMaterial.setBoolean("UseWind", false);
+        leafMaterial.setTexture("WindNoise", noise);
+        leafMaterial.setFloat("AlphaDiscardThreshold", 0.7f);
         leafMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
     }
 

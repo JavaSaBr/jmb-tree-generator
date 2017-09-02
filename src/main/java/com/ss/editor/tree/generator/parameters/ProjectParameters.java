@@ -42,8 +42,6 @@ public class ProjectParameters extends Parameters {
     }
 
     public ProjectParameters(@NotNull final AssetManager assetManager) {
-        this.materialParameters = new MaterialsParameters(assetManager);
-        this.materialParameters.setParent(this);
         this.treeParameters = new TreeParameters();
         this.treeParameters.setParent(this);
         this.treeParameters.setGenerateLeaves(true);
@@ -59,6 +57,16 @@ public class ProjectParameters extends Parameters {
         for (final LevelOfDetailParameters detailParameters : treeParameters.getLods()) {
             detailParameters.setParent(treeParameters);
         }
+    }
+
+    /**
+     * Set material parameters.
+     *
+     * @param materialParameters the material parameters.
+     */
+    public void setMaterialParameters(@NotNull final MaterialsParameters materialParameters) {
+        this.materialParameters = materialParameters;
+        this.materialParameters.setParent(this);
     }
 
     /**

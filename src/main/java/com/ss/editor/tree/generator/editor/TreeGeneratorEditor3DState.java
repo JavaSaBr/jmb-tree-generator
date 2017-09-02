@@ -1,8 +1,13 @@
 package com.ss.editor.tree.generator.editor;
 
 import static com.ss.rlib.util.ObjectUtils.notNull;
+import com.jme3.app.Application;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.bounding.BoundingBox;
+import com.jme3.light.DirectionalLight;
+import com.jme3.material.MatParam;
 import com.jme3.material.Material;
+import com.jme3.material.MaterialDef;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
@@ -60,6 +65,11 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     @Nullable
     private ProjectParameters parameters;
 
+    /**
+     * The flag of activity light of the camera.
+     */
+    private boolean lightEnabled;
+
     public TreeGeneratorEditor3DState(@NotNull final TreeGeneratorFileEditor fileEditor) {
         super(fileEditor);
 
@@ -69,6 +79,13 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
 
         this.treeNode = new Node("Tree");
         this.treeNode.addControl(new LodSwitchControl());
+
+        setLightEnabled(true);
+    }
+
+    @Override
+    public void initialize(@NotNull final AppStateManager stateManager, @NotNull final Application application) {
+        super.initialize(stateManager, application);
 
         final Node modelNode = getModelNode();
         modelNode.attachChild(treeNode);
@@ -225,25 +242,47 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         final Material flatMaterial = materialParameters.getFlatMaterial();
 
         if (treeMaterial.getKey() == null) {
-            treeMaterial.setFloat("FlexHeight", treeParameters.getFlexHeight());
-            treeMaterial.setFloat("TrunkFlexibility", treeParameters.getTrunkFlexibility());
-            treeMaterial.setFloat("BranchFlexibility", treeParameters.getBranchFlexibility());
+            applyWindParameters(treeParameters, treeMaterial);
         }
 
         if (leafMaterial.getKey() == null) {
-            leafMaterial.setFloat("FlexHeight", treeParameters.getFlexHeight());
-            leafMaterial.setFloat("TrunkFlexibility", treeParameters.getTrunkFlexibility());
-            leafMaterial.setFloat("BranchFlexibility", treeParameters.getBranchFlexibility());
+            applyWindParameters(treeParameters, leafMaterial);
         }
 
         if (flatMaterial.getKey() == null) {
-            flatMaterial.setFloat("FlexHeight", treeParameters.getFlexHeight());
-            flatMaterial.setFloat("TrunkFlexibility", treeParameters.getTrunkFlexibility());
-            flatMaterial.setFloat("BranchFlexibility", treeParameters.getBranchFlexibility());
+            applyWindParameters(treeParameters, flatMaterial);
         }
 
         if (impostorMaterial.getKey() == null) {
-            impostorMaterial.setFloat("TrunkFlexibility", treeParameters.getTrunkFlexibility());
+            applyWindParameters(treeParameters, impostorMaterial);
+        }
+    }
+
+    private void applyWindParameters(final TreeParameters treeParameters, final Material material) {
+
+        MaterialDef def = material.getMaterialDef();
+        MatParam param = def.getMaterialParam("FlexHeight");
+
+        if (param != null) {
+            material.setFloat(param.getName(), treeParameters.getFlexHeight());
+        }
+
+        param = def.getMaterialParam("TrunkFlexibility");
+
+        if (param != null) {
+            material.setFloat(param.getName(), treeParameters.getTrunkFlexibility());
+        }
+
+        param = def.getMaterialParam("BranchFlexibility");
+
+        if (param != null) {
+            material.setFloat(param.getName(), treeParameters.getBranchFlexibility());
+        }
+
+        param = def.getMaterialParam("UseWind");
+
+        if (param != null) {
+            material.setBoolean(param.getName(), treeParameters.isUseWind());
         }
     }
 
@@ -412,11 +451,76 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     }
 
     private @NotNull Material makeWareMateial(@NotNull final Material material) {
-        material.clearParam("DiffuseMap");
-        material.setColor("Diffuse", ColorRGBA.Yellow.mult(10));
-        material.setColor("Ambient", ColorRGBA.Yellow.mult(10));
+
+        final MaterialDef def = material.getMaterialDef();
+
+        MatParam param = def.getMaterialParam("DiffuseMap");
+
+        if (param != null) {
+            material.clearParam(param.getName());
+        }
+
+        param = def.getMaterialParam("BaseColorMap");
+
+        if (param != null) {
+            material.clearParam(param.getName());
+        }
+
+        param = def.getMaterialParam("Diffuse");
+
+        if (param != null) {
+            material.setColor(param.getName(), ColorRGBA.Yellow.mult(10));
+        }
+
+        param = def.getMaterialParam("BaseColor");
+
+        if (param != null) {
+            material.setColor(param.getName(), ColorRGBA.Yellow.mult(10));
+        }
+
         material.getAdditionalRenderState().setWireframe(true);
         return material;
+    }
+
+    /**
+     * Update light.
+     *
+     * @param enabled the enabled
+     */
+    public void updateLightEnabled(final boolean enabled) {
+        EXECUTOR_MANAGER.addJMETask(() -> updateLightEnabledImpl(enabled));
+    }
+
+    /**
+     * @return true if the light of the camera is enabled.
+     */
+    private boolean isLightEnabled() {
+        return lightEnabled;
+    }
+
+    /**
+     * @param lightEnabled the flag of activity light of the camera.
+     */
+    private void setLightEnabled(final boolean lightEnabled) {
+        this.lightEnabled = lightEnabled;
+    }
+
+    /**
+     * The process of updating the light.
+     */
+    private void updateLightEnabledImpl(boolean enabled) {
+        if (enabled == isLightEnabled()) return;
+
+        final DirectionalLight light = getLightForCamera();
+        final Node stateNode = getStateNode();
+
+        if (enabled) {
+            stateNode.addLight(light);
+        } else {
+            stateNode.removeLight(light);
+        }
+
+        setLightEnabled(enabled);
     }
 
     /**

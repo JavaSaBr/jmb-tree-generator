@@ -55,14 +55,14 @@ configurations {
 
 dependencies {
     compile 'com.github.JavaSaBr:jME3-SpaceShift-Editor:develop-SNAPSHOT'
-    compile 'com.github.JavaSaBr:SimArboreal:1.1.0'
-    compile 'com.github.JavaSaBr:SimArboreal:1.1.0:assets'
+    compile 'com.github.JavaSaBr:SimArboreal:1.2.0'
+    compile 'com.github.JavaSaBr:SimArboreal:1.2.0:assets'
 
-    pluginDependences ('com.github.JavaSaBr:SimArboreal:1.1.0') {
+    pluginDependences ('com.github.JavaSaBr:SimArboreal:1.2.0') {
         exclude group: 'org.jmonkeyengine'
         exclude group: 'org.jetbrains'
     }
-    pluginDependences ('com.github.JavaSaBr:SimArboreal:1.1.0:assets') {
+    pluginDependences ('com.github.JavaSaBr:SimArboreal:1.2.0:assets') {
         exclude group: 'org.jmonkeyengine'
         exclude group: 'org.jetbrains'
     }
