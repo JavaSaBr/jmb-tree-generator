@@ -169,6 +169,9 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
             result.add(new SimpleProperty<>(BOOLEAN, PluginMessages.TREE_GENERATOR_PROPERTY_GENERATE_LEAVES, parameters,
                     TreeParameters::getGenerateLeaves,
                     TreeParameters::setGenerateLeaves));
+            result.add(new SimpleProperty<>(BOOLEAN, PluginMessages.TREE_GENERATOR_PROPERTY_ENABLE_WIND, parameters,
+                    TreeParameters::isUseWind,
+                    TreeParameters::setUseWind));
             result.add(new SimpleProperty<>(FLOAT, PluginMessages.TREE_GENERATOR_PROPERTY_LEAF_SCALE, 0.01F, 0.01F, Integer.MAX_VALUE, parameters,
                     TreeParameters::getLeafScale,
                     TreeParameters::setLeafScale));

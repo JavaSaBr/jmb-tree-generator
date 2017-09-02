@@ -6,6 +6,7 @@ import com.jme3.export.binary.BinaryImporter;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.ss.editor.FileExtensions;
+import com.ss.editor.Messages;
 import com.ss.editor.annotation.BackgroundThread;
 import com.ss.editor.annotation.FXThread;
 import com.ss.editor.annotation.FromAnyThread;
@@ -32,6 +33,7 @@ import com.ss.editor.ui.util.UIUtils;
 import com.ss.editor.util.EditorUtil;
 import com.ss.rlib.ui.util.FXUtils;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -73,6 +75,12 @@ public class TreeGeneratorFileEditor extends
         DESCRIPTION.setEditorId(TreeGeneratorFileEditor.class.getSimpleName());
         DESCRIPTION.addExtension(TreeGeneratorEditorPlugin.PROJECT_EXTENSION);
     }
+
+    /**
+     * The light toggle.
+     */
+    @Nullable
+    private ToggleButton lightButton;
 
     /**
      * The parameters tree.
@@ -205,11 +213,19 @@ public class TreeGeneratorFileEditor extends
         exportAction.setOnAction(event -> export());
         exportAction.setGraphic(new ImageView(Icons.EXPORT_16));
 
+        lightButton = new ToggleButton();
+        lightButton.setTooltip(new Tooltip(Messages.SCENE_FILE_EDITOR_ACTION_CAMERA_LIGHT));
+        lightButton.setGraphic(new ImageView(Icons.LIGHT_16));
+        lightButton.setSelected(true);
+        lightButton.selectedProperty()
+                .addListener((observable, oldValue, newValue) -> changeLight(newValue));
+
         FXUtils.addClassesTo(exportAction, CSSClasses.FLAT_BUTTON, CSSClasses.FILE_EDITOR_TOOLBAR_BUTTON);
-        DynamicIconSupport.addSupport(exportAction);
+        FXUtils.addClassesTo(lightButton, CSSClasses.FILE_EDITOR_TOOLBAR_BUTTON);
+        DynamicIconSupport.addSupport(exportAction, lightButton);
 
         FXUtils.addToPane(createSaveAction(), container);
-        FXUtils.addToPane(exportAction, container);
+        FXUtils.addToPane(exportAction, lightButton, container);
     }
 
     /**
@@ -238,6 +254,18 @@ public class TreeGeneratorFileEditor extends
     }
 
     /**
+     * Handle changing camera light visibility.
+     */
+    private void changeLight(@NotNull final Boolean newValue) {
+        if (isIgnoreListeners()) return;
+
+        final TreeGeneratorEditor3DState editor3DState = getEditor3DState();
+        editor3DState.updateLightEnabled(newValue);
+
+        if (editorState != null) editorState.setEnableLight(newValue);
+    }
+
+    /**
      * @return the parameters tree.
      */
     @FXThread
@@ -251,6 +279,24 @@ public class TreeGeneratorFileEditor extends
     @FromAnyThread
     private @NotNull ProjectParameters getParameters() {
         return notNull(parameters);
+    }
+
+    /**
+     * @return the light toggle.
+     */
+    private @NotNull ToggleButton getLightButton() {
+        return notNull(lightButton);
+    }
+
+    @Override
+    @FXThread
+    protected void loadState() {
+        super.loadState();
+
+        final TreeGeneratorEditorState editorState = getEditorState();
+        if (editorState != null) {
+            getLightButton().setSelected(editorState.isEnableLight());
+        }
     }
 
     @Override

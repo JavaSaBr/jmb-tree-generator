@@ -59,6 +59,7 @@ public class PluginMessages {
     public static final String TREE_GENERATOR_PROPERTY_RADIAL_SEGMENTS;
     public static final String TREE_GENERATOR_PROPERTY_SIDE_JOINT_COUNT;
     public static final String TREE_GENERATOR_PROPERTY_GENERATE_LEAVES;
+    public static final String TREE_GENERATOR_PROPERTY_ENABLE_WIND;
     public static final String TREE_GENERATOR_PROPERTY_LEAF_SCALE;
     public static final String TREE_GENERATOR_PROPERTY_BASE_SCALE;
     public static final String TREE_GENERATOR_PROPERTY_TEXTURE_V_SCALE;
@@ -115,6 +116,7 @@ public class PluginMessages {
         TREE_GENERATOR_PROPERTY_RADIAL_SEGMENTS = RESOURCE_BUNDLE.getString("TreeGeneratorPropertyRadialSegments");
         TREE_GENERATOR_PROPERTY_SIDE_JOINT_COUNT = RESOURCE_BUNDLE.getString("TreeGeneratorPropertySideJointCount");
         TREE_GENERATOR_PROPERTY_GENERATE_LEAVES = RESOURCE_BUNDLE.getString("TreeGeneratorPropertyGenerateLeaves");
+        TREE_GENERATOR_PROPERTY_ENABLE_WIND = RESOURCE_BUNDLE.getString("TreeGeneratorPropertyEnableWind");
         TREE_GENERATOR_PROPERTY_LEAF_SCALE = RESOURCE_BUNDLE.getString("TreeGeneratorPropertyLeafScale");
         TREE_GENERATOR_PROPERTY_BASE_SCALE = RESOURCE_BUNDLE.getString("TreeGeneratorPropertyBaseScale");
         TREE_GENERATOR_PROPERTY_TEXTURE_V_SCALE = RESOURCE_BUNDLE.getString("TreeGeneratorPropertyTextureVScale");
