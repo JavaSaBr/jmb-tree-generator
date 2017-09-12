@@ -169,7 +169,7 @@ public class TreeGeneratorFileEditor extends
 
     @Override
     @FXThread
-    protected void doOpenFile(@NotNull final Path file) {
+    protected void doOpenFile(@NotNull final Path file) throws IOException {
         super.doOpenFile(file);
 
         final BinaryImporter importer = BinaryImporter.getInstance();

@@ -1,10 +1,10 @@
 
-## SimArboreal Tree Generator 1.0.0
+## SimArboreal Tree Generator 1.0.1
 
 It's a plugin for jME SpaceShift Editor with an Editor to generate Tree models.
-This plugin is embedded in the Editor since 1.1.0 version.
+This plugin is embedded in the Editor since 1.2.0 version.
 
-#### It requires jME SpaceShift Editor 1.1.0 or higher.
+#### It requires jME SpaceShift Editor 1.2.0 or higher.
 
 ##### if you want to use generated trees in your project, you need to include the library
 https://github.com/JavaSaBr/SimArboreal
