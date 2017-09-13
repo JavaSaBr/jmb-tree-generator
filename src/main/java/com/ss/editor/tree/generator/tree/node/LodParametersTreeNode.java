@@ -2,6 +2,7 @@ package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.annotation.FXThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.tree.action.DeleteLodAction;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -27,6 +28,7 @@ public class LodParametersTreeNode extends ParametersTreeNode<LevelOfDetailParam
     }
 
     @Override
+    @FXThread
     public void fillContextMenu(@NotNull final NodeTree<?> nodeTree, @NotNull final ObservableList<MenuItem> items) {
         super.fillContextMenu(nodeTree, items);
 
@@ -40,11 +42,13 @@ public class LodParametersTreeNode extends ParametersTreeNode<LevelOfDetailParam
     }
 
     @Override
+    @FXThread
     public void setName(@NotNull final String name) {
         this.name = name;
     }
 
     @Override
+    @FXThread
     public @NotNull String getName() {
         return name;
     }

@@ -2,6 +2,7 @@ package com.ss.editor.tree.generator.parameters;
 
 import com.jme3.material.Material;
 import com.simsilica.arboreal.Parameters;
+import com.ss.editor.annotation.JMEThread;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -51,6 +52,7 @@ public class MaterialParameters extends Parameters {
     /**
      * @return the material.
      */
+    @JMEThread
     public @NotNull Material getMaterial() {
         return material;
     }
@@ -58,6 +60,7 @@ public class MaterialParameters extends Parameters {
     /**
      * @param material the material.
      */
+    @JMEThread
     public void setMaterial(@NotNull final Material material) {
         this.material = material;
     }
@@ -65,6 +68,7 @@ public class MaterialParameters extends Parameters {
     /**
      * @return the material name.
      */
+    @JMEThread
     public @NotNull String getName() {
         return name;
     }
@@ -72,6 +76,7 @@ public class MaterialParameters extends Parameters {
     /**
      * @return the material change handler.
      */
+    @JMEThread
     public @NotNull Consumer<@NotNull Material> getChangeHandler() {
         return changeHandler;
     }
@@ -79,6 +84,7 @@ public class MaterialParameters extends Parameters {
     /**
      * @return the material sync handler.
      */
+    @JMEThread
     public @NotNull Supplier<@NotNull Material> getSyncHandler() {
         return syncHandler;
     }

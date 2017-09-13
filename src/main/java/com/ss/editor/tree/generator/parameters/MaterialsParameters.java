@@ -13,6 +13,7 @@ import com.jme3.texture.Texture;
 import com.jme3.util.clone.Cloner;
 import com.simsilica.arboreal.Parameters;
 import com.ss.editor.Editor;
+import com.ss.editor.annotation.JMEThread;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class MaterialsParameters extends Parameters {
     public MaterialsParameters() {
     }
 
+    @JMEThread
     public void loadDefault() {
 
         final Editor editor = Editor.getInstance();
@@ -111,6 +113,7 @@ public class MaterialsParameters extends Parameters {
         leafMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
     }
 
+    @JMEThread
     public void loadPBR() {
 
         final Editor editor = Editor.getInstance();
@@ -177,6 +180,7 @@ public class MaterialsParameters extends Parameters {
     /**
      * @return the tree material.
      */
+    @JMEThread
     public @NotNull Material getTreeMaterial() {
         return treeMaterial;
     }
@@ -184,6 +188,7 @@ public class MaterialsParameters extends Parameters {
     /**
      * @param treeMaterial the tree material.
      */
+    @JMEThread
     public void setTreeMaterial(@NotNull final Material treeMaterial) {
         this.treeMaterial = treeMaterial;
     }
@@ -191,6 +196,7 @@ public class MaterialsParameters extends Parameters {
     /**
      * @return the flat material.
      */
+    @JMEThread
     public @NotNull Material getFlatMaterial() {
         return flatMaterial;
     }
@@ -198,6 +204,7 @@ public class MaterialsParameters extends Parameters {
     /**
      * @param flatMaterial the flat material.
      */
+    @JMEThread
     public void setFlatMaterial(@NotNull final Material flatMaterial) {
         this.flatMaterial = flatMaterial;
     }
@@ -205,6 +212,7 @@ public class MaterialsParameters extends Parameters {
     /**
      * @return the impostor material.
      */
+    @JMEThread
     public @NotNull Material getImpostorMaterial() {
         return impostorMaterial;
     }
@@ -212,6 +220,7 @@ public class MaterialsParameters extends Parameters {
     /**
      * @param impostorMaterial the impostor material.
      */
+    @JMEThread
     public void setImpostorMaterial(@NotNull final Material impostorMaterial) {
         this.impostorMaterial = impostorMaterial;
     }
@@ -219,6 +228,7 @@ public class MaterialsParameters extends Parameters {
     /**
      * @return the leaf material.
      */
+    @JMEThread
     public @NotNull Material getLeafMaterial() {
         return leafMaterial;
     }
@@ -226,11 +236,13 @@ public class MaterialsParameters extends Parameters {
     /**
      * @param leafMaterial the leaf material.
      */
+    @JMEThread
     public void setLeafMaterial(@NotNull final Material leafMaterial) {
         this.leafMaterial = leafMaterial;
     }
 
     @Override
+    @JMEThread
     public void cloneFields(@NotNull final Cloner cloner, @NotNull final Object original) {
         super.cloneFields(cloner, original);
         treeMaterial = cloner.clone(treeMaterial);
@@ -240,6 +252,7 @@ public class MaterialsParameters extends Parameters {
     }
 
     @Override
+    @JMEThread
     public void write(@NotNull final JmeExporter ex) throws IOException {
         super.write(ex);
 
@@ -255,6 +268,7 @@ public class MaterialsParameters extends Parameters {
     }
 
     @Override
+    @JMEThread
     public void read(@NotNull final JmeImporter im) throws IOException {
         super.read(im);
 

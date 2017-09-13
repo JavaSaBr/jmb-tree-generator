@@ -163,6 +163,7 @@ public class TreeGeneratorFileEditor extends
     /**
      * @return the property editor.
      */
+    @FXThread
     private @NotNull PropertyEditor<ChangeConsumer> getPropertyEditor() {
         return notNull(propertyEditor);
     }
@@ -256,6 +257,7 @@ public class TreeGeneratorFileEditor extends
     /**
      * Handle changing camera light visibility.
      */
+    @FXThread
     private void changeLight(@NotNull final Boolean newValue) {
         if (isIgnoreListeners()) return;
 
@@ -276,7 +278,7 @@ public class TreeGeneratorFileEditor extends
     /**
      * @return the project parameters.
      */
-    @FromAnyThread
+    @FXThread
     private @NotNull ProjectParameters getParameters() {
         return notNull(parameters);
     }
@@ -284,6 +286,7 @@ public class TreeGeneratorFileEditor extends
     /**
      * @return the light toggle.
      */
+    @FXThread
     private @NotNull ToggleButton getLightButton() {
         return notNull(lightButton);
     }

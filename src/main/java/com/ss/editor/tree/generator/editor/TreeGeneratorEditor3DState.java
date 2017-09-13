@@ -84,6 +84,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     }
 
     @Override
+    @JMEThread
     public void initialize(@NotNull final AppStateManager stateManager, @NotNull final Application application) {
         super.initialize(stateManager, application);
 
@@ -92,21 +93,25 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     }
 
     @Override
+    @JMEThread
     protected boolean needMovableCamera() {
         return false;
     }
 
     @Override
+    @JMEThread
     protected boolean needEditorCamera() {
         return true;
     }
 
     @Override
+    @JMEThread
     protected boolean needLightForCamera() {
         return true;
     }
 
     @Override
+    @JMEThread
     protected boolean needUpdateCameraLight() {
         return true;
     }
@@ -258,7 +263,8 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         }
     }
 
-    private void applyWindParameters(final TreeParameters treeParameters, final Material material) {
+    @JMEThread
+    private void applyWindParameters(@NotNull final TreeParameters treeParameters, @NotNull final Material material) {
 
         MaterialDef def = material.getMaterialDef();
         MatParam param = def.getMaterialParam("FlexHeight");
@@ -286,6 +292,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         }
     }
 
+    @JMEThread
     private void generateLeafs(@NotNull final TreeParameters treeParameters, @NotNull final Material leafMaterial,
                                @NotNull final AtomicReference<BoundingBox> leafBoundsRef,
                                @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
@@ -302,6 +309,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         level.leafGeom.setLocalTranslation(0, treeParameters.getRootHeight(), 0);
     }
 
+    @JMEThread
     private void generateImposter(@NotNull final TreeParameters treeParameters,
                                   @NotNull final Material impostorMaterial,
                                   @NotNull final Material impostorWireMaterial, @NotNull final Tree tree,
@@ -391,6 +399,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         level.wireGeom.setLocalTranslation(0, 0, 0);
     }
 
+    @JMEThread
     private void generateFlatPoly(@NotNull final TreeParameters treeParameters, @NotNull final Material flatMaterial,
                                   @NotNull final Material flatWireMaterial, @NotNull final Tree tree,
                                   @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
@@ -420,6 +429,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         generateLeaves.set(true);
     }
 
+    @JMEThread
     private void generateNormal(@NotNull final TreeParameters treeParameters, @NotNull final Material treeMaterial,
                                 @NotNull final Tree tree, @NotNull final AtomicReference<BoundingBox> trunkBoundsRef,
                                 @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
@@ -450,6 +460,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         generateLeaves.set(true);
     }
 
+    @JMEThread
     private @NotNull Material makeWareMateial(@NotNull final Material material) {
 
         final MaterialDef def = material.getMaterialDef();
@@ -487,6 +498,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      *
      * @param enabled the enabled
      */
+    @FromAnyThread
     public void updateLightEnabled(final boolean enabled) {
         EXECUTOR_MANAGER.addJMETask(() -> updateLightEnabledImpl(enabled));
     }
@@ -494,6 +506,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     /**
      * @return true if the light of the camera is enabled.
      */
+    @JMEThread
     private boolean isLightEnabled() {
         return lightEnabled;
     }
@@ -501,6 +514,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     /**
      * @param lightEnabled the flag of activity light of the camera.
      */
+    @FromAnyThread
     private void setLightEnabled(final boolean lightEnabled) {
         this.lightEnabled = lightEnabled;
     }
@@ -508,6 +522,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     /**
      * The process of updating the light.
      */
+    @JMEThread
     private void updateLightEnabledImpl(boolean enabled) {
         if (enabled == isLightEnabled()) return;
 

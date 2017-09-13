@@ -25,6 +25,7 @@ public class DeleteBranchAction extends AbstractNodeAction<ChangeConsumer> {
     }
 
     @Override
+    @FXThread
     protected @NotNull String getName() {
         return PluginMessages.TREE_GENERATOR_EDITOR_ACTION_DELETE;
     }

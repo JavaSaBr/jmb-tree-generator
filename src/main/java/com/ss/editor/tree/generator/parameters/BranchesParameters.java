@@ -2,6 +2,7 @@ package com.ss.editor.tree.generator.parameters;
 
 import com.simsilica.arboreal.Parameters;
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.annotation.JMEThread;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,6 +25,7 @@ public class BranchesParameters extends Parameters {
     /**
      * @return the tree parameters.
      */
+    @JMEThread
     public @NotNull TreeParameters getTreeParameters() {
         return treeParameters;
     }
