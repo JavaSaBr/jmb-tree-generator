@@ -2,6 +2,7 @@ package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.annotation.FXThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.BranchesParameters;
 import com.ss.editor.tree.generator.tree.action.CreateBranchAction;
@@ -25,11 +26,13 @@ public class BranchesParametersTreeNode extends ParametersTreeNode<BranchesParam
     }
 
     @Override
+    @FXThread
     public @NotNull String getName() {
         return PluginMessages.TREE_GENERATOR_EDITOR_NODE_BRANCHES;
     }
 
     @Override
+    @FXThread
     public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
 
         final BranchesParameters branchesParameters = getElement();
@@ -51,12 +54,14 @@ public class BranchesParametersTreeNode extends ParametersTreeNode<BranchesParam
     }
 
     @Override
+    @FXThread
     public void fillContextMenu(@NotNull final NodeTree<?> nodeTree, @NotNull final ObservableList<MenuItem> items) {
         super.fillContextMenu(nodeTree, items);
         items.add(new CreateBranchAction(nodeTree, this));
     }
 
     @Override
+    @FXThread
     public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
         return true;
     }

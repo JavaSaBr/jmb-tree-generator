@@ -4,6 +4,8 @@ import static com.ss.rlib.util.ClassUtils.unsafeCast;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.parameters.*;
 import com.ss.editor.tree.generator.tree.node.*;
 import com.ss.editor.ui.control.tree.node.TreeNode;
@@ -21,11 +23,13 @@ public class ParametersTreeNodeFactory implements TreeNodeFactory {
     @NotNull
     private static final TreeNodeFactory INSTANCE = new ParametersTreeNodeFactory();
 
+    @FromAnyThread
     public static @NotNull TreeNodeFactory getInstance() {
         return INSTANCE;
     }
 
     @Override
+    @FXThread
     public <T, V extends TreeNode<T>> @Nullable V createFor(@Nullable final T element, final long objectId) {
 
         if (element instanceof ProjectParameters) {

@@ -1,5 +1,6 @@
 package com.ss.editor.tree.generator.tree.node;
 
+import com.ss.editor.annotation.FXThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -20,11 +21,13 @@ public class ProjectParametersTreeNode extends ParametersTreeNode<ProjectParamet
     }
 
     @Override
+    @FXThread
     public @NotNull String getName() {
         return PluginMessages.TREE_GENERATOR_EDITOR_NODE_SETTINGS;
     }
 
     @Override
+    @FXThread
     public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
 
         final ProjectParameters element = getElement();
@@ -37,6 +40,7 @@ public class ProjectParametersTreeNode extends ParametersTreeNode<ProjectParamet
     }
 
     @Override
+    @FXThread
     public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
         return true;
     }

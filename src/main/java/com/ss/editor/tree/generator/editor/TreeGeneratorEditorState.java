@@ -1,5 +1,6 @@
 package com.ss.editor.tree.generator.editor;
 
+import com.ss.editor.annotation.FXThread;
 import com.ss.editor.ui.component.editor.state.impl.Editor3DWithEditorToolEditorState;
 
 /**
@@ -29,6 +30,7 @@ public class TreeGeneratorEditorState extends Editor3DWithEditorToolEditorState 
      *
      * @param enableLight true if the light is enabled.
      */
+    @FXThread
     public void setEnableLight(final boolean enableLight) {
         final boolean changed = isEnableLight() != enableLight;
         this.enableLight = enableLight;
@@ -40,6 +42,7 @@ public class TreeGeneratorEditorState extends Editor3DWithEditorToolEditorState 
      *
      * @return true if the light is enabled.
      */
+    @FXThread
     public boolean isEnableLight() {
         return enableLight;
     }

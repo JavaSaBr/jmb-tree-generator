@@ -9,6 +9,8 @@ import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.Messages;
+import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.extension.property.EditableProperty;
 import com.ss.editor.extension.property.SimpleProperty;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
@@ -66,6 +68,7 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
     @NotNull
     private static final ParametersPropertyBuilder INSTANCE = new ParametersPropertyBuilder();
 
+    @FromAnyThread
     public static @NotNull ParametersPropertyBuilder getInstance() {
         return INSTANCE;
     }
@@ -75,6 +78,7 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
     }
 
     @Override
+    @FXThread
     protected @Nullable List<EditableProperty<?, ?>> getProperties(@NotNull final Object object) {
 
         if (!(object instanceof ProjectParameters || object instanceof TreeParameters ||
@@ -211,6 +215,7 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
     }
 
     @Override
+    @FXThread
     protected void buildForImpl(@NotNull final Object object, @Nullable final Object parent,
                                 @NotNull final VBox container, @NotNull final ChangeConsumer changeConsumer) {
         super.buildForImpl(object, parent, container, changeConsumer);

@@ -10,6 +10,7 @@ import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.Parameters;
 import com.simsilica.arboreal.TreeParameters;
+import com.ss.editor.annotation.JMEThread;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -64,6 +65,7 @@ public class ProjectParameters extends Parameters {
      *
      * @param materialParameters the material parameters.
      */
+    @JMEThread
     public void setMaterialParameters(@NotNull final MaterialsParameters materialParameters) {
         this.materialParameters = materialParameters;
         this.materialParameters.setParent(this);
@@ -72,6 +74,7 @@ public class ProjectParameters extends Parameters {
     /**
      * @return the tree parameters.
      */
+    @JMEThread
     public @NotNull TreeParameters getTreeParameters() {
         return treeParameters;
     }
@@ -79,6 +82,7 @@ public class ProjectParameters extends Parameters {
     /**
      * @return the material parameters.
      */
+    @JMEThread
     public @NotNull MaterialsParameters getMaterialParameters() {
         return materialParameters;
     }
@@ -86,6 +90,7 @@ public class ProjectParameters extends Parameters {
     /**
      * @return true if need to show wire.
      */
+    @JMEThread
     public boolean isShowWire() {
         return showWire;
     }
@@ -93,17 +98,20 @@ public class ProjectParameters extends Parameters {
     /**
      * @param showWire true if need to show wire.
      */
+    @JMEThread
     public void setShowWire(final boolean showWire) {
         this.showWire = showWire;
     }
 
     @Override
+    @JMEThread
     public void cloneFields(@NotNull final Cloner cloner, @NotNull final Object original) {
         materialParameters = cloner.clone(materialParameters);
         treeParameters = cloner.clone(treeParameters);
     }
 
     @Override
+    @JMEThread
     public void write(@NotNull final JmeExporter ex) throws IOException {
         final OutputCapsule out = ex.getCapsule(this);
         out.write(treeParameters, "treeParameters", null);
@@ -112,6 +120,7 @@ public class ProjectParameters extends Parameters {
     }
 
     @Override
+    @JMEThread
     public void read(@NotNull final JmeImporter im) throws IOException {
         final InputCapsule in = im.getCapsule(this);
         materialParameters = (MaterialsParameters) in.readSavable("materialsParameters", null);
