@@ -27,7 +27,6 @@ public class MaterialParameters extends Parameters {
     @NotNull
     private final Supplier<@NotNull Material> syncHandler;
 
-
     /**
      * The material name.
      */

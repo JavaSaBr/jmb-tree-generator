@@ -19,6 +19,9 @@ import java.util.List;
  */
 public class LodParametersTreeNode extends ParametersTreeNode<LevelOfDetailParameters> {
 
+    /**
+     * The name.
+     */
     @NotNull
     private String name;
 

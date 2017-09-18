@@ -245,13 +245,21 @@ public class TreeGeneratorFileEditor extends
     @FXThread
     private void export(@NotNull final Path path) {
 
-        final BinaryExporter exporter = BinaryExporter.getInstance();
+        EditorUtil.incrementLoading();
 
-        try (final OutputStream out = Files.newOutputStream(path)) {
-            exporter.save(getEditor3DState().getTreeNode(), out);
-        } catch (final IOException e) {
-            EditorUtil.handleException(LOGGER, this, e);
-        }
+        final TreeGeneratorEditor3DState editor3DState = getEditor3DState();
+        editor3DState.generate(node -> {
+
+            final BinaryExporter exporter = BinaryExporter.getInstance();
+
+            try (final OutputStream out = Files.newOutputStream(path)) {
+                exporter.save(node, out);
+            } catch (final IOException e) {
+                EditorUtil.handleException(LOGGER, this, e);
+            }
+
+            EditorUtil.decrementLoading();
+        });
     }
 
     /**

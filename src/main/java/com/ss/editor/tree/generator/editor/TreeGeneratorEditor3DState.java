@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * The implementation of 3D part of {@link TreeGeneratorFileEditor}.
@@ -125,7 +126,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     public void open(@NotNull final ProjectParameters parameters) {
         EXECUTOR_MANAGER.addJMETask(() -> {
             setParameters(parameters);
-            generateImpl();
+            generateImpl(getTreeNode(), true);
         });
     }
 
@@ -150,24 +151,47 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      */
     @FromAnyThread
     public void generate() {
-        EXECUTOR_MANAGER.addJMETask(this::generateImpl);
+        EXECUTOR_MANAGER.addJMETask(() -> generateImpl(getTreeNode(), true));
+    }
+
+    /**
+     * Generate new node with new tree.
+     *
+     * @param consumer the result consumer.
+     */
+    @FromAnyThread
+    public void generate(@NotNull final Consumer<Node> consumer) {
+        EXECUTOR_MANAGER.addBackgroundTask(() -> {
+
+            final Node treeNode = new Node("Tree");
+            treeNode.addControl(new LodSwitchControl());
+
+            generateImpl(treeNode, false);
+
+            EXECUTOR_MANAGER.addFXTask(() -> consumer.accept(treeNode));
+        });
     }
 
     /**
      * @return the tree node.
      */
     @FromAnyThread
-    public @NotNull Node getTreeNode() {
+    private @NotNull Node getTreeNode() {
         return treeNode;
     }
 
+    /**
+     * The process of generating tree.
+     *
+     * @param treeNode the tree node.
+     * @param needWire the flag if need to add wire.
+     */
     @JMEThread
-    private void generateImpl() {
+    private void generateImpl(@NotNull final Node treeNode, final boolean needWire) {
 
         final LodSwitchControl lodControl = treeNode.getControl(LodSwitchControl.class);
         lodControl.clearLevels();
 
-        final Node treeNode = getTreeNode();
         treeNode.detachAllChildren();
 
         final ProjectParameters parameters = getParameters();
@@ -177,8 +201,8 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         final Material leafMaterial = materialParameters.getLeafMaterial();
         final Material impostorMaterial = materialParameters.getImpostorMaterial();
         final Material flatMaterial = materialParameters.getFlatMaterial();
-        final Material flatWireMaterial = makeWareMateial(flatMaterial.clone());
-        final Material impostorWireMaterial = makeWareMateial(impostorMaterial.clone());
+        final Material flatWireMaterial = makeWareMaterial(flatMaterial.clone());
+        final Material impostorWireMaterial = makeWareMaterial(impostorMaterial.clone());
 
         updateMaterials();
 
@@ -207,13 +231,16 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
 
             switch (lod.reduction) {
                 case Normal:
-                    generateNormal(treeParameters, treeMaterial, tree, trunkBoundsRef, baseTipsRef, generateLeaves, lod, level, yOffset, textureVScale, textureURepeat);
+                    generateNormal(treeParameters, treeMaterial, tree, trunkBoundsRef, baseTipsRef, generateLeaves,
+                            lod, level, yOffset, textureVScale, textureURepeat);
                     break;
                 case FlatPoly:
-                    generateFlatPoly(treeParameters, flatMaterial, flatWireMaterial, tree, baseTipsRef, generateLeaves, level, lod, yOffset, textureVScale, textureURepeat);
+                    generateFlatPoly(treeParameters, flatMaterial, flatWireMaterial, tree, baseTipsRef, generateLeaves,
+                            level, lod, yOffset, textureVScale, textureURepeat);
                     break;
                 case Impostor:
-                    generateImposter(treeParameters, impostorMaterial, impostorWireMaterial, tree, trunkBoundsRef, leafBoundsRef, baseTipsRef, level, lod, yOffset, textureVScale, textureURepeat);
+                    generateImposter(treeParameters, impostorMaterial, impostorWireMaterial, tree, trunkBoundsRef,
+                            leafBoundsRef, baseTipsRef, level, lod, yOffset, textureVScale, textureURepeat);
                     break;
             }
 
@@ -225,16 +252,20 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         treeNode.setLocalScale(treeParameters.getBaseScale());
 
         // Add in the new ones
-        for (int i = 0; i < levels.length; i++) {
-            final LevelGeometry level = levels[i];
-            level.attach(lodControl);
+        for (final LevelGeometry level : levels) {
+            level.attach(lodControl, needWire);
+
             TangentGenerator.useMikktspaceGenerator(level.levelNode);
+
             if (!parameters.isShowWire() && level.wireGeom != null) {
                 level.wireGeom.setCullHint(Spatial.CullHint.Always);
             }
         }
     }
 
+    /**
+     * Update materials.
+     */
     @JMEThread
     private void updateMaterials() {
 
@@ -263,6 +294,12 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         }
     }
 
+    /**
+     * Apply wind settings to the material.
+     *
+     * @param treeParameters the tree parameters.
+     * @param material       the material.
+     */
     @JMEThread
     private void applyWindParameters(@NotNull final TreeParameters treeParameters, @NotNull final Material material) {
 
@@ -292,6 +329,16 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         }
     }
 
+    /**
+     * Generate leafs.
+     *
+     * @param treeParameters the tree parameters.
+     * @param leafMaterial   the leaf material.
+     * @param leafBoundsRef  the leaf bounds reference.
+     * @param baseTipsRef    the base tips reference.
+     * @param lod            the level of detail.
+     * @param level          the level of geometry.
+     */
     @JMEThread
     private void generateLeafs(@NotNull final TreeParameters treeParameters, @NotNull final Material leafMaterial,
                                @NotNull final AtomicReference<BoundingBox> leafBoundsRef,
@@ -309,6 +356,19 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         level.leafGeom.setLocalTranslation(0, treeParameters.getRootHeight(), 0);
     }
 
+    /**
+     * Generate a impostar tree model.
+     *
+     * @param treeParameters   the ree parameters.
+     * @param impostorMaterial the impostar material.
+     * @param tree             the tree.
+     * @param baseTipsRef      the base tips reference.
+     * @param lod              the level of detail parameters.
+     * @param level            the level of geometry.
+     * @param yOffset          the offset by Y.
+     * @param textureVScale    the texture V scale.
+     * @param textureURepeat   the texture U repeat.
+     */
     @JMEThread
     private void generateImposter(@NotNull final TreeParameters treeParameters,
                                   @NotNull final Material impostorMaterial,
@@ -399,6 +459,20 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         level.wireGeom.setLocalTranslation(0, 0, 0);
     }
 
+    /**
+     * Generate a flat polygon tree model.
+     *
+     * @param treeParameters the ree parameters.
+     * @param flatMaterial   the flat material.
+     * @param tree           the tree.
+     * @param baseTipsRef    the base tips reference.
+     * @param generateLeaves true of need to generate leaves.
+     * @param lod            the level of detail parameters.
+     * @param level          the level of geometry.
+     * @param yOffset        the offset by Y.
+     * @param textureVScale  the texture V scale.
+     * @param textureURepeat the texture U repeat.
+     */
     @JMEThread
     private void generateFlatPoly(@NotNull final TreeParameters treeParameters, @NotNull final Material flatMaterial,
                                   @NotNull final Material flatWireMaterial, @NotNull final Tree tree,
@@ -429,6 +503,21 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         generateLeaves.set(true);
     }
 
+    /**
+     * Generate a normal tree model.
+     *
+     * @param treeParameters the ree parameters.
+     * @param treeMaterial   the tree material.
+     * @param tree           the tree.
+     * @param trunkBoundsRef the trunk bounds reference.
+     * @param baseTipsRef    the base tips reference.
+     * @param generateLeaves true of need to generate leaves.
+     * @param lod            the level of detail parameters.
+     * @param level          the level of geometry.
+     * @param yOffset        the offset by Y.
+     * @param textureVScale  the texture V scale.
+     * @param textureURepeat the texture U repeat.
+     */
     @JMEThread
     private void generateNormal(@NotNull final TreeParameters treeParameters, @NotNull final Material treeMaterial,
                                 @NotNull final Tree tree, @NotNull final AtomicReference<BoundingBox> trunkBoundsRef,
@@ -460,8 +549,14 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         generateLeaves.set(true);
     }
 
+    /**
+     * Mate a new material to show wire.
+     *
+     * @param material the material.
+     * @return the prepared material to show wire.
+     */
     @JMEThread
-    private @NotNull Material makeWareMateial(@NotNull final Material material) {
+    private @NotNull Material makeWareMaterial(@NotNull final Material material) {
 
         final MaterialDef def = material.getMaterialDef();
 
@@ -550,15 +645,18 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
         Geometry wireGeom;
         Geometry leafGeom;
 
-        public LevelGeometry(float distance) {
+        LevelGeometry(final float distance) {
             this.distance = distance;
         }
 
-        public void attach(LodSwitchControl control) {
+        void attach(@NotNull final LodSwitchControl control, final boolean needWire) {
             levelNode = new Node("level:" + distance);
 
             if (treeGeom != null) {
                 levelNode.attachChild(treeGeom);
+            }
+
+            if (wireGeom != null && needWire) {
                 levelNode.attachChild(wireGeom);
             }
 
