@@ -17,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BranchParametersTreeNode extends ParametersTreeNode<BranchParameters> {
 
+    /**
+     * The name.
+     */
     @NotNull
     private String name;
 

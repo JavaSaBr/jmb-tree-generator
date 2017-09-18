@@ -70,7 +70,6 @@ public class TreeGeneratorFileCreator extends GenericFileCreator {
         super.writeData(vars, resultFile);
 
         final boolean pbr = vars.getBoolean(PROP_PBR);
-
         final MaterialsParameters materialsParameters = new MaterialsParameters();
 
         if (pbr) {
