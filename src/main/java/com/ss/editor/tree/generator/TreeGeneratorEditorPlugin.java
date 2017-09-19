@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @PluginDescription(
         id = "com.ss.editor.tree.generator",
-        version = "1.0.1",
+        version = "1.0.4",
         minAppVersion = "1.2.0",
         name = "SimArboreal Tree Generator",
         description = "A plugin to generate trees using the library SimArboreal."
