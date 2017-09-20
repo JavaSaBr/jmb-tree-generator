@@ -3,6 +3,7 @@ package com.ss.editor.tree.generator.tree.node;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.RootsParameters;
 import com.ss.editor.tree.generator.tree.action.CreateRootAction;
@@ -26,7 +27,7 @@ public class RootsParametersTreeNode extends ParametersTreeNode<RootsParameters>
     }
 
     @Override
-    @FXThread
+    @FromAnyThread
     public @NotNull String getName() {
         return PluginMessages.TREE_GENERATOR_EDITOR_NODE_ROOTS;
     }
