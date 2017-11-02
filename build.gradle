@@ -16,7 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 group = 'com.spaceshift'
-version = '1.0.4'
+version = '1.0.5'
 
 ext.artifactId = 'tree-generator'
 
@@ -54,7 +54,7 @@ configurations {
 }
 
 dependencies {
-    compile 'com.github.JavaSaBr:jME3-SpaceShift-Editor:develop-SNAPSHOT'
+    compile 'com.github.JavaSaBr:jmonkeybuilder:develop-SNAPSHOT'
     compile 'com.github.JavaSaBr:SimArboreal:1.2.1'
     compile 'com.github.JavaSaBr:SimArboreal:1.2.1:assets'
 
@@ -186,7 +186,7 @@ task deployPlugin(type: Zip, dependsOn: 'preparePlugin') {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
+    gradleVersion = '4.3'
 }
 
 defaultTasks 'install'
