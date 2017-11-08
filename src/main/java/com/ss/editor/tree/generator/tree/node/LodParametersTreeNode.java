@@ -3,6 +3,7 @@ package com.ss.editor.tree.generator.tree.node;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.tree.action.DeleteLodAction;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -51,7 +52,7 @@ public class LodParametersTreeNode extends ParametersTreeNode<LevelOfDetailParam
     }
 
     @Override
-    @FXThread
+    @FromAnyThread
     public @NotNull String getName() {
         return name;
     }

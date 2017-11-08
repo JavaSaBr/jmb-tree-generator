@@ -168,6 +168,7 @@ public class MaterialsParameters extends Parameters {
 
         leafMaterial = new Material(assetManager, "MatDefs/LeafPBRLighting.j3md");
         leafMaterial.setFloat("Metallic", 0.1F);
+        leafMaterial.setFloat("Roughness", 2F);
         leafMaterial.setTexture("BaseColorMap", leafDiffuse);
         leafMaterial.setTexture("NormalMap", leafNormal);
         leafMaterial.setTexture("RoughnessMap", leafRoughness);

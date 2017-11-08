@@ -1,6 +1,7 @@
 package com.ss.editor.tree.generator.tree.node;
 
 import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
@@ -20,7 +21,7 @@ public class MaterialParametersTreeNode extends ParametersTreeNode<MaterialParam
     }
 
     @Override
-    @FXThread
+    @FromAnyThread
     public @NotNull String getName() {
         return getElement().getName();
     }
