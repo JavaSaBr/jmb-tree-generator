@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC2'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
     }
 }
 
@@ -29,8 +29,8 @@ compileTestJava {
     options.compilerArgs += '-parameters'
 }
 
-ext.junitPlatformVersion = "1.0.0-M5"
-ext.junitJupiterVersion = "5.0.0-M5"
+ext.junitPlatformVersion = "1.0.0"
+ext.junitJupiterVersion = "5.0.0"
 ext.log4jVersion = '2.6.2'
 
 junitPlatform {
@@ -55,14 +55,14 @@ configurations {
 
 dependencies {
     compile 'com.github.JavaSaBr:jmonkeybuilder:develop-SNAPSHOT'
-    compile 'com.github.JavaSaBr:SimArboreal:1.2.1'
-    compile 'com.github.JavaSaBr:SimArboreal:1.2.1:assets'
+    compile 'com.github.JavaSaBr:SimArboreal:1.2.2'
+    compile 'com.github.JavaSaBr:SimArboreal:1.2.2:assets'
 
-    pluginDependences ('com.github.JavaSaBr:SimArboreal:1.2.1') {
+    pluginDependences ('com.github.JavaSaBr:SimArboreal:1.2.2') {
         exclude group: 'org.jmonkeyengine'
         exclude group: 'org.jetbrains'
     }
-    pluginDependences ('com.github.JavaSaBr:SimArboreal:1.2.1:assets') {
+    pluginDependences ('com.github.JavaSaBr:SimArboreal:1.2.2:assets') {
         exclude group: 'org.jmonkeyengine'
         exclude group: 'org.jetbrains'
     }
