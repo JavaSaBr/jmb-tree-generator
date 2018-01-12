@@ -13,7 +13,12 @@ import com.ss.editor.ui.control.property.builder.PropertyBuilderRegistry;
 import com.ss.editor.ui.control.tree.node.TreeNodeFactoryRegistry;
 import com.ss.rlib.plugin.PluginContainer;
 import com.ss.rlib.plugin.annotation.PluginDescription;
+import com.ss.rlib.util.FileUtils;
+import com.ss.rlib.util.Utils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.net.URL;
 
 /**
  * The implementation of an editor plugin.
@@ -22,15 +27,26 @@ import org.jetbrains.annotations.NotNull;
  */
 @PluginDescription(
         id = "com.ss.editor.tree.generator",
-        version = "1.0.5",
-        minAppVersion = "1.3.0",
+        version = "1.0.6",
+        minAppVersion = "1.5.1",
         name = "SimArboreal Tree Generator",
-        description = "A plugin to generate trees using the library SimArboreal."
+        description = "Provides a new editor to generate trees based on the library 'SimArboreal'."
 )
 public class TreeGeneratorEditorPlugin extends EditorPlugin {
 
     @NotNull
     public static final String PROJECT_EXTENSION = "j3sa";
+
+    @NotNull
+    private static final String GRADLE_DEPENDENCIES;
+
+    @NotNull
+    private static final String MAVEN_DEPENDENCIES;
+
+    static {
+        GRADLE_DEPENDENCIES = FileUtils.read(TreeGeneratorEditorPlugin.class.getResourceAsStream("/com/ss/editor/tree/generator/dependency/gradle.html"));
+        MAVEN_DEPENDENCIES = FileUtils.read(TreeGeneratorEditorPlugin.class.getResourceAsStream("/com/ss/editor/tree/generator/dependency/maven.html"));
+    }
 
     public TreeGeneratorEditorPlugin(@NotNull final PluginContainer pluginContainer) {
         super(pluginContainer);
@@ -75,5 +91,23 @@ public class TreeGeneratorEditorPlugin extends EditorPlugin {
 
             return null;
         });
+    }
+
+    @Override
+    @FromAnyThread
+    public @Nullable URL getHomePageUrl() {
+        return Utils.get("https://github.com/JavaSaBr/jmb-tree-generator", URL::new);
+    }
+
+    @Override
+    @FromAnyThread
+    public @Nullable String getUsedGradleDependencies() {
+        return GRADLE_DEPENDENCIES;
+    }
+
+    @Override
+    @FromAnyThread
+    public @Nullable String getUsedMavenDependencies() {
+        return MAVEN_DEPENDENCIES;
     }
 }
