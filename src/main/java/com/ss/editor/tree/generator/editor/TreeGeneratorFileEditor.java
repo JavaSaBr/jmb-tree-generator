@@ -8,7 +8,7 @@ import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.ss.editor.FileExtensions;
 import com.ss.editor.Messages;
 import com.ss.editor.annotation.BackgroundThread;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.plugin.api.editor.Advanced3DFileEditorWithSplitRightTool;
@@ -107,7 +107,7 @@ public class TreeGeneratorFileEditor extends
     private Consumer<Object> selectionHandler;
 
     @Override
-    @FXThread
+    @FxThread
     protected @NotNull TreeGeneratorEditor3DState create3DEditorState() {
         return new TreeGeneratorEditor3DState(this);
     }
@@ -142,7 +142,7 @@ public class TreeGeneratorFileEditor extends
      *
      * @param object the selected object.
      */
-    @FXThread
+    @FxThread
     private void selectFromTree(@Nullable final Object object) {
 
         Object parent = null;
@@ -163,18 +163,18 @@ public class TreeGeneratorFileEditor extends
     /**
      * @return the property editor.
      */
-    @FXThread
+    @FxThread
     private @NotNull PropertyEditor<ChangeConsumer> getPropertyEditor() {
         return notNull(propertyEditor);
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void doOpenFile(@NotNull final Path file) throws IOException {
         super.doOpenFile(file);
 
         final BinaryImporter importer = BinaryImporter.getInstance();
-        importer.setAssetManager(EDITOR.getAssetManager());
+        importer.setAssetManager(EditorUtil.getAssetManager());
 
         try (final InputStream in = Files.newInputStream(file)) {
             parameters = (ProjectParameters) importer.load(in);
@@ -199,13 +199,13 @@ public class TreeGeneratorFileEditor extends
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected boolean needToolbar() {
         return true;
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void createToolbar(@NotNull final HBox container) {
         super.createToolbar(container);
 
@@ -232,7 +232,7 @@ public class TreeGeneratorFileEditor extends
     /**
      * Open Save As Dialog to export the tree.
      */
-    @FXThread
+    @FxThread
     private void export() {
         UIUtils.openSaveAsDialog(this::export, FileExtensions.JME_OBJECT, ACTION_TESTER);
     }
@@ -242,7 +242,7 @@ public class TreeGeneratorFileEditor extends
      *
      * @param path the file.
      */
-    @FXThread
+    @FxThread
     private void export(@NotNull final Path path) {
 
         EditorUtil.incrementLoading();
@@ -265,7 +265,7 @@ public class TreeGeneratorFileEditor extends
     /**
      * Handle changing camera light visibility.
      */
-    @FXThread
+    @FxThread
     private void changeLight(@NotNull final Boolean newValue) {
         if (isIgnoreListeners()) return;
 
@@ -278,7 +278,7 @@ public class TreeGeneratorFileEditor extends
     /**
      * @return the parameters tree.
      */
-    @FXThread
+    @FxThread
     private @NotNull NodeTree<ChangeConsumer> getParametersTree() {
         return notNull(parametersTree);
     }
@@ -286,7 +286,7 @@ public class TreeGeneratorFileEditor extends
     /**
      * @return the project parameters.
      */
-    @FXThread
+    @FxThread
     private @NotNull ProjectParameters getParameters() {
         return notNull(parameters);
     }
@@ -294,13 +294,13 @@ public class TreeGeneratorFileEditor extends
     /**
      * @return the light toggle.
      */
-    @FXThread
+    @FxThread
     private @NotNull ToggleButton getLightButton() {
         return notNull(lightButton);
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void loadState() {
         super.loadState();
 
@@ -311,7 +311,7 @@ public class TreeGeneratorFileEditor extends
     }
 
     @Override
-    @FXThread
+    @FxThread
     public void notifyFXChangeProperty(@NotNull final Object object, @NotNull final String propertyName) {
 
         if (object instanceof MaterialParameters) {
@@ -323,7 +323,7 @@ public class TreeGeneratorFileEditor extends
     }
 
     @Override
-    @FXThread
+    @FxThread
     public void notifyFXAddedChild(@NotNull final Object parent, @NotNull final Object added, final int index,
                                    final boolean needSelect) {
 
@@ -343,7 +343,7 @@ public class TreeGeneratorFileEditor extends
     }
 
     @Override
-    @FXThread
+    @FxThread
     public void notifyFXRemovedChild(@NotNull final Object parent, @NotNull final Object removed) {
 
         if (removed instanceof BranchParameters || removed instanceof LevelOfDetailParameters) {

@@ -2,7 +2,7 @@ package com.ss.editor.tree.generator.tree.operation;
 
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.model.undo.impl.AbstractEditorOperation;
 import com.ss.editor.tree.generator.parameters.BranchesParameters;
@@ -47,20 +47,20 @@ public class RemoveBranchOperation extends AbstractEditorOperation<ChangeConsume
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void redoImpl(@NotNull final ChangeConsumer editor) {
-        EXECUTOR_MANAGER.addJMETask(() -> {
+        EXECUTOR_MANAGER.addJmeTask(() -> {
             index = treeParameters.removeBranch(removed);
-            EXECUTOR_MANAGER.addFXTask(() -> editor.notifyFXRemovedChild(branchesParameters, removed));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXRemovedChild(branchesParameters, removed));
         });
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void undoImpl(@NotNull final ChangeConsumer editor) {
-        EXECUTOR_MANAGER.addJMETask(() -> {
+        EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addBranch(removed, index);
-            EXECUTOR_MANAGER.addFXTask(() -> editor.notifyFXAddedChild(branchesParameters, removed, index, false));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXAddedChild(branchesParameters, removed, index, false));
         });
     }
 }

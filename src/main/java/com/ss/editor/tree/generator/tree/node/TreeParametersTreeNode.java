@@ -1,7 +1,7 @@
 package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.BranchesParameters;
@@ -31,7 +31,7 @@ public class TreeParametersTreeNode extends ParametersTreeNode<TreeParameters> {
     }
 
     @Override
-    @FXThread
+    @FxThread
     public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
 
         final TreeParameters element = getElement();
@@ -45,7 +45,7 @@ public class TreeParametersTreeNode extends ParametersTreeNode<TreeParameters> {
     }
 
     @Override
-    @FXThread
+    @FxThread
     public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
         return true;
     }

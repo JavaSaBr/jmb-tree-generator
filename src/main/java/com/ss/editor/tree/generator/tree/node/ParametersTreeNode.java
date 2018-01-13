@@ -1,7 +1,7 @@
 package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.Parameters;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.ui.Icons;
 import com.ss.editor.ui.control.tree.node.TreeNode;
 import javafx.scene.image.Image;
@@ -20,7 +20,7 @@ public class ParametersTreeNode<T extends Parameters> extends TreeNode<T> {
     }
 
     @Override
-    @FXThread
+    @FxThread
     public @Nullable Image getIcon() {
         return Icons.INFLUENCER_16;
     }

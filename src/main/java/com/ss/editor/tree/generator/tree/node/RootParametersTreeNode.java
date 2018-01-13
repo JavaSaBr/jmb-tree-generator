@@ -2,7 +2,7 @@ package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.tree.action.DeleteRootAction;
@@ -30,7 +30,7 @@ public class RootParametersTreeNode extends ParametersTreeNode<BranchParameters>
     }
 
     @Override
-    @FXThread
+    @FxThread
     public void fillContextMenu(@NotNull final NodeTree<?> nodeTree, @NotNull final ObservableList<MenuItem> items) {
         super.fillContextMenu(nodeTree, items);
 
@@ -44,7 +44,7 @@ public class RootParametersTreeNode extends ParametersTreeNode<BranchParameters>
     }
 
     @Override
-    @FXThread
+    @FxThread
     public void setName(@NotNull final String name) {
         this.name = name;
     }

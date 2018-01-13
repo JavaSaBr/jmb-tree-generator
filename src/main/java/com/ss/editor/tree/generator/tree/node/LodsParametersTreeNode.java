@@ -2,7 +2,7 @@ package com.ss.editor.tree.generator.tree.node;
 
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.LodsParameters;
@@ -35,7 +35,7 @@ public class LodsParametersTreeNode extends ParametersTreeNode<LodsParameters> {
     }
 
     @Override
-    @FXThread
+    @FxThread
     public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
 
         final LodsParameters lodsParameters = getElement();
@@ -55,14 +55,14 @@ public class LodsParametersTreeNode extends ParametersTreeNode<LodsParameters> {
     }
 
     @Override
-    @FXThread
+    @FxThread
     public void fillContextMenu(@NotNull final NodeTree<?> nodeTree, @NotNull final ObservableList<MenuItem> items) {
         super.fillContextMenu(nodeTree, items);
         items.add(new CreateLodAction(nodeTree, this));
     }
 
     @Override
-    @FXThread
+    @FxThread
     public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
         return true;
     }
