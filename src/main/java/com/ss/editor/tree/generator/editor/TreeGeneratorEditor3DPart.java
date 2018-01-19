@@ -18,12 +18,13 @@ import com.simsilica.arboreal.TreeGenerator;
 import com.simsilica.arboreal.TreeParameters;
 import com.simsilica.arboreal.mesh.*;
 import com.ss.editor.annotation.FromAnyThread;
-import com.ss.editor.annotation.JMEThread;
+import com.ss.editor.annotation.JmeThread;
 import com.ss.editor.model.EditorCamera;
-import com.ss.editor.model.tool.TangentGenerator;
-import com.ss.editor.plugin.api.editor.part3d.AdvancedPBRWithStudioSky3DEditorState;
+import com.ss.editor.plugin.api.editor.part3d.AdvancedPbrWithStudioSky3DEditorPart;
 import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
+import com.ss.editor.util.EditorUtil;
+import com.ss.editor.util.TangentGenerator;
 import com.ss.rlib.geom.util.AngleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +41,7 @@ import java.util.function.Consumer;
  *
  * @author JavaSaBr
  */
-public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditorState<TreeGeneratorFileEditor> {
+public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorPart<TreeGeneratorFileEditor> {
 
     private static final float H_ROTATION = AngleUtils.degreeToRadians(75);
     private static final float V_ROTATION = AngleUtils.degreeToRadians(25);
@@ -49,7 +50,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     private static final Material WIRE_MATERIAL;
 
     static {
-        WIRE_MATERIAL = new Material(EDITOR.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        WIRE_MATERIAL = new Material(EditorUtil.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         WIRE_MATERIAL.setColor("Color", ColorRGBA.Yellow);
         WIRE_MATERIAL.getAdditionalRenderState().setWireframe(true);
     }
@@ -71,7 +72,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      */
     private boolean lightEnabled;
 
-    public TreeGeneratorEditor3DState(@NotNull final TreeGeneratorFileEditor fileEditor) {
+    public TreeGeneratorEditor3DPart(@NotNull final TreeGeneratorFileEditor fileEditor) {
         super(fileEditor);
 
         final EditorCamera editorCamera = notNull(getEditorCamera());
@@ -85,7 +86,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     }
 
     @Override
-    @JMEThread
+    @JmeThread
     public void initialize(@NotNull final AppStateManager stateManager, @NotNull final Application application) {
         super.initialize(stateManager, application);
 
@@ -94,25 +95,25 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     }
 
     @Override
-    @JMEThread
+    @JmeThread
     protected boolean needMovableCamera() {
         return false;
     }
 
     @Override
-    @JMEThread
+    @JmeThread
     protected boolean needEditorCamera() {
         return true;
     }
 
     @Override
-    @JMEThread
+    @JmeThread
     protected boolean needLightForCamera() {
         return true;
     }
 
     @Override
-    @JMEThread
+    @JmeThread
     protected boolean needUpdateCameraLight() {
         return true;
     }
@@ -124,21 +125,25 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      */
     @FromAnyThread
     public void open(@NotNull final ProjectParameters parameters) {
-        EXECUTOR_MANAGER.addJMETask(() -> {
+        EXECUTOR_MANAGER.addJmeTask(() -> {
             setParameters(parameters);
             generateImpl(getTreeNode(), true);
         });
     }
 
     /**
+     * Set the project parameters.
+     *
      * @param parameters the project parameters.
      */
-    @JMEThread
+    @JmeThread
     private void setParameters(@NotNull final ProjectParameters parameters) {
         this.parameters = parameters;
     }
 
     /**
+     * Get the project parameters.
+     *
      * @return the project parameters.
      */
     @FromAnyThread
@@ -151,7 +156,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      */
     @FromAnyThread
     public void generate() {
-        EXECUTOR_MANAGER.addJMETask(() -> generateImpl(getTreeNode(), true));
+        EXECUTOR_MANAGER.addJmeTask(() -> generateImpl(getTreeNode(), true));
     }
 
     /**
@@ -168,11 +173,13 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
 
             generateImpl(treeNode, false);
 
-            EXECUTOR_MANAGER.addFXTask(() -> consumer.accept(treeNode));
+            EXECUTOR_MANAGER.addFxTask(() -> consumer.accept(treeNode));
         });
     }
 
     /**
+     * Get the tree node.
+     *
      * @return the tree node.
      */
     @FromAnyThread
@@ -186,7 +193,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      * @param treeNode the tree node.
      * @param needWire the flag if need to add wire.
      */
-    @JMEThread
+    @JmeThread
     private void generateImpl(@NotNull final Node treeNode, final boolean needWire) {
 
         final LodSwitchControl lodControl = treeNode.getControl(LodSwitchControl.class);
@@ -266,7 +273,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     /**
      * Update materials.
      */
-    @JMEThread
+    @JmeThread
     private void updateMaterials() {
 
         final ProjectParameters parameters = getParameters();
@@ -300,7 +307,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      * @param treeParameters the tree parameters.
      * @param material       the material.
      */
-    @JMEThread
+    @JmeThread
     private void applyWindParameters(@NotNull final TreeParameters treeParameters, @NotNull final Material material) {
 
         MaterialDef def = material.getMaterialDef();
@@ -339,7 +346,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      * @param lod            the level of detail.
      * @param level          the level of geometry.
      */
-    @JMEThread
+    @JmeThread
     private void generateLeafs(@NotNull final TreeParameters treeParameters, @NotNull final Material leafMaterial,
                                @NotNull final AtomicReference<BoundingBox> leafBoundsRef,
                                @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
@@ -369,7 +376,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      * @param textureVScale    the texture V scale.
      * @param textureURepeat   the texture U repeat.
      */
-    @JMEThread
+    @JmeThread
     private void generateImposter(@NotNull final TreeParameters treeParameters,
                                   @NotNull final Material impostorMaterial,
                                   @NotNull final Material impostorWireMaterial, @NotNull final Tree tree,
@@ -473,7 +480,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      * @param textureVScale  the texture V scale.
      * @param textureURepeat the texture U repeat.
      */
-    @JMEThread
+    @JmeThread
     private void generateFlatPoly(@NotNull final TreeParameters treeParameters, @NotNull final Material flatMaterial,
                                   @NotNull final Material flatWireMaterial, @NotNull final Tree tree,
                                   @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
@@ -518,7 +525,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      * @param textureVScale  the texture V scale.
      * @param textureURepeat the texture U repeat.
      */
-    @JMEThread
+    @JmeThread
     private void generateNormal(@NotNull final TreeParameters treeParameters, @NotNull final Material treeMaterial,
                                 @NotNull final Tree tree, @NotNull final AtomicReference<BoundingBox> trunkBoundsRef,
                                 @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
@@ -555,7 +562,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      * @param material the material.
      * @return the prepared material to show wire.
      */
-    @JMEThread
+    @JmeThread
     private @NotNull Material makeWareMaterial(@NotNull final Material material) {
 
         final MaterialDef def = material.getMaterialDef();
@@ -595,13 +602,13 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      */
     @FromAnyThread
     public void updateLightEnabled(final boolean enabled) {
-        EXECUTOR_MANAGER.addJMETask(() -> updateLightEnabledImpl(enabled));
+        EXECUTOR_MANAGER.addJmeTask(() -> updateLightEnabledImpl(enabled));
     }
 
     /**
      * @return true if the light of the camera is enabled.
      */
-    @JMEThread
+    @JmeThread
     private boolean isLightEnabled() {
         return lightEnabled;
     }
@@ -617,7 +624,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     /**
      * The process of updating the light.
      */
-    @JMEThread
+    @JmeThread
     private void updateLightEnabledImpl(boolean enabled) {
         if (enabled == isLightEnabled()) return;
 

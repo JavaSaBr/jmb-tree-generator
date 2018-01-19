@@ -1,6 +1,6 @@
 package com.ss.editor.tree.generator.tree.node;
 
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -27,14 +27,14 @@ public class MaterialParametersTreeNode extends ParametersTreeNode<MaterialParam
     }
 
     @Override
-    @FXThread
+    @FxThread
     public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
         final TreeNode<?> node = FACTORY_REGISTRY.createFor(getElement().getMaterial());
         return ArrayFactory.asArray(node);
     }
 
     @Override
-    @FXThread
+    @FxThread
     public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
         return true;
     }

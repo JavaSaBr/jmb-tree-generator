@@ -9,7 +9,7 @@ import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.Messages;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.extension.property.EditableProperty;
 import com.ss.editor.extension.property.SimpleProperty;
@@ -20,6 +20,7 @@ import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.control.property.builder.PropertyBuilder;
 import com.ss.editor.ui.control.property.builder.impl.EditableObjectPropertyBuilder;
 import com.ss.editor.ui.control.property.impl.MaterialKeyPropertyControl;
+import com.ss.editor.util.EditorUtil;
 import com.ss.rlib.ui.util.FXUtils;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,7 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
     @NotNull
     private static final BiConsumer<MaterialParameters, MaterialKey> MATERIAL_APPLY_HANDLER = (parameters, materialKey) -> {
 
-        final AssetManager assetManager = EDITOR.getAssetManager();
+        final AssetManager assetManager = EditorUtil.getAssetManager();
         final Consumer<@NotNull Material> changeHandler = parameters.getChangeHandler();
 
         if (materialKey == null) {
@@ -78,7 +79,7 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected @Nullable List<EditableProperty<?, ?>> getProperties(@NotNull final Object object) {
 
         if (!(object instanceof ProjectParameters || object instanceof TreeParameters ||
@@ -215,7 +216,7 @@ public class ParametersPropertyBuilder extends EditableObjectPropertyBuilder<Cha
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void buildForImpl(@NotNull final Object object, @Nullable final Object parent,
                                 @NotNull final VBox container, @NotNull final ChangeConsumer changeConsumer) {
         super.buildForImpl(object, parent, container, changeConsumer);

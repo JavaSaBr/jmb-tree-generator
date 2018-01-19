@@ -11,6 +11,7 @@ import com.ss.editor.tree.generator.TreeGeneratorEditorPlugin;
 import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.component.creator.FileCreatorDescription;
+import com.ss.editor.util.EditorUtil;
 import com.ss.rlib.util.VarTable;
 import com.ss.rlib.util.array.Array;
 import com.ss.rlib.util.array.ArrayFactory;
@@ -78,7 +79,7 @@ public class TreeGeneratorFileCreator extends GenericFileCreator {
             materialsParameters.loadDefault();
         }
 
-        final ProjectParameters parameters = new ProjectParameters(EDITOR.getAssetManager());
+        final ProjectParameters parameters = new ProjectParameters(EditorUtil.getAssetManager());
         parameters.setMaterialParameters(materialsParameters);
 
         final BinaryExporter exporter = BinaryExporter.getInstance();

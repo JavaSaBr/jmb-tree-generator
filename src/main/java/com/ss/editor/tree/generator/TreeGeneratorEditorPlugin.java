@@ -10,7 +10,7 @@ import com.ss.editor.tree.generator.tree.factory.ParametersTreeNodeFactory;
 import com.ss.editor.ui.component.creator.FileCreatorRegistry;
 import com.ss.editor.ui.component.editor.EditorRegistry;
 import com.ss.editor.ui.control.property.builder.PropertyBuilderRegistry;
-import com.ss.editor.ui.control.tree.node.TreeNodeFactoryRegistry;
+import com.ss.editor.ui.control.tree.node.factory.TreeNodeFactoryRegistry;
 import com.ss.rlib.plugin.PluginContainer;
 import com.ss.rlib.plugin.annotation.PluginDescription;
 import com.ss.rlib.util.FileUtils;
@@ -27,8 +27,8 @@ import java.net.URL;
  */
 @PluginDescription(
         id = "com.ss.editor.tree.generator",
-        version = "1.0.6",
-        minAppVersion = "1.5.1",
+        version = "1.1.0",
+        minAppVersion = "1.6.0",
         name = "SimArboreal Tree Generator",
         description = "Provides a new editor to generate trees based on the library 'SimArboreal'."
 )

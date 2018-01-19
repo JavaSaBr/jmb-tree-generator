@@ -3,7 +3,7 @@ package com.ss.editor.tree.generator.tree.action;
 import static com.ss.rlib.util.ObjectUtils.notNull;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.RootsParameters;
@@ -25,13 +25,13 @@ public class CreateRootAction extends AbstractNodeAction<ChangeConsumer> {
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected @NotNull String getName() {
         return PluginMessages.TREE_GENERATOR_EDITOR_ACTION_ADD_ROOT;
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void process() {
         super.process();
 

@@ -4,12 +4,12 @@ import static com.ss.rlib.util.ClassUtils.unsafeCast;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FXThread;
 import com.ss.editor.annotation.FromAnyThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.tree.generator.parameters.*;
 import com.ss.editor.tree.generator.tree.node.*;
 import com.ss.editor.ui.control.tree.node.TreeNode;
-import com.ss.editor.ui.control.tree.node.TreeNodeFactory;
+import com.ss.editor.ui.control.tree.node.factory.TreeNodeFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +29,7 @@ public class ParametersTreeNodeFactory implements TreeNodeFactory {
     }
 
     @Override
-    @FXThread
+    @FxThread
     public <T, V extends TreeNode<T>> @Nullable V createFor(@Nullable final T element, final long objectId) {
 
         if (element instanceof ProjectParameters) {
