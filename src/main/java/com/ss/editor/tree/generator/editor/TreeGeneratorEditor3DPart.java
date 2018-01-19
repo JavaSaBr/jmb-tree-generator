@@ -20,11 +20,11 @@ import com.simsilica.arboreal.mesh.*;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.annotation.JmeThread;
 import com.ss.editor.model.EditorCamera;
-import com.ss.editor.model.tool.TangentGenerator;
-import com.ss.editor.plugin.api.editor.part3d.AdvancedPBRWithStudioSky3DEditorState;
+import com.ss.editor.plugin.api.editor.part3d.AdvancedPbrWithStudioSky3DEditorPart;
 import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.util.EditorUtil;
+import com.ss.editor.util.TangentGenerator;
 import com.ss.rlib.geom.util.AngleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ import java.util.function.Consumer;
  *
  * @author JavaSaBr
  */
-public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditorState<TreeGeneratorFileEditor> {
+public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorPart<TreeGeneratorFileEditor> {
 
     private static final float H_ROTATION = AngleUtils.degreeToRadians(75);
     private static final float V_ROTATION = AngleUtils.degreeToRadians(25);
@@ -72,7 +72,7 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
      */
     private boolean lightEnabled;
 
-    public TreeGeneratorEditor3DState(@NotNull final TreeGeneratorFileEditor fileEditor) {
+    public TreeGeneratorEditor3DPart(@NotNull final TreeGeneratorFileEditor fileEditor) {
         super(fileEditor);
 
         final EditorCamera editorCamera = notNull(getEditorCamera());
@@ -132,6 +132,8 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     }
 
     /**
+     * Set the project parameters.
+     *
      * @param parameters the project parameters.
      */
     @JmeThread
@@ -140,6 +142,8 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     }
 
     /**
+     * Get the project parameters.
+     *
      * @return the project parameters.
      */
     @FromAnyThread
@@ -174,6 +178,8 @@ public class TreeGeneratorEditor3DState extends AdvancedPBRWithStudioSky3DEditor
     }
 
     /**
+     * Get the tree node.
+     *
      * @return the tree node.
      */
     @FromAnyThread

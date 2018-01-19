@@ -177,6 +177,8 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the tree material.
+     *
      * @return the tree material.
      */
     @JmeThread
@@ -185,6 +187,8 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the tree material.
+     *
      * @param treeMaterial the tree material.
      */
     @JmeThread
@@ -193,6 +197,8 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the flat material.
+     *
      * @return the flat material.
      */
     @JmeThread
@@ -201,6 +207,8 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the flat material.
+     *
      * @param flatMaterial the flat material.
      */
     @JmeThread
@@ -209,6 +217,8 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the impostor material.
+     *
      * @return the impostor material.
      */
     @JmeThread
@@ -217,6 +227,8 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the impostor material.
+     *
      * @param impostorMaterial the impostor material.
      */
     @JmeThread
@@ -225,6 +237,8 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the leaf material.
+     *
      * @return the leaf material.
      */
     @JmeThread
@@ -233,6 +247,8 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the leaf material.
+     *
      * @param leafMaterial the leaf material.
      */
     @JmeThread

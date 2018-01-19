@@ -46,7 +46,7 @@ public class AddBranchOperation extends AbstractEditorOperation<ChangeConsumer> 
     protected void redoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addBranch(newBranch, -1);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXAddedChild(branchesParameters, newBranch, -1, true));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(branchesParameters, newBranch, -1, true));
         });
     }
 
@@ -55,7 +55,7 @@ public class AddBranchOperation extends AbstractEditorOperation<ChangeConsumer> 
     protected void undoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.removeBranch(newBranch);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXRemovedChild(branchesParameters, newBranch));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(branchesParameters, newBranch));
         });
     }
 }

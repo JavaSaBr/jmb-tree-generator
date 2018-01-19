@@ -72,6 +72,8 @@ public class ProjectParameters extends Parameters {
     }
 
     /**
+     * Get the tree parameters.
+     *
      * @return the tree parameters.
      */
     @JmeThread
@@ -80,6 +82,8 @@ public class ProjectParameters extends Parameters {
     }
 
     /**
+     * Get the material parameters.
+     *
      * @return the material parameters.
      */
     @JmeThread

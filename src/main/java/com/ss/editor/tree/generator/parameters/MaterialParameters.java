@@ -49,6 +49,8 @@ public class MaterialParameters extends Parameters {
     }
 
     /**
+     * Get the material.
+     *
      * @return the material.
      */
     @JmeThread
@@ -57,6 +59,8 @@ public class MaterialParameters extends Parameters {
     }
 
     /**
+     * Get the material.
+     *
      * @param material the material.
      */
     @JmeThread
@@ -65,6 +69,8 @@ public class MaterialParameters extends Parameters {
     }
 
     /**
+     * Get the material name.
+     *
      * @return the material name.
      */
     @JmeThread
@@ -73,6 +79,8 @@ public class MaterialParameters extends Parameters {
     }
 
     /**
+     * Get the material change handler.
+     *
      * @return the material change handler.
      */
     @JmeThread
@@ -81,6 +89,8 @@ public class MaterialParameters extends Parameters {
     }
 
     /**
+     * Get the material sync handler.
+     *
      * @return the material sync handler.
      */
     @JmeThread

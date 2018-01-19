@@ -51,7 +51,7 @@ public class RemoveBranchOperation extends AbstractEditorOperation<ChangeConsume
     protected void redoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             index = treeParameters.removeBranch(removed);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXRemovedChild(branchesParameters, removed));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(branchesParameters, removed));
         });
     }
 
@@ -60,7 +60,7 @@ public class RemoveBranchOperation extends AbstractEditorOperation<ChangeConsume
     protected void undoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addBranch(removed, index);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXAddedChild(branchesParameters, removed, index, false));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(branchesParameters, removed, index, false));
         });
     }
 }

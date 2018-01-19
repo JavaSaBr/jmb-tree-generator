@@ -45,7 +45,7 @@ public class AddLodOperation extends AbstractEditorOperation<ChangeConsumer> {
     protected void redoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addLodLevel(newLevel, -1);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXAddedChild(lodsParameters, newLevel, -1, true));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(lodsParameters, newLevel, -1, true));
         });
     }
 
@@ -54,7 +54,7 @@ public class AddLodOperation extends AbstractEditorOperation<ChangeConsumer> {
     protected void undoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.removeLodLevel(newLevel);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXRemovedChild(lodsParameters, newLevel));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(lodsParameters, newLevel));
         });
     }
 }

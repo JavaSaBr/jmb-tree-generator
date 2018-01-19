@@ -23,6 +23,8 @@ public class LodsParameters extends Parameters {
     }
 
     /**
+     * Get the tree parameters.
+     *
      * @return the tree parameters.
      */
     @JmeThread

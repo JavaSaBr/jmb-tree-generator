@@ -45,7 +45,7 @@ public class AddRootOperation extends AbstractEditorOperation<ChangeConsumer> {
     protected void redoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addRoot(newRoot, -1);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXAddedChild(rootsParameters, newRoot, -1, true));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(rootsParameters, newRoot, -1, true));
         });
     }
 
@@ -54,7 +54,7 @@ public class AddRootOperation extends AbstractEditorOperation<ChangeConsumer> {
     protected void undoImpl(@NotNull final ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.removeRoot(newRoot);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFXRemovedChild(rootsParameters, newRoot));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(rootsParameters, newRoot));
         });
     }
 }
