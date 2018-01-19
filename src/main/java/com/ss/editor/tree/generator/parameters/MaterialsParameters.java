@@ -12,8 +12,8 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.texture.Texture;
 import com.jme3.util.clone.Cloner;
 import com.simsilica.arboreal.Parameters;
-import com.ss.editor.Editor;
-import com.ss.editor.annotation.JMEThread;
+import com.ss.editor.annotation.JmeThread;
+import com.ss.editor.util.EditorUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -52,11 +52,10 @@ public class MaterialsParameters extends Parameters {
     public MaterialsParameters() {
     }
 
-    @JMEThread
+    @JmeThread
     public void loadDefault() {
 
-        final Editor editor = Editor.getInstance();
-        final AssetManager assetManager = editor.getAssetManager();
+        final AssetManager assetManager = EditorUtil.getAssetManager();
 
         final Texture bark = assetManager.loadTexture("Textures/bark128.jpg");
         bark.setWrap(Texture.WrapMode.Repeat);
@@ -113,11 +112,10 @@ public class MaterialsParameters extends Parameters {
         leafMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
     }
 
-    @JMEThread
+    @JmeThread
     public void loadPBR() {
 
-        final Editor editor = Editor.getInstance();
-        final AssetManager assetManager = editor.getAssetManager();
+        final AssetManager assetManager = EditorUtil.getAssetManager();
 
         final Texture bark = assetManager.loadTexture("Textures/pbr/bark_diffuse.png");
         bark.setWrap(Texture.WrapMode.Repeat);
@@ -179,71 +177,87 @@ public class MaterialsParameters extends Parameters {
     }
 
     /**
+     * Get the tree material.
+     *
      * @return the tree material.
      */
-    @JMEThread
+    @JmeThread
     public @NotNull Material getTreeMaterial() {
         return treeMaterial;
     }
 
     /**
+     * Get the tree material.
+     *
      * @param treeMaterial the tree material.
      */
-    @JMEThread
+    @JmeThread
     public void setTreeMaterial(@NotNull final Material treeMaterial) {
         this.treeMaterial = treeMaterial;
     }
 
     /**
+     * Get the flat material.
+     *
      * @return the flat material.
      */
-    @JMEThread
+    @JmeThread
     public @NotNull Material getFlatMaterial() {
         return flatMaterial;
     }
 
     /**
+     * Get the flat material.
+     *
      * @param flatMaterial the flat material.
      */
-    @JMEThread
+    @JmeThread
     public void setFlatMaterial(@NotNull final Material flatMaterial) {
         this.flatMaterial = flatMaterial;
     }
 
     /**
+     * Get the impostor material.
+     *
      * @return the impostor material.
      */
-    @JMEThread
+    @JmeThread
     public @NotNull Material getImpostorMaterial() {
         return impostorMaterial;
     }
 
     /**
+     * Get the impostor material.
+     *
      * @param impostorMaterial the impostor material.
      */
-    @JMEThread
+    @JmeThread
     public void setImpostorMaterial(@NotNull final Material impostorMaterial) {
         this.impostorMaterial = impostorMaterial;
     }
 
     /**
+     * Get the leaf material.
+     *
      * @return the leaf material.
      */
-    @JMEThread
+    @JmeThread
     public @NotNull Material getLeafMaterial() {
         return leafMaterial;
     }
 
     /**
+     * Get the leaf material.
+     *
      * @param leafMaterial the leaf material.
      */
-    @JMEThread
+    @JmeThread
     public void setLeafMaterial(@NotNull final Material leafMaterial) {
         this.leafMaterial = leafMaterial;
     }
 
     @Override
-    @JMEThread
+    @JmeThread
     public void cloneFields(@NotNull final Cloner cloner, @NotNull final Object original) {
         super.cloneFields(cloner, original);
         treeMaterial = cloner.clone(treeMaterial);
@@ -253,7 +267,7 @@ public class MaterialsParameters extends Parameters {
     }
 
     @Override
-    @JMEThread
+    @JmeThread
     public void write(@NotNull final JmeExporter ex) throws IOException {
         super.write(ex);
 
@@ -269,7 +283,7 @@ public class MaterialsParameters extends Parameters {
     }
 
     @Override
-    @JMEThread
+    @JmeThread
     public void read(@NotNull final JmeImporter im) throws IOException {
         super.read(im);
 

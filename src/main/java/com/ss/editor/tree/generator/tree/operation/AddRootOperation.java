@@ -2,7 +2,7 @@ package com.ss.editor.tree.generator.tree.operation;
 
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.model.undo.impl.AbstractEditorOperation;
 import com.ss.editor.tree.generator.parameters.RootsParameters;
@@ -41,20 +41,20 @@ public class AddRootOperation extends AbstractEditorOperation<ChangeConsumer> {
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void redoImpl(@NotNull final ChangeConsumer editor) {
-        EXECUTOR_MANAGER.addJMETask(() -> {
+        EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addRoot(newRoot, -1);
-            EXECUTOR_MANAGER.addFXTask(() -> editor.notifyFXAddedChild(rootsParameters, newRoot, -1, true));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(rootsParameters, newRoot, -1, true));
         });
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected void undoImpl(@NotNull final ChangeConsumer editor) {
-        EXECUTOR_MANAGER.addJMETask(() -> {
+        EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.removeRoot(newRoot);
-            EXECUTOR_MANAGER.addFXTask(() -> editor.notifyFXRemovedChild(rootsParameters, newRoot));
+            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(rootsParameters, newRoot));
         });
     }
 }

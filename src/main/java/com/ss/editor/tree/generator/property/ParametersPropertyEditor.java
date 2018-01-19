@@ -1,7 +1,7 @@
 package com.ss.editor.tree.generator.property;
 
 import com.jme3.material.Material;
-import com.ss.editor.annotation.FXThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.ui.control.property.PropertyEditor;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ public class ParametersPropertyEditor extends PropertyEditor<ChangeConsumer> {
     }
 
     @Override
-    @FXThread
+    @FxThread
     protected boolean canEdit(@NotNull final Object object, @Nullable final Object parent) {
 
         if (object instanceof Material) {
