@@ -27,8 +27,8 @@ import java.net.URL;
  */
 @PluginDescription(
         id = "com.ss.editor.tree.generator",
-        version = "1.1.0",
-        minAppVersion = "1.6.0",
+        version = "1.1.1",
+        minAppVersion = "1.7.0",
         name = "SimArboreal Tree Generator",
         description = "Provides a new editor to generate trees based on the library 'SimArboreal'."
 )

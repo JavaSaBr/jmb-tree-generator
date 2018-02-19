@@ -1,8 +1,8 @@
 package com.ss.editor.tree.generator.editor;
 
-import static com.ss.editor.config.DefaultSettingsProvider.Defaults.PREF_DEFAULT_CAMERA_LIGHT;
-import static com.ss.editor.config.DefaultSettingsProvider.Preferences.PREF_CAMERA_LAMP;
 import com.ss.editor.annotation.FxThread;
+import com.ss.editor.config.DefaultSettingsProvider.Defaults;
+import com.ss.editor.config.DefaultSettingsProvider.Preferences;
 import com.ss.editor.ui.component.editor.state.impl.Editor3DWithEditorToolEditorState;
 
 /**
@@ -24,7 +24,7 @@ public class TreeGeneratorEditorState extends Editor3DWithEditorToolEditorState 
 
     public TreeGeneratorEditorState() {
         this.cameraLocation.set(0, 2, 0);
-        this.enableLight = EDITOR_CONFIG.getBoolean(PREF_CAMERA_LAMP, PREF_DEFAULT_CAMERA_LIGHT);
+        this.enableLight = EDITOR_CONFIG.getBoolean(Preferences.PREF_CAMERA_LAMP, Defaults.PREF_DEFAULT_CAMERA_LIGHT);
     }
 
     /**

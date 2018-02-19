@@ -32,6 +32,7 @@ import com.ss.editor.ui.util.DynamicIconSupport;
 import com.ss.editor.ui.util.UiUtils;
 import com.ss.editor.util.EditorUtil;
 import com.ss.rlib.ui.util.FXUtils;
+import com.ss.rlib.util.array.Array;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
@@ -104,7 +105,7 @@ public class TreeGeneratorFileEditor extends
      * The selection handler.
      */
     @Nullable
-    private Consumer<Object> selectionHandler;
+    private Consumer<Array<Object>> selectionHandler;
 
     @Override
     @FxThread
@@ -139,12 +140,14 @@ public class TreeGeneratorFileEditor extends
     }
 
     /**
-     * Handle selected object from node tree.
+     * Handle selected objects from node tree.
      *
-     * @param object the selected object.
+     * @param objects the selected objects.
      */
     @FxThread
-    private void selectFromTree(@Nullable final Object object) {
+    private void selectFromTree(@Nullable final Array<Object> objects) {
+
+        final Object object = objects.first();
 
         Object parent = null;
         Object element;
@@ -350,7 +353,7 @@ public class TreeGeneratorFileEditor extends
         }
 
         if (needSelect) {
-            parametersTree.select(added);
+            parametersTree.selectSingle(added);
         }
 
         getEditor3DPart().generate();
