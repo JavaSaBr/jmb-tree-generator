@@ -38,9 +38,11 @@ public class RemoveLodOperation extends AbstractEditorOperation<ChangeConsumer> 
      */
     private int index;
 
-    public RemoveLodOperation(@NotNull final TreeParameters treeParameters,
-                              @NotNull final LodsParameters lodsParameters,
-                              @NotNull final LevelOfDetailParameters removed) {
+    public RemoveLodOperation(
+            @NotNull TreeParameters treeParameters,
+            @NotNull LodsParameters lodsParameters,
+            @NotNull LevelOfDetailParameters removed
+    ) {
         this.treeParameters = treeParameters;
         this.lodsParameters = lodsParameters;
         this.removed = removed;
@@ -48,7 +50,7 @@ public class RemoveLodOperation extends AbstractEditorOperation<ChangeConsumer> 
 
     @Override
     @FxThread
-    protected void redoImpl(@NotNull final ChangeConsumer editor) {
+    protected void redoImpl(@NotNull ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             index = treeParameters.removeLodLevel(removed);
             EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(lodsParameters, removed));
@@ -57,7 +59,7 @@ public class RemoveLodOperation extends AbstractEditorOperation<ChangeConsumer> 
 
     @Override
     @FxThread
-    protected void undoImpl(@NotNull final ChangeConsumer editor) {
+    protected void undoImpl(@NotNull ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addLodLevel(removed, index);
             EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(lodsParameters, removed, index, false));

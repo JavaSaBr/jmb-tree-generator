@@ -1,6 +1,6 @@
 package com.ss.editor.tree.generator.editor;
 
-import static com.ss.rlib.util.ObjectUtils.notNull;
+import static com.ss.rlib.common.util.ObjectUtils.notNull;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bounding.BoundingBox;
@@ -25,7 +25,7 @@ import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.util.EditorUtil;
 import com.ss.editor.util.TangentGenerator;
-import com.ss.rlib.geom.util.AngleUtils;
+import com.ss.rlib.common.geom.util.AngleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

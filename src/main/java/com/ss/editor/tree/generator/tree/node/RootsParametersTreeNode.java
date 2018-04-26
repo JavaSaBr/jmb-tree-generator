@@ -1,16 +1,14 @@
 package com.ss.editor.tree.generator.tree.node;
 
-import com.simsilica.arboreal.BranchParameters;
-import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FxThread;
 import com.ss.editor.annotation.FromAnyThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.RootsParameters;
 import com.ss.editor.tree.generator.tree.action.CreateRootAction;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
-import com.ss.rlib.util.array.Array;
-import com.ss.rlib.util.array.ArrayFactory;
+import com.ss.rlib.common.util.array.Array;
+import com.ss.rlib.common.util.array.ArrayFactory;
 import javafx.collections.ObservableList;
 import javafx.scene.control.MenuItem;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RootsParametersTreeNode extends ParametersTreeNode<RootsParameters> {
 
-    public RootsParametersTreeNode(@NotNull final RootsParameters element, final long objectId) {
+    public RootsParametersTreeNode(@NotNull RootsParameters element, long objectId) {
         super(element, objectId);
     }
 
@@ -34,20 +32,20 @@ public class RootsParametersTreeNode extends ParametersTreeNode<RootsParameters>
 
     @Override
     @FxThread
-    public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
+    public @NotNull Array<TreeNode<?>> getChildren(@NotNull NodeTree<?> nodeTree) {
 
-        final RootsParameters rootsParameters = getElement();
-        final TreeParameters treeParameters = rootsParameters.getTreeParameters();
+        var rootsParameters = getElement();
+        var treeParameters = rootsParameters.getTreeParameters();
 
-        final Array<TreeNode<?>> children = ArrayFactory.newArray(TreeNode.class);
+        var children = ArrayFactory.<TreeNode<?>>newArray(TreeNode.class);
 
-        final BranchParameters[] roots = treeParameters.getRoots();
-        for (final BranchParameters root : roots) {
+        var roots = treeParameters.getRoots();
+        for (var root : roots) {
             children.add(FACTORY_REGISTRY.createFor(root));
         }
 
-        for (int i = 0; i < children.size(); i++) {
-            final BranchParametersTreeNode node = (BranchParametersTreeNode) children.get(i);
+        for (var i = 0; i < children.size(); i++) {
+            var node = (BranchParametersTreeNode) children.get(i);
             node.setName(PluginMessages.TREE_GENERATOR_EDITOR_NODE_ROOT + " #" + i);
         }
 
@@ -56,14 +54,14 @@ public class RootsParametersTreeNode extends ParametersTreeNode<RootsParameters>
 
     @Override
     @FxThread
-    public void fillContextMenu(@NotNull final NodeTree<?> nodeTree, @NotNull final ObservableList<MenuItem> items) {
+    public void fillContextMenu(@NotNull NodeTree<?> nodeTree, @NotNull ObservableList<MenuItem> items) {
         super.fillContextMenu(nodeTree, items);
         items.add(new CreateRootAction(nodeTree, this));
     }
 
     @Override
     @FxThread
-    public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
+    public boolean hasChildren(@NotNull NodeTree<?> nodeTree) {
         return true;
     }
 }

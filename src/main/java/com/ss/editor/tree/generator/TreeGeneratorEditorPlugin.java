@@ -11,10 +11,10 @@ import com.ss.editor.ui.component.creator.FileCreatorRegistry;
 import com.ss.editor.ui.component.editor.EditorRegistry;
 import com.ss.editor.ui.control.property.builder.PropertyBuilderRegistry;
 import com.ss.editor.ui.control.tree.node.factory.TreeNodeFactoryRegistry;
-import com.ss.rlib.plugin.PluginContainer;
-import com.ss.rlib.plugin.annotation.PluginDescription;
-import com.ss.rlib.util.FileUtils;
-import com.ss.rlib.util.Utils;
+import com.ss.rlib.common.plugin.PluginContainer;
+import com.ss.rlib.common.plugin.annotation.PluginDescription;
+import com.ss.rlib.common.util.FileUtils;
+import com.ss.rlib.common.util.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,8 +27,8 @@ import java.net.URL;
  */
 @PluginDescription(
         id = "com.ss.editor.tree.generator",
-        version = "1.1.1",
-        minAppVersion = "1.7.0",
+        version = "1.2.0",
+        minAppVersion = "1.8.0",
         name = "SimArboreal Tree Generator",
         description = "Provides a new editor to generate trees based on the library 'SimArboreal'."
 )
@@ -44,45 +44,46 @@ public class TreeGeneratorEditorPlugin extends EditorPlugin {
     private static final String MAVEN_DEPENDENCIES;
 
     static {
-        GRADLE_DEPENDENCIES = FileUtils.read(TreeGeneratorEditorPlugin.class.getResourceAsStream("/com/ss/editor/tree/generator/dependency/gradle.html"));
-        MAVEN_DEPENDENCIES = FileUtils.read(TreeGeneratorEditorPlugin.class.getResourceAsStream("/com/ss/editor/tree/generator/dependency/maven.html"));
+        var loader = TreeGeneratorEditorPlugin.class;
+        GRADLE_DEPENDENCIES = FileUtils.read(loader.getResourceAsStream("/com/ss/editor/tree/generator/dependency/gradle.html"));
+        MAVEN_DEPENDENCIES = FileUtils.read(loader.getResourceAsStream("/com/ss/editor/tree/generator/dependency/maven.html"));
     }
 
-    public TreeGeneratorEditorPlugin(@NotNull final PluginContainer pluginContainer) {
+    public TreeGeneratorEditorPlugin(@NotNull PluginContainer pluginContainer) {
         super(pluginContainer);
     }
 
     @Override
     @FromAnyThread
-    public void register(@NotNull final FileCreatorRegistry registry) {
+    public void register(@NotNull FileCreatorRegistry registry) {
         super.register(registry);
         registry.register(TreeGeneratorFileCreator.DESCRIPTION);
     }
 
     @Override
     @FromAnyThread
-    public void register(@NotNull final EditorRegistry registry) {
+    public void register(@NotNull EditorRegistry registry) {
         super.register(registry);
         registry.register(TreeGeneratorFileEditor.DESCRIPTION);
     }
 
     @Override
     @FromAnyThread
-    public void register(@NotNull final TreeNodeFactoryRegistry registry) {
+    public void register(@NotNull TreeNodeFactoryRegistry registry) {
         super.register(registry);
         registry.register(ParametersTreeNodeFactory.getInstance());
     }
 
     @Override
     @FromAnyThread
-    public void register(@NotNull final PropertyBuilderRegistry registry) {
+    public void register(@NotNull PropertyBuilderRegistry registry) {
         super.register(registry);
         registry.register(ParametersPropertyBuilder.getInstance());
     }
 
     @Override
     @FromAnyThread
-    public void register(@NotNull final FileIconManager iconManager) {
+    public void register(@NotNull FileIconManager iconManager) {
         iconManager.register((path, extension) -> {
 
             if (PROJECT_EXTENSION.equals(extension)) {

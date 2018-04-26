@@ -1,11 +1,8 @@
 package com.ss.editor.tree.generator.parameters;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.asset.AssetNotFoundException;
-import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
@@ -14,6 +11,7 @@ import com.jme3.util.clone.Cloner;
 import com.simsilica.arboreal.Parameters;
 import com.ss.editor.annotation.JmeThread;
 import com.ss.editor.util.EditorUtil;
+import com.ss.rlib.common.util.Utils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -52,24 +50,27 @@ public class MaterialsParameters extends Parameters {
     public MaterialsParameters() {
     }
 
+    /**
+     * Load default tree's materials.
+     */
     @JmeThread
     public void loadDefault() {
 
-        final AssetManager assetManager = EditorUtil.getAssetManager();
+        var assetManager = EditorUtil.getAssetManager();
 
-        final Texture bark = assetManager.loadTexture("Textures/bark128.jpg");
+        var bark = assetManager.loadTexture("Textures/bark128.jpg");
         bark.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture barkNormals = assetManager.loadTexture("Textures/bark128-norm.jpg");
+        var barkNormals = assetManager.loadTexture("Textures/bark128-norm.jpg");
         barkNormals.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture barkBumps = assetManager.loadTexture("Textures/bark128-bump.png");
+        var barkBumps = assetManager.loadTexture("Textures/bark128-bump.png");
         barkBumps.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture leafAtlas = assetManager.loadTexture("Textures/leaf-atlas.png");
+        var leafAtlas = assetManager.loadTexture("Textures/leaf-atlas.png");
         leafAtlas.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture noise = assetManager.loadTexture("Textures/noise-x3-512.png");
+        var noise = assetManager.loadTexture("Textures/noise-x3-512.png");
         noise.setWrap(Texture.WrapMode.Repeat);
 
         treeMaterial = new Material(assetManager, "MatDefs/TreeLighting.j3md");
@@ -112,30 +113,33 @@ public class MaterialsParameters extends Parameters {
         leafMaterial.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
     }
 
+    /**
+     * Load PBR tree's materials.
+     */
     @JmeThread
     public void loadPBR() {
 
-        final AssetManager assetManager = EditorUtil.getAssetManager();
+        var assetManager = EditorUtil.getAssetManager();
 
-        final Texture bark = assetManager.loadTexture("Textures/pbr/bark_diffuse.png");
+        var bark = assetManager.loadTexture("Textures/pbr/bark_diffuse.png");
         bark.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture barkNormals = assetManager.loadTexture("Textures/pbr/bark_normal.png");
+        var barkNormals = assetManager.loadTexture("Textures/pbr/bark_normal.png");
         barkNormals.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture barkRoughness = assetManager.loadTexture("Textures/pbr/bark_rough.png");
+        var barkRoughness = assetManager.loadTexture("Textures/pbr/bark_rough.png");
         barkRoughness.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture leafDiffuse = assetManager.loadTexture("Textures/pbr/crone_diffuse.png");
+        var leafDiffuse = assetManager.loadTexture("Textures/pbr/crone_diffuse.png");
         leafDiffuse.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture leafNormal = assetManager.loadTexture("Textures/pbr/crone_normal.png");
+        var leafNormal = assetManager.loadTexture("Textures/pbr/crone_normal.png");
         leafNormal.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture leafRoughness = assetManager.loadTexture("Textures/pbr/crone_rough.png");
+        var leafRoughness = assetManager.loadTexture("Textures/pbr/crone_rough.png");
         leafRoughness.setWrap(Texture.WrapMode.Repeat);
 
-        final Texture noise = assetManager.loadTexture("Textures/noise-x3-512.png");
+        var noise = assetManager.loadTexture("Textures/noise-x3-512.png");
         noise.setWrap(Texture.WrapMode.Repeat);
 
         treeMaterial = new Material(assetManager, "MatDefs/TreePBRLighting.j3md");
@@ -192,7 +196,7 @@ public class MaterialsParameters extends Parameters {
      * @param treeMaterial the tree material.
      */
     @JmeThread
-    public void setTreeMaterial(@NotNull final Material treeMaterial) {
+    public void setTreeMaterial(@NotNull Material treeMaterial) {
         this.treeMaterial = treeMaterial;
     }
 
@@ -212,7 +216,7 @@ public class MaterialsParameters extends Parameters {
      * @param flatMaterial the flat material.
      */
     @JmeThread
-    public void setFlatMaterial(@NotNull final Material flatMaterial) {
+    public void setFlatMaterial(@NotNull Material flatMaterial) {
         this.flatMaterial = flatMaterial;
     }
 
@@ -232,7 +236,7 @@ public class MaterialsParameters extends Parameters {
      * @param impostorMaterial the impostor material.
      */
     @JmeThread
-    public void setImpostorMaterial(@NotNull final Material impostorMaterial) {
+    public void setImpostorMaterial(@NotNull Material impostorMaterial) {
         this.impostorMaterial = impostorMaterial;
     }
 
@@ -252,13 +256,13 @@ public class MaterialsParameters extends Parameters {
      * @param leafMaterial the leaf material.
      */
     @JmeThread
-    public void setLeafMaterial(@NotNull final Material leafMaterial) {
+    public void setLeafMaterial(@NotNull Material leafMaterial) {
         this.leafMaterial = leafMaterial;
     }
 
     @Override
     @JmeThread
-    public void cloneFields(@NotNull final Cloner cloner, @NotNull final Object original) {
+    public void cloneFields(@NotNull Cloner cloner, @NotNull Object original) {
         super.cloneFields(cloner, original);
         treeMaterial = cloner.clone(treeMaterial);
         flatMaterial = cloner.clone(flatMaterial);
@@ -268,10 +272,10 @@ public class MaterialsParameters extends Parameters {
 
     @Override
     @JmeThread
-    public void write(@NotNull final JmeExporter ex) throws IOException {
+    public void write(@NotNull JmeExporter ex) throws IOException {
         super.write(ex);
 
-        final OutputCapsule out = ex.getCapsule(this);
+        var out = ex.getCapsule(this);
         out.write(treeMaterial, "treeMaterial", null);
         out.write(flatMaterial, "flatMaterial", null);
         out.write(impostorMaterial, "impostorMaterial", null);
@@ -287,41 +291,33 @@ public class MaterialsParameters extends Parameters {
     public void read(@NotNull final JmeImporter im) throws IOException {
         super.read(im);
 
-        final AssetManager assetManager = im.getAssetManager();
-        final InputCapsule in = im.getCapsule(this);
+        var assetManager = im.getAssetManager();
+        var in = im.getCapsule(this);
 
         treeMaterial = (Material) in.readSavable("treeMaterial", null);
         flatMaterial = (Material) in.readSavable("flatMaterial", null);
         impostorMaterial = (Material) in.readSavable("impostorMaterial", null);
         leafMaterial = (Material) in.readSavable("leafMaterial", null);
 
-        String matName = in.readString("treeMaterialName", null);
+        var matName = in.readString("treeMaterialName", null);
         if (matName != null) {
-            try {
-                treeMaterial = assetManager.loadMaterial(matName);
-            } catch (final AssetNotFoundException ex) {
-            }
+            treeMaterial = Utils.safeGetOpt(assetManager, matName, AssetManager::loadMaterial)
+                    .orElse(treeMaterial);
         }
         matName = in.readString("flatMaterialName", null);
         if (matName != null) {
-            try {
-                flatMaterial = assetManager.loadMaterial(matName);
-            } catch (final AssetNotFoundException ex) {
-            }
+            flatMaterial = Utils.safeGetOpt(assetManager, matName, AssetManager::loadMaterial)
+                    .orElse(flatMaterial);
         }
         matName = in.readString("impostorMaterialName", null);
         if (matName != null) {
-            try {
-                impostorMaterial = assetManager.loadMaterial(matName);
-            } catch (final AssetNotFoundException ex) {
-            }
+            impostorMaterial = Utils.safeGetOpt(assetManager, matName, AssetManager::loadMaterial)
+                    .orElse(impostorMaterial);
         }
         matName = in.readString("leafMaterialName", null);
         if (matName != null) {
-            try {
-                leafMaterial = assetManager.loadMaterial(matName);
-            } catch (final AssetNotFoundException ex) {
-            }
+            leafMaterial = Utils.safeGetOpt(assetManager, matName, AssetManager::loadMaterial)
+                    .orElse(leafMaterial);
         }
     }
 }

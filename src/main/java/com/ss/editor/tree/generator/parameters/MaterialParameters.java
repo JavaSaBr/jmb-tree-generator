@@ -19,13 +19,13 @@ public class MaterialParameters extends Parameters {
      * The material change handler.
      */
     @NotNull
-    private final Consumer<@NotNull Material> changeHandler;
+    private final Consumer<Material> changeHandler;
 
     /**
      * The material sync handler.
      */
     @NotNull
-    private final Supplier<@NotNull Material> syncHandler;
+    private final Supplier<Material> syncHandler;
 
     /**
      * The material name.
@@ -39,9 +39,11 @@ public class MaterialParameters extends Parameters {
     @NotNull
     private Material material;
 
-    public MaterialParameters(@NotNull final Consumer<@NotNull Material> changeHandler,
-                              @NotNull final Supplier<@NotNull Material> syncHandler,
-                              @NotNull final String name) {
+    public MaterialParameters(
+            @NotNull Consumer<Material> changeHandler,
+            @NotNull Supplier<Material> syncHandler,
+            @NotNull String name
+    ) {
         this.changeHandler = changeHandler;
         this.syncHandler = syncHandler;
         this.material = syncHandler.get();
@@ -64,7 +66,7 @@ public class MaterialParameters extends Parameters {
      * @param material the material.
      */
     @JmeThread
-    public void setMaterial(@NotNull final Material material) {
+    public void setMaterial(@NotNull Material material) {
         this.material = material;
     }
 
@@ -84,7 +86,7 @@ public class MaterialParameters extends Parameters {
      * @return the material change handler.
      */
     @JmeThread
-    public @NotNull Consumer<@NotNull Material> getChangeHandler() {
+    public @NotNull Consumer<Material> getChangeHandler() {
         return changeHandler;
     }
 
@@ -94,7 +96,7 @@ public class MaterialParameters extends Parameters {
      * @return the material sync handler.
      */
     @JmeThread
-    public @NotNull Supplier<@NotNull Material> getSyncHandler() {
+    public @NotNull Supplier<Material> getSyncHandler() {
         return syncHandler;
     }
 }

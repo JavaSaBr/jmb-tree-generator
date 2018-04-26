@@ -5,8 +5,8 @@ import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
-import com.ss.rlib.util.array.Array;
-import com.ss.rlib.util.array.ArrayFactory;
+import com.ss.rlib.common.util.array.Array;
+import com.ss.rlib.common.util.array.ArrayFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MaterialParametersTreeNode extends ParametersTreeNode<MaterialParameters> {
 
-    public MaterialParametersTreeNode(@NotNull final MaterialParameters element, final long objectId) {
+    public MaterialParametersTreeNode(@NotNull MaterialParameters element, long objectId) {
         super(element, objectId);
     }
 
@@ -28,9 +28,8 @@ public class MaterialParametersTreeNode extends ParametersTreeNode<MaterialParam
 
     @Override
     @FxThread
-    public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
-        final TreeNode<?> node = FACTORY_REGISTRY.createFor(getElement().getMaterial());
-        return ArrayFactory.asArray(node);
+    public @NotNull Array<TreeNode<?>> getChildren(@NotNull NodeTree<?> nodeTree) {
+        return ArrayFactory.asArray(FACTORY_REGISTRY.createFor(getElement().getMaterial()));
     }
 
     @Override

@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ParametersTreeNode<T extends Parameters> extends TreeNode<T> {
 
-    public ParametersTreeNode(@NotNull final T element, final long objectId) {
+    public ParametersTreeNode(@NotNull T element, long objectId) {
         super(element, objectId);
     }
 

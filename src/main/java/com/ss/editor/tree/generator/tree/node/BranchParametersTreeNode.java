@@ -24,19 +24,19 @@ public class BranchParametersTreeNode extends ParametersTreeNode<BranchParameter
     @NotNull
     private String name;
 
-    public BranchParametersTreeNode(@NotNull final BranchParameters element, final long objectId) {
+    public BranchParametersTreeNode(@NotNull BranchParameters element, long objectId) {
         super(element, objectId);
         this.name = PluginMessages.TREE_GENERATOR_EDITOR_NODE_BRANCH;
     }
 
     @Override
     @FxThread
-    public void fillContextMenu(@NotNull final NodeTree<?> nodeTree, @NotNull final ObservableList<MenuItem> items) {
+    public void fillContextMenu(@NotNull NodeTree<?> nodeTree, @NotNull ObservableList<MenuItem> items) {
         super.fillContextMenu(nodeTree, items);
 
-        final BranchParameters branchParameters = getElement();
-        final TreeParameters parent = (TreeParameters) branchParameters.getParent();
-        final BranchParameters[] branches = parent.getBranches();
+        var branchParameters = getElement();
+        var parent = (TreeParameters) branchParameters.getParent();
+        var branches = parent.getBranches();
 
         if (branches[0] != branchParameters) {
             items.add(new DeleteBranchAction(nodeTree, this));
@@ -45,7 +45,7 @@ public class BranchParametersTreeNode extends ParametersTreeNode<BranchParameter
 
     @Override
     @FxThread
-    public void setName(@NotNull final String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 
