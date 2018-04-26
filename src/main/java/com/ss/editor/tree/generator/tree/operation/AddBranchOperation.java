@@ -33,9 +33,11 @@ public class AddBranchOperation extends AbstractEditorOperation<ChangeConsumer> 
     @NotNull
     private final BranchParameters newBranch;
 
-    public AddBranchOperation(@NotNull final TreeParameters treeParameters,
-                              @NotNull final BranchesParameters branchesParameters,
-                              @NotNull final BranchParameters newBranch) {
+    public AddBranchOperation(
+            @NotNull TreeParameters treeParameters,
+            @NotNull BranchesParameters branchesParameters,
+            @NotNull BranchParameters newBranch
+    ) {
         this.treeParameters = treeParameters;
         this.branchesParameters = branchesParameters;
         this.newBranch = newBranch;
@@ -43,7 +45,7 @@ public class AddBranchOperation extends AbstractEditorOperation<ChangeConsumer> 
 
     @Override
     @FxThread
-    protected void redoImpl(@NotNull final ChangeConsumer editor) {
+    protected void redoImpl(@NotNull ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addBranch(newBranch, -1);
             EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(branchesParameters, newBranch, -1, true));
@@ -52,7 +54,7 @@ public class AddBranchOperation extends AbstractEditorOperation<ChangeConsumer> 
 
     @Override
     @FxThread
-    protected void undoImpl(@NotNull final ChangeConsumer editor) {
+    protected void undoImpl(@NotNull ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.removeBranch(newBranch);
             EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(branchesParameters, newBranch));

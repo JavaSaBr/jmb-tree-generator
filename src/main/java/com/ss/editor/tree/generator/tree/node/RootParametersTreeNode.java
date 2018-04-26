@@ -1,9 +1,10 @@
 package com.ss.editor.tree.generator.tree.node;
 
+import static com.ss.rlib.common.util.ObjectUtils.notNull;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
-import com.ss.editor.annotation.FxThread;
 import com.ss.editor.annotation.FromAnyThread;
+import com.ss.editor.annotation.FxThread;
 import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.tree.action.DeleteRootAction;
 import com.ss.editor.ui.control.tree.NodeTree;
@@ -24,19 +25,19 @@ public class RootParametersTreeNode extends ParametersTreeNode<BranchParameters>
     @NotNull
     private String name;
 
-    public RootParametersTreeNode(@NotNull final BranchParameters element, final long objectId) {
+    public RootParametersTreeNode(@NotNull BranchParameters element, long objectId) {
         super(element, objectId);
         this.name = PluginMessages.TREE_GENERATOR_EDITOR_NODE_ROOT;
     }
 
     @Override
     @FxThread
-    public void fillContextMenu(@NotNull final NodeTree<?> nodeTree, @NotNull final ObservableList<MenuItem> items) {
+    public void fillContextMenu(@NotNull NodeTree<?> nodeTree, @NotNull ObservableList<MenuItem> items) {
         super.fillContextMenu(nodeTree, items);
 
-        final BranchParameters branchParameters = getElement();
-        final TreeParameters parent = (TreeParameters) branchParameters.getParent();
-        final BranchParameters[] roots = parent.getRoots();
+        var branchParameters = getElement();
+        var parent = notNull((TreeParameters) branchParameters.getParent());
+        var roots = parent.getRoots();
 
         if (roots[0] != branchParameters) {
             items.add(new DeleteRootAction(nodeTree, this));
@@ -45,7 +46,7 @@ public class RootParametersTreeNode extends ParametersTreeNode<BranchParameters>
 
     @Override
     @FxThread
-    public void setName(@NotNull final String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 

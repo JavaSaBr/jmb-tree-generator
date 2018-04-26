@@ -1,8 +1,7 @@
 package com.ss.editor.tree.generator.tree.action;
 
-import static com.ss.rlib.util.ObjectUtils.notNull;
+import static com.ss.rlib.common.util.ObjectUtils.notNull;
 import com.simsilica.arboreal.LevelOfDetailParameters;
-import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.FxThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.tree.generator.PluginMessages;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CreateLodAction extends AbstractNodeAction<ChangeConsumer> {
 
-    public CreateLodAction(@NotNull final NodeTree<?> nodeTree, @NotNull final TreeNode<?> node) {
+    public CreateLodAction(@NotNull NodeTree<?> nodeTree, @NotNull TreeNode<?> node) {
         super(nodeTree, node);
     }
 
@@ -35,15 +34,14 @@ public class CreateLodAction extends AbstractNodeAction<ChangeConsumer> {
     protected void process() {
         super.process();
 
-        final TreeNode<?> node = getNode();
-        final LodsParameters lodsParameters = (LodsParameters) node.getElement();
-        final TreeParameters treeParameters = lodsParameters.getTreeParameters();
+        var node = getNode();
+        var lodsParameters = (LodsParameters) node.getElement();
+        var treeParameters = lodsParameters.getTreeParameters();
 
-        final LevelOfDetailParameters newLod = new LevelOfDetailParameters();
+        var newLod = new LevelOfDetailParameters();
         newLod.setParent(treeParameters);
 
-        final NodeTree<ChangeConsumer> nodeTree = getNodeTree();
-        final ChangeConsumer changeConsumer = notNull(nodeTree.getChangeConsumer());
-        changeConsumer.execute(new AddLodOperation(treeParameters, lodsParameters, newLod));
+        notNull(getNodeTree().getChangeConsumer())
+                .execute(new AddLodOperation(treeParameters, lodsParameters, newLod));
     }
 }
