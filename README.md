@@ -1,5 +1,5 @@
 
-## SimArboreal Tree Generator 1.2.0
+## SimArboreal Tree Generator 1.2.1
 
 It's a plugin for jMonkeyBuilder with provides an editor to generate tree models.
 This plugin is embedded in the jMB since 1.3.0 version.
