@@ -14,13 +14,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ParametersPropertyEditor extends PropertyEditor<ChangeConsumer> {
 
-    public ParametersPropertyEditor(@NotNull final ChangeConsumer changeConsumer) {
+    public ParametersPropertyEditor(@NotNull ChangeConsumer changeConsumer) {
         super(changeConsumer);
     }
 
     @Override
     @FxThread
-    protected boolean canEdit(@NotNull final Object object, @Nullable final Object parent) {
+    protected boolean canEdit(@NotNull Object object, @Nullable Object parent) {
 
         if (object instanceof Material) {
             return ((Material) object).getKey() == null;

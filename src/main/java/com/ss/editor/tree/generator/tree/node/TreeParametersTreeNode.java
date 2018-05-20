@@ -9,8 +9,8 @@ import com.ss.editor.tree.generator.parameters.LodsParameters;
 import com.ss.editor.tree.generator.parameters.RootsParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
-import com.ss.rlib.util.array.Array;
-import com.ss.rlib.util.array.ArrayFactory;
+import com.ss.rlib.common.util.array.Array;
+import com.ss.rlib.common.util.array.ArrayFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TreeParametersTreeNode extends ParametersTreeNode<TreeParameters> {
 
-    public TreeParametersTreeNode(@NotNull final TreeParameters element, final long objectId) {
+    public TreeParametersTreeNode(@NotNull TreeParameters element, long objectId) {
         super(element, objectId);
     }
 
@@ -32,21 +32,21 @@ public class TreeParametersTreeNode extends ParametersTreeNode<TreeParameters> {
 
     @Override
     @FxThread
-    public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
+    public @NotNull Array<TreeNode<?>> getChildren(@NotNull NodeTree<?> nodeTree) {
 
-        final TreeParameters element = getElement();
+        var treeParameters = getElement();
 
-        final Array<TreeNode<?>> children = ArrayFactory.newArray(TreeNode.class);
-        children.add(FACTORY_REGISTRY.createFor(new LodsParameters(element)));
-        children.add(FACTORY_REGISTRY.createFor(new BranchesParameters(element)));
-        children.add(FACTORY_REGISTRY.createFor(new RootsParameters(element)));
+        var children = ArrayFactory.<TreeNode<?>>newArray(TreeNode.class);
+        children.add(FACTORY_REGISTRY.createFor(new LodsParameters(treeParameters)));
+        children.add(FACTORY_REGISTRY.createFor(new BranchesParameters(treeParameters)));
+        children.add(FACTORY_REGISTRY.createFor(new RootsParameters(treeParameters)));
 
         return children;
     }
 
     @Override
     @FxThread
-    public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
+    public boolean hasChildren(@NotNull NodeTree<?> nodeTree) {
         return true;
     }
 }

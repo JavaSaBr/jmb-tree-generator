@@ -1,6 +1,6 @@
 package com.ss.editor.tree.generator.tree.factory;
 
-import static com.ss.rlib.util.ClassUtils.unsafeCast;
+import static com.ss.rlib.common.util.ClassUtils.unsafeCast;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.TreeParameters;
@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ParametersTreeNodeFactory implements TreeNodeFactory {
 
-    @NotNull
     private static final TreeNodeFactory INSTANCE = new ParametersTreeNodeFactory();
 
     @FromAnyThread
@@ -30,7 +29,7 @@ public class ParametersTreeNodeFactory implements TreeNodeFactory {
 
     @Override
     @FxThread
-    public <T, V extends TreeNode<T>> @Nullable V createFor(@Nullable final T element, final long objectId) {
+    public <T, V extends TreeNode<T>> @Nullable V createFor(@Nullable T element, long objectId) {
 
         if (element instanceof ProjectParameters) {
             return unsafeCast(new ProjectParametersTreeNode((ProjectParameters) element, objectId));

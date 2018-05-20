@@ -38,9 +38,11 @@ public class RemoveRootOperation extends AbstractEditorOperation<ChangeConsumer>
      */
     private int index;
 
-    public RemoveRootOperation(@NotNull final TreeParameters treeParameters,
-                               @NotNull final RootsParameters rootsParameters,
-                               @NotNull final BranchParameters removed) {
+    public RemoveRootOperation(
+            @NotNull TreeParameters treeParameters,
+            @NotNull RootsParameters rootsParameters,
+            @NotNull BranchParameters removed
+    ) {
         this.treeParameters = treeParameters;
         this.rootsParameters = rootsParameters;
         this.removed = removed;
@@ -48,7 +50,7 @@ public class RemoveRootOperation extends AbstractEditorOperation<ChangeConsumer>
 
     @Override
     @FxThread
-    protected void redoImpl(@NotNull final ChangeConsumer editor) {
+    protected void redoImpl(@NotNull ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             index = treeParameters.removeRoot(removed);
             EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(rootsParameters, removed));
@@ -57,7 +59,7 @@ public class RemoveRootOperation extends AbstractEditorOperation<ChangeConsumer>
 
     @Override
     @FxThread
-    protected void undoImpl(@NotNull final ChangeConsumer editor) {
+    protected void undoImpl(@NotNull ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addRoot(removed, index);
             EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(rootsParameters, removed, index, false));

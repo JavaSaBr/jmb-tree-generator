@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RootsParameters extends BranchesParameters {
 
-    public RootsParameters(@NotNull final TreeParameters treeParameters) {
+    public RootsParameters(@NotNull TreeParameters treeParameters) {
         super(treeParameters);
     }
 }

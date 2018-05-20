@@ -1,13 +1,9 @@
 package com.ss.editor.tree.generator.parameters;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
 import com.jme3.util.clone.Cloner;
-import com.simsilica.arboreal.BranchParameters;
-import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.Parameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.JmeThread;
@@ -42,20 +38,20 @@ public class ProjectParameters extends Parameters {
     public ProjectParameters() {
     }
 
-    public ProjectParameters(@NotNull final AssetManager assetManager) {
+    public ProjectParameters(@NotNull AssetManager assetManager) {
         this.treeParameters = new TreeParameters();
         this.treeParameters.setParent(this);
         this.treeParameters.setGenerateLeaves(true);
 
-        for (final BranchParameters branchParameters : treeParameters.getBranches()) {
+        for (var branchParameters : treeParameters.getBranches()) {
             branchParameters.setParent(treeParameters);
         }
 
-        for (final BranchParameters branchParameters : treeParameters.getRoots()) {
+        for (var branchParameters : treeParameters.getRoots()) {
             branchParameters.setParent(treeParameters);
         }
 
-        for (final LevelOfDetailParameters detailParameters : treeParameters.getLods()) {
+        for (var detailParameters : treeParameters.getLods()) {
             detailParameters.setParent(treeParameters);
         }
     }
@@ -66,7 +62,7 @@ public class ProjectParameters extends Parameters {
      * @param materialParameters the material parameters.
      */
     @JmeThread
-    public void setMaterialParameters(@NotNull final MaterialsParameters materialParameters) {
+    public void setMaterialParameters(@NotNull MaterialsParameters materialParameters) {
         this.materialParameters = materialParameters;
         this.materialParameters.setParent(this);
     }
@@ -103,13 +99,13 @@ public class ProjectParameters extends Parameters {
      * @param showWire true if need to show wire.
      */
     @JmeThread
-    public void setShowWire(final boolean showWire) {
+    public void setShowWire(boolean showWire) {
         this.showWire = showWire;
     }
 
     @Override
     @JmeThread
-    public void cloneFields(@NotNull final Cloner cloner, @NotNull final Object original) {
+    public void cloneFields(@NotNull Cloner cloner, @NotNull Object original) {
         materialParameters = cloner.clone(materialParameters);
         treeParameters = cloner.clone(treeParameters);
     }
@@ -117,7 +113,7 @@ public class ProjectParameters extends Parameters {
     @Override
     @JmeThread
     public void write(@NotNull final JmeExporter ex) throws IOException {
-        final OutputCapsule out = ex.getCapsule(this);
+        var out = ex.getCapsule(this);
         out.write(treeParameters, "treeParameters", null);
         out.write(materialParameters, "materialsParameters", null);
         out.write(showWire, "showWire", false);
@@ -126,7 +122,7 @@ public class ProjectParameters extends Parameters {
     @Override
     @JmeThread
     public void read(@NotNull final JmeImporter im) throws IOException {
-        final InputCapsule in = im.getCapsule(this);
+        var in = im.getCapsule(this);
         materialParameters = (MaterialsParameters) in.readSavable("materialsParameters", null);
         treeParameters = (TreeParameters) in.readSavable("treeParameters", null);
         showWire = in.readBoolean("showWire", false);

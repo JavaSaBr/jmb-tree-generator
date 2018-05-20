@@ -1,16 +1,14 @@
 package com.ss.editor.tree.generator.editor;
 
-import static com.ss.rlib.util.ObjectUtils.notNull;
+import static com.ss.rlib.common.util.ObjectUtils.notNull;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bounding.BoundingBox;
-import com.jme3.light.DirectionalLight;
 import com.jme3.material.MatParam;
 import com.jme3.material.Material;
-import com.jme3.material.MaterialDef;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.*;
 import com.simsilica.arboreal.LevelOfDetailParameters;
 import com.simsilica.arboreal.Tree;
@@ -19,13 +17,11 @@ import com.simsilica.arboreal.TreeParameters;
 import com.simsilica.arboreal.mesh.*;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.annotation.JmeThread;
-import com.ss.editor.model.EditorCamera;
 import com.ss.editor.plugin.api.editor.part3d.AdvancedPbrWithStudioSky3DEditorPart;
-import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.util.EditorUtil;
 import com.ss.editor.util.TangentGenerator;
-import com.ss.rlib.geom.util.AngleUtils;
+import com.ss.rlib.common.geom.util.AngleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +42,6 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
     private static final float H_ROTATION = AngleUtils.degreeToRadians(75);
     private static final float V_ROTATION = AngleUtils.degreeToRadians(25);
 
-    @Nullable
     private static final Material WIRE_MATERIAL;
 
     static {
@@ -72,10 +67,10 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      */
     private boolean lightEnabled;
 
-    public TreeGeneratorEditor3DPart(@NotNull final TreeGeneratorFileEditor fileEditor) {
+    public TreeGeneratorEditor3DPart(@NotNull TreeGeneratorFileEditor fileEditor) {
         super(fileEditor);
 
-        final EditorCamera editorCamera = notNull(getEditorCamera());
+        var editorCamera = notNull(getEditorCamera());
         editorCamera.setDefaultHorizontalRotation(H_ROTATION);
         editorCamera.setDefaultVerticalRotation(V_ROTATION);
 
@@ -87,11 +82,9 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
 
     @Override
     @JmeThread
-    public void initialize(@NotNull final AppStateManager stateManager, @NotNull final Application application) {
+    public void initialize(@NotNull AppStateManager stateManager, @NotNull Application application) {
         super.initialize(stateManager, application);
-
-        final Node modelNode = getModelNode();
-        modelNode.attachChild(treeNode);
+        getModelNode().attachChild(treeNode);
     }
 
     @Override
@@ -124,7 +117,7 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param parameters the parameters.
      */
     @FromAnyThread
-    public void open(@NotNull final ProjectParameters parameters) {
+    public void open(@NotNull ProjectParameters parameters) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             setParameters(parameters);
             generateImpl(getTreeNode(), true);
@@ -137,7 +130,7 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param parameters the project parameters.
      */
     @JmeThread
-    private void setParameters(@NotNull final ProjectParameters parameters) {
+    private void setParameters(@NotNull ProjectParameters parameters) {
         this.parameters = parameters;
     }
 
@@ -165,10 +158,10 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param consumer the result consumer.
      */
     @FromAnyThread
-    public void generate(@NotNull final Consumer<Node> consumer) {
+    public void generate(@NotNull Consumer<Node> consumer) {
         EXECUTOR_MANAGER.addBackgroundTask(() -> {
 
-            final Node treeNode = new Node("Tree");
+            var treeNode = new Node("Tree");
             treeNode.addControl(new LodSwitchControl());
 
             generateImpl(treeNode, false);
@@ -194,38 +187,38 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param needWire the flag if need to add wire.
      */
     @JmeThread
-    private void generateImpl(@NotNull final Node treeNode, final boolean needWire) {
+    private void generateImpl(@NotNull Node treeNode, boolean needWire) {
 
-        final LodSwitchControl lodControl = treeNode.getControl(LodSwitchControl.class);
+        var lodControl = treeNode.getControl(LodSwitchControl.class);
         lodControl.clearLevels();
 
         treeNode.detachAllChildren();
 
-        final ProjectParameters parameters = getParameters();
-        final TreeParameters treeParameters = parameters.getTreeParameters();
-        final MaterialsParameters materialParameters = parameters.getMaterialParameters();
-        final Material treeMaterial = materialParameters.getTreeMaterial();
-        final Material leafMaterial = materialParameters.getLeafMaterial();
-        final Material impostorMaterial = materialParameters.getImpostorMaterial();
-        final Material flatMaterial = materialParameters.getFlatMaterial();
-        final Material flatWireMaterial = makeWareMaterial(flatMaterial.clone());
-        final Material impostorWireMaterial = makeWareMaterial(impostorMaterial.clone());
+        var parameters = getParameters();
+        var treeParameters = parameters.getTreeParameters();
+        var materialParameters = parameters.getMaterialParameters();
+        var treeMaterial = materialParameters.getTreeMaterial();
+        var leafMaterial = materialParameters.getLeafMaterial();
+        var impostorMaterial = materialParameters.getImpostorMaterial();
+        var flatMaterial = materialParameters.getFlatMaterial();
+        var flatWireMaterial = makeWareMaterial(flatMaterial.clone());
+        var impostorWireMaterial = makeWareMaterial(impostorMaterial.clone());
 
         updateMaterials();
 
-        final LevelGeometry[] levels = new LevelGeometry[treeParameters.getLodCount()];
-        final TreeGenerator treeGen = new TreeGenerator();
-        final Tree tree = treeGen.generateTree(treeParameters.getSeed(), treeParameters);
+        var levels = new LevelGeometry[treeParameters.getLodCount()];
+        var treeGen = new TreeGenerator();
+        var tree = treeGen.generateTree(treeParameters.getSeed(), treeParameters);
 
-        final AtomicReference<BoundingBox> trunkBoundsRef = new AtomicReference<>();
-        final AtomicReference<BoundingBox> leafBoundsRef = new AtomicReference<>();
-        final AtomicReference<List<Vertex>> baseTipsRef = new AtomicReference<>();
+        var trunkBoundsRef = new AtomicReference<BoundingBox>();
+        var leafBoundsRef = new AtomicReference<BoundingBox>();
+        var baseTipsRef = new AtomicReference<List<Vertex>>();
 
-        final AtomicBoolean generateLeaves = new AtomicBoolean();
+        var generateLeaves = new AtomicBoolean();
 
-        final float yOffset = treeParameters.getYOffset();
-        final float textureVScale = treeParameters.getTextureVScale();
-        final int textureURepeat = treeParameters.getTextureURepeat();
+        var yOffset = treeParameters.getYOffset();
+        var textureVScale = treeParameters.getTextureVScale();
+        var textureURepeat = treeParameters.getTextureURepeat();
 
         for (int i = 0; i < levels.length; i++) {
 
@@ -259,9 +252,9 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
         treeNode.setLocalScale(treeParameters.getBaseScale());
 
         // Add in the new ones
-        for (final LevelGeometry level : levels) {
-            level.attach(lodControl, needWire);
+        for (var level : levels) {
 
+            level.attach(lodControl, needWire);
             TangentGenerator.useMikktspaceGenerator(level.levelNode);
 
             if (!parameters.isShowWire() && level.wireGeom != null) {
@@ -276,13 +269,13 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
     @JmeThread
     private void updateMaterials() {
 
-        final ProjectParameters parameters = getParameters();
-        final TreeParameters treeParameters = parameters.getTreeParameters();
-        final MaterialsParameters materialParameters = parameters.getMaterialParameters();
-        final Material treeMaterial = materialParameters.getTreeMaterial();
-        final Material leafMaterial = materialParameters.getLeafMaterial();
-        final Material impostorMaterial = materialParameters.getImpostorMaterial();
-        final Material flatMaterial = materialParameters.getFlatMaterial();
+        var parameters = getParameters();
+        var treeParameters = parameters.getTreeParameters();
+        var materialParameters = parameters.getMaterialParameters();
+        var treeMaterial = materialParameters.getTreeMaterial();
+        var leafMaterial = materialParameters.getLeafMaterial();
+        var impostorMaterial = materialParameters.getImpostorMaterial();
+        var flatMaterial = materialParameters.getFlatMaterial();
 
         if (treeMaterial.getKey() == null) {
             applyWindParameters(treeParameters, treeMaterial);
@@ -308,10 +301,10 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param material       the material.
      */
     @JmeThread
-    private void applyWindParameters(@NotNull final TreeParameters treeParameters, @NotNull final Material material) {
+    private void applyWindParameters(@NotNull TreeParameters treeParameters, @NotNull Material material) {
 
-        MaterialDef def = material.getMaterialDef();
-        MatParam param = def.getMaterialParam("FlexHeight");
+        var def = material.getMaterialDef();
+        var param = def.getMaterialParam("FlexHeight");
 
         if (param != null) {
             material.setFloat(param.getName(), treeParameters.getFlexHeight());
@@ -347,18 +340,22 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param level          the level of geometry.
      */
     @JmeThread
-    private void generateLeafs(@NotNull final TreeParameters treeParameters, @NotNull final Material leafMaterial,
-                               @NotNull final AtomicReference<BoundingBox> leafBoundsRef,
-                               @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
-                               @NotNull final LevelOfDetailParameters lod, @NotNull final LevelGeometry level) {
+    private void generateLeafs(
+            @NotNull TreeParameters treeParameters,
+            @NotNull Material leafMaterial,
+            @NotNull AtomicReference<BoundingBox> leafBoundsRef,
+            @NotNull AtomicReference<List<Vertex>> baseTipsRef,
+            @NotNull LevelOfDetailParameters lod,
+            @NotNull LevelGeometry level
+    ) {
 
-        final BillboardedLeavesMeshGenerator leafGen = new BillboardedLeavesMeshGenerator();
-        final Mesh leafMesh = leafGen.generateMesh(baseTipsRef.get(), treeParameters.getLeafScale());
+        var leafGen = new BillboardedLeavesMeshGenerator();
+        var leafMesh = leafGen.generateMesh(baseTipsRef.get(), treeParameters.getLeafScale());
         leafBoundsRef.set((BoundingBox) leafMesh.getBound());
 
         level.leafGeom = new Geometry("leaves:" + lod.reduction, leafMesh);
-        level.leafGeom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        level.leafGeom.setQueueBucket(RenderQueue.Bucket.Transparent);
+        level.leafGeom.setShadowMode(ShadowMode.CastAndReceive);
+        level.leafGeom.setQueueBucket(Bucket.Transparent);
         level.leafGeom.setMaterial(leafMaterial);
         level.leafGeom.setLocalTranslation(0, treeParameters.getRootHeight(), 0);
     }
@@ -377,19 +374,25 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param textureURepeat   the texture U repeat.
      */
     @JmeThread
-    private void generateImposter(@NotNull final TreeParameters treeParameters,
-                                  @NotNull final Material impostorMaterial,
-                                  @NotNull final Material impostorWireMaterial, @NotNull final Tree tree,
-                                  @NotNull final AtomicReference<BoundingBox> trunkBoundsRef,
-                                  @NotNull final AtomicReference<BoundingBox> leafBoundsRef,
-                                  @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
-                                  @NotNull final LevelGeometry level, @NotNull final LevelOfDetailParameters lod,
-                                  final float yOffset, final float textureVScale, final int textureURepeat) {
+    private void generateImposter(
+            @NotNull TreeParameters treeParameters,
+            @NotNull Material impostorMaterial,
+            @NotNull Material impostorWireMaterial,
+            @NotNull Tree tree,
+            @NotNull AtomicReference<BoundingBox> trunkBoundsRef,
+            @NotNull AtomicReference<BoundingBox> leafBoundsRef,
+            @NotNull AtomicReference<List<Vertex>> baseTipsRef,
+            @NotNull LevelGeometry level,
+            @NotNull LevelOfDetailParameters lod,
+            float yOffset,
+            float textureVScale,
+            int textureURepeat
+    ) {
 
         if (trunkBoundsRef.get() == null) {
 
             // Generate the mesh just to throw it away
-            final SkinnedTreeMeshGenerator skinnedGen = new SkinnedTreeMeshGenerator();
+            var skinnedGen = new SkinnedTreeMeshGenerator();
 
             List<Vertex> tips = null;
 
@@ -398,29 +401,29 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
                 baseTipsRef.set(tips);
             }
 
-            final Mesh treeMesh = skinnedGen.generateMesh(tree, treeParameters.getLod(0),
+            var treeMesh = skinnedGen.generateMesh(tree, treeParameters.getLod(0),
                     yOffset, textureURepeat, textureVScale, tips);
 
             trunkBoundsRef.set((BoundingBox) treeMesh.getBound());
         }
 
-        final BoundingBox trunkBounds = trunkBoundsRef.get();
-        final BoundingBox impostorBounds = (BoundingBox) trunkBounds.clone();
+        var trunkBounds = trunkBoundsRef.get();
+        var impostorBounds = (BoundingBox) trunkBounds.clone();
 
         if (leafBoundsRef.get() == null && treeParameters.getGenerateLeaves()) {
-            final BillboardedLeavesMeshGenerator leafGen = new BillboardedLeavesMeshGenerator();
-            final Mesh leafMesh = leafGen.generateMesh(baseTipsRef.get(), treeParameters.getLeafScale());
+            var leafGen = new BillboardedLeavesMeshGenerator();
+            var leafMesh = leafGen.generateMesh(baseTipsRef.get(), treeParameters.getLeafScale());
             leafBoundsRef.set((BoundingBox) leafMesh.getBound());
         } else if (treeParameters.getGenerateLeaves()) {
             impostorBounds.mergeLocal(leafBoundsRef.get());
         }
 
-        float rootHeight = treeParameters.getRootHeight();
+        var rootHeight = treeParameters.getRootHeight();
 
-        Vector3f min = trunkBounds.getMin(null);
-        Vector3f max = trunkBounds.getMax(null);
+        var min = trunkBounds.getMin(null);
+        var max = trunkBounds.getMax(null);
 
-        final BoundingBox leafBounds = leafBoundsRef.get();
+        var leafBounds = leafBoundsRef.get();
 
         if (leafBounds != null) {
             min.minLocal(leafBounds.getMin(null));
@@ -429,17 +432,18 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
 
         //float radius = (max.y - min.y) * 0.5f;
 
-        float xSize = Math.max(Math.abs(min.x), Math.abs(max.x));
-        float ySize = max.y - min.y;
-        float zSize = Math.max(Math.abs(min.z), Math.abs(max.z));
+        var xSize = Math.max(Math.abs(min.x), Math.abs(max.x));
+        var ySize = max.y - min.y;
+        var zSize = Math.max(Math.abs(min.z), Math.abs(max.z));
 
-        float size = ySize * 0.5f;
+        var size = ySize * 0.5f;
         size = Math.max(size, xSize);
         size = Math.max(size, zSize);
-        float radius = size;
+
+        var radius = size;
 
         // Just do it here raw for now
-        final Mesh mesh = new Mesh();
+        var mesh = new Mesh();
         mesh.setBuffer(VertexBuffer.Type.Position, 3, new float[]{0,
                 min.y + rootHeight, 0, 0,
                 min.y + rootHeight, 0, 0, min.y + (size * 2) + rootHeight, 0, 0, min.y + (size * 2) + rootHeight, 0
@@ -458,9 +462,9 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
 
         level.treeGeom = new Geometry("tree:" + lod.reduction, mesh);
         level.treeGeom.setMaterial(impostorMaterial);
-        level.treeGeom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        level.treeGeom.setShadowMode(ShadowMode.CastAndReceive);
         level.treeGeom.setLocalTranslation(0, 0, 0);
-        level.treeGeom.setQueueBucket(RenderQueue.Bucket.Transparent);
+        level.treeGeom.setQueueBucket(Bucket.Transparent);
         level.wireGeom = new Geometry("wire:" + lod.reduction, mesh);
         level.wireGeom.setMaterial(impostorWireMaterial);
         level.wireGeom.setLocalTranslation(0, 0, 0);
@@ -481,14 +485,21 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param textureURepeat the texture U repeat.
      */
     @JmeThread
-    private void generateFlatPoly(@NotNull final TreeParameters treeParameters, @NotNull final Material flatMaterial,
-                                  @NotNull final Material flatWireMaterial, @NotNull final Tree tree,
-                                  @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
-                                  @NotNull final AtomicBoolean generateLeaves, @NotNull final LevelGeometry level,
-                                  @NotNull final LevelOfDetailParameters lod, final float yOffset,
-                                  final float textureVScale, final int textureURepeat) {
+    private void generateFlatPoly(
+            @NotNull TreeParameters treeParameters,
+            @NotNull Material flatMaterial,
+            @NotNull Material flatWireMaterial,
+            @NotNull Tree tree,
+            @NotNull AtomicReference<List<Vertex>> baseTipsRef,
+            @NotNull AtomicBoolean generateLeaves,
+            @NotNull LevelGeometry level,
+            @NotNull LevelOfDetailParameters lod,
+            float yOffset,
+            float textureVScale,
+            int textureURepeat
+    ) {
 
-        final FlatPolyTreeMeshGenerator flatPolyGen = new FlatPolyTreeMeshGenerator();
+        var flatPolyGen = new FlatPolyTreeMeshGenerator();
 
         List<Vertex> tips = null;
 
@@ -497,11 +508,11 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
             baseTipsRef.set(tips);
         }
 
-        final Mesh treeMesh = flatPolyGen.generateMesh(tree, lod, yOffset, textureURepeat, textureVScale, tips);
+        var treeMesh = flatPolyGen.generateMesh(tree, lod, yOffset, textureURepeat, textureVScale, tips);
 
         level.treeGeom = new Geometry("tree:" + lod.reduction, treeMesh);
         level.treeGeom.setMaterial(flatMaterial);
-        level.treeGeom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        level.treeGeom.setShadowMode(ShadowMode.CastAndReceive);
         level.treeGeom.setLocalTranslation(0, treeParameters.getRootHeight(), 0);
         level.wireGeom = new Geometry("wire:" + lod.reduction, treeMesh);
         level.wireGeom.setMaterial(flatWireMaterial);
@@ -526,14 +537,21 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param textureURepeat the texture U repeat.
      */
     @JmeThread
-    private void generateNormal(@NotNull final TreeParameters treeParameters, @NotNull final Material treeMaterial,
-                                @NotNull final Tree tree, @NotNull final AtomicReference<BoundingBox> trunkBoundsRef,
-                                @NotNull final AtomicReference<List<Vertex>> baseTipsRef,
-                                @NotNull final AtomicBoolean generateLeaves, @NotNull final LevelOfDetailParameters lod,
-                                @NotNull final LevelGeometry level, final float yOffset, final float textureVScale,
-                                final int textureURepeat) {
+    private void generateNormal(
+            @NotNull TreeParameters treeParameters,
+            @NotNull Material treeMaterial,
+            @NotNull Tree tree,
+            @NotNull AtomicReference<BoundingBox> trunkBoundsRef,
+            @NotNull AtomicReference<List<Vertex>> baseTipsRef,
+            @NotNull AtomicBoolean generateLeaves,
+            @NotNull LevelOfDetailParameters lod,
+            @NotNull LevelGeometry level,
+            float yOffset,
+            float textureVScale,
+            int textureURepeat
+    ) {
 
-        final SkinnedTreeMeshGenerator skinnedGen = new SkinnedTreeMeshGenerator();
+        var skinnedGen = new SkinnedTreeMeshGenerator();
 
         List<Vertex> tips = null;
 
@@ -542,12 +560,12 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
             baseTipsRef.set(tips);
         }
 
-        final Mesh treeMesh = skinnedGen.generateMesh(tree, lod, yOffset, textureURepeat, textureVScale, tips);
+        var treeMesh = skinnedGen.generateMesh(tree, lod, yOffset, textureURepeat, textureVScale, tips);
         trunkBoundsRef.set((BoundingBox) treeMesh.getBound());
 
         level.treeGeom = new Geometry("tree:" + lod.reduction, treeMesh);
         level.treeGeom.setMaterial(treeMaterial);
-        level.treeGeom.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        level.treeGeom.setShadowMode(ShadowMode.CastAndReceive);
         level.treeGeom.setLocalTranslation(0, treeParameters.getRootHeight(), 0);
         level.wireGeom = new Geometry("wire:" + lod.reduction, treeMesh);
         level.wireGeom.setMaterial(WIRE_MATERIAL);
@@ -563,9 +581,9 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @return the prepared material to show wire.
      */
     @JmeThread
-    private @NotNull Material makeWareMaterial(@NotNull final Material material) {
+    private @NotNull Material makeWareMaterial(@NotNull Material material) {
 
-        final MaterialDef def = material.getMaterialDef();
+        var def = material.getMaterialDef();
 
         MatParam param = def.getMaterialParam("DiffuseMap");
 
@@ -601,7 +619,7 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param enabled the enabled
      */
     @FromAnyThread
-    public void updateLightEnabled(final boolean enabled) {
+    public void updateLightEnabled(boolean enabled) {
         EXECUTOR_MANAGER.addJmeTask(() -> updateLightEnabledImpl(enabled));
     }
 
@@ -617,7 +635,7 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      * @param lightEnabled the flag of activity light of the camera.
      */
     @FromAnyThread
-    private void setLightEnabled(final boolean lightEnabled) {
+    private void setLightEnabled(boolean lightEnabled) {
         this.lightEnabled = lightEnabled;
     }
 
@@ -626,10 +644,13 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      */
     @JmeThread
     private void updateLightEnabledImpl(boolean enabled) {
-        if (enabled == isLightEnabled()) return;
 
-        final DirectionalLight light = getLightForCamera();
-        final Node stateNode = getStateNode();
+        if (enabled == isLightEnabled()) {
+            return;
+        }
+
+        var light = getLightForCamera();
+        var stateNode = getStateNode();
 
         if (enabled) {
             stateNode.addLight(light);
@@ -652,11 +673,12 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
         Geometry wireGeom;
         Geometry leafGeom;
 
-        LevelGeometry(final float distance) {
+        LevelGeometry(float distance) {
             this.distance = distance;
         }
 
-        void attach(@NotNull final LodSwitchControl control, final boolean needWire) {
+        void attach(@NotNull LodSwitchControl control, boolean needWire) {
+
             levelNode = new Node("level:" + distance);
 
             if (treeGeom != null) {

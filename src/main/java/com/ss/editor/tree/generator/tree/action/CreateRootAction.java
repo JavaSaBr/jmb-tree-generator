@@ -1,8 +1,7 @@
 package com.ss.editor.tree.generator.tree.action;
 
-import static com.ss.rlib.util.ObjectUtils.notNull;
+import static com.ss.rlib.common.util.ObjectUtils.notNull;
 import com.simsilica.arboreal.BranchParameters;
-import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.FxThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.tree.generator.PluginMessages;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CreateRootAction extends AbstractNodeAction<ChangeConsumer> {
 
-    public CreateRootAction(@NotNull final NodeTree<?> nodeTree, @NotNull final TreeNode<?> node) {
+    public CreateRootAction(@NotNull NodeTree<?> nodeTree, @NotNull TreeNode<?> node) {
         super(nodeTree, node);
     }
 
@@ -35,15 +34,14 @@ public class CreateRootAction extends AbstractNodeAction<ChangeConsumer> {
     protected void process() {
         super.process();
 
-        final TreeNode<?> node = getNode();
-        final RootsParameters rootsParameters = (RootsParameters) node.getElement();
-        final TreeParameters treeParameters = rootsParameters.getTreeParameters();
+        var node = getNode();
+        var rootsParameters = (RootsParameters) node.getElement();
+        var treeParameters = rootsParameters.getTreeParameters();
 
-        final BranchParameters newRoot = new BranchParameters();
+        var newRoot = new BranchParameters();
         newRoot.setParent(treeParameters);
 
-        final NodeTree<ChangeConsumer> nodeTree = getNodeTree();
-        final ChangeConsumer changeConsumer = notNull(nodeTree.getChangeConsumer());
-        changeConsumer.execute(new AddRootOperation(treeParameters, rootsParameters, newRoot));
+        notNull(getNodeTree().getChangeConsumer())
+                .execute(new AddRootOperation(treeParameters, rootsParameters, newRoot));
     }
 }

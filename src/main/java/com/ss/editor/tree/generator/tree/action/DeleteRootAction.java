@@ -1,8 +1,7 @@
 package com.ss.editor.tree.generator.tree.action;
 
-import static com.ss.rlib.util.ObjectUtils.notNull;
+import static com.ss.rlib.common.util.ObjectUtils.notNull;
 import com.simsilica.arboreal.BranchParameters;
-import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.FxThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.tree.generator.PluginMessages;
@@ -20,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DeleteRootAction extends AbstractNodeAction<ChangeConsumer> {
 
-    public DeleteRootAction(@NotNull final NodeTree<?> nodeTree, @NotNull final TreeNode<?> node) {
+    public DeleteRootAction(@NotNull NodeTree<?> nodeTree, @NotNull TreeNode<?> node) {
         super(nodeTree, node);
     }
 
@@ -35,14 +34,13 @@ public class DeleteRootAction extends AbstractNodeAction<ChangeConsumer> {
     protected void process() {
         super.process();
 
-        final TreeNode<?> node = getNode();
-        final TreeNode<?> parentNode = node.getParent();
-        final BranchParameters root = (BranchParameters) node.getElement();
-        final RootsParameters rootsParameters = (RootsParameters) parentNode.getElement();
-        final TreeParameters treeParameters = rootsParameters.getTreeParameters();
+        var node = getNode();
+        var parentNode = notNull(node.getParent());
+        var root = (BranchParameters) node.getElement();
+        var rootsParameters = (RootsParameters) parentNode.getElement();
+        var treeParameters = rootsParameters.getTreeParameters();
 
-        final NodeTree<ChangeConsumer> nodeTree = getNodeTree();
-        final ChangeConsumer changeConsumer = notNull(nodeTree.getChangeConsumer());
-        changeConsumer.execute(new RemoveRootOperation(treeParameters, rootsParameters, root));
+        notNull(getNodeTree().getChangeConsumer())
+                .execute(new RemoveRootOperation(treeParameters, rootsParameters, root));
     }
 }
