@@ -38,9 +38,11 @@ public class RemoveBranchOperation extends AbstractEditorOperation<ChangeConsume
      */
     private int index;
 
-    public RemoveBranchOperation(@NotNull final TreeParameters treeParameters,
-                                 @NotNull final BranchesParameters branchesParameters,
-                                 @NotNull final BranchParameters removed) {
+    public RemoveBranchOperation(
+            @NotNull TreeParameters treeParameters,
+            @NotNull BranchesParameters branchesParameters,
+            @NotNull BranchParameters removed
+    ) {
         this.treeParameters = treeParameters;
         this.branchesParameters = branchesParameters;
         this.removed = removed;
@@ -48,7 +50,7 @@ public class RemoveBranchOperation extends AbstractEditorOperation<ChangeConsume
 
     @Override
     @FxThread
-    protected void redoImpl(@NotNull final ChangeConsumer editor) {
+    protected void redoImpl(@NotNull ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             index = treeParameters.removeBranch(removed);
             EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(branchesParameters, removed));
@@ -57,7 +59,7 @@ public class RemoveBranchOperation extends AbstractEditorOperation<ChangeConsume
 
     @Override
     @FxThread
-    protected void undoImpl(@NotNull final ChangeConsumer editor) {
+    protected void undoImpl(@NotNull ChangeConsumer editor) {
         EXECUTOR_MANAGER.addJmeTask(() -> {
             treeParameters.addBranch(removed, index);
             EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(branchesParameters, removed, index, false));

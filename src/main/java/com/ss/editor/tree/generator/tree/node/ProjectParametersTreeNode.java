@@ -6,8 +6,8 @@ import com.ss.editor.tree.generator.PluginMessages;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
-import com.ss.rlib.util.array.Array;
-import com.ss.rlib.util.array.ArrayFactory;
+import com.ss.rlib.common.util.array.Array;
+import com.ss.rlib.common.util.array.ArrayFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ProjectParametersTreeNode extends ParametersTreeNode<ProjectParameters> {
 
-    public ProjectParametersTreeNode(@NotNull final ProjectParameters element, final long objectId) {
+    public ProjectParametersTreeNode(@NotNull ProjectParameters element, long objectId) {
         super(element, objectId);
     }
 
@@ -29,20 +29,20 @@ public class ProjectParametersTreeNode extends ParametersTreeNode<ProjectParamet
 
     @Override
     @FxThread
-    public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
+    public @NotNull Array<TreeNode<?>> getChildren(@NotNull NodeTree<?> nodeTree) {
 
-        final ProjectParameters element = getElement();
+        var projectParameters = getElement();
 
-        final Array<TreeNode<?>> children = ArrayFactory.newArray(TreeNode.class);
-        children.add(FACTORY_REGISTRY.createFor(element.getMaterialParameters()));
-        children.add(FACTORY_REGISTRY.createFor(element.getTreeParameters()));
+        var children = ArrayFactory.<TreeNode<?>>newArray(TreeNode.class);
+        children.add(FACTORY_REGISTRY.createFor(projectParameters.getMaterialParameters()));
+        children.add(FACTORY_REGISTRY.createFor(projectParameters.getTreeParameters()));
 
         return children;
     }
 
     @Override
     @FxThread
-    public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
+    public boolean hasChildren(@NotNull NodeTree<?> nodeTree) {
         return true;
     }
 }

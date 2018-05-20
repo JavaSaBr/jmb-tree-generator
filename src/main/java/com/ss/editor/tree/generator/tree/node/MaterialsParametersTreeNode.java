@@ -7,8 +7,8 @@ import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
-import com.ss.rlib.util.array.Array;
-import com.ss.rlib.util.array.ArrayFactory;
+import com.ss.rlib.common.util.array.Array;
+import com.ss.rlib.common.util.array.ArrayFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MaterialsParametersTreeNode extends ParametersTreeNode<MaterialsParameters> {
 
-    public MaterialsParametersTreeNode(@NotNull final MaterialsParameters element, final long objectId) {
+    public MaterialsParametersTreeNode(@NotNull MaterialsParameters element, long objectId) {
         super(element, objectId);
     }
 
@@ -30,27 +30,20 @@ public class MaterialsParametersTreeNode extends ParametersTreeNode<MaterialsPar
 
     @Override
     @FxThread
-    public @NotNull Array<TreeNode<?>> getChildren(@NotNull final NodeTree<?> nodeTree) {
+    public @NotNull Array<TreeNode<?>> getChildren(@NotNull NodeTree<?> nodeTree) {
 
-        final MaterialsParameters parameters = getElement();
+        var parameters = getElement();
 
-        final MaterialParameters treeMaterial =
-                new MaterialParameters(parameters::setTreeMaterial, parameters::getTreeMaterial,
-                        PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_TREE);
+        var treeMaterial = new MaterialParameters(parameters::setTreeMaterial, parameters::getTreeMaterial,
+                PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_TREE);
+        var leafMaterial = new MaterialParameters(parameters::setLeafMaterial, parameters::getLeafMaterial,
+                PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_LEAF);
+        var flatMaterial = new MaterialParameters(parameters::setFlatMaterial, parameters::getFlatMaterial,
+                PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_FLAT);
+        var impostorMaterial = new MaterialParameters(parameters::setImpostorMaterial, parameters::getImpostorMaterial,
+                PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_IMPOSTOR);
 
-        final MaterialParameters leafMaterial =
-                new MaterialParameters(parameters::setLeafMaterial, parameters::getLeafMaterial,
-                        PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_LEAF);
-
-        final MaterialParameters flatMaterial =
-                new MaterialParameters(parameters::setFlatMaterial, parameters::getFlatMaterial,
-                        PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_FLAT);
-
-        final MaterialParameters impostorMaterial =
-                new MaterialParameters(parameters::setImpostorMaterial, parameters::getImpostorMaterial,
-                        PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_IMPOSTOR);
-
-        final Array<TreeNode<?>> children = ArrayFactory.newArray(TreeNode.class);
+        var children = ArrayFactory.<TreeNode<?>>newArray(TreeNode.class);
         children.add(FACTORY_REGISTRY.createFor(treeMaterial));
         children.add(FACTORY_REGISTRY.createFor(leafMaterial));
         children.add(FACTORY_REGISTRY.createFor(flatMaterial));
@@ -61,7 +54,7 @@ public class MaterialsParametersTreeNode extends ParametersTreeNode<MaterialsPar
 
     @Override
     @FxThread
-    public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
+    public boolean hasChildren(@NotNull NodeTree<?> nodeTree) {
         return true;
     }
 }

@@ -18,7 +18,7 @@ public class BranchesParameters extends Parameters {
     @NotNull
     private final TreeParameters treeParameters;
 
-    public BranchesParameters(@NotNull final TreeParameters treeParameters) {
+    public BranchesParameters(@NotNull TreeParameters treeParameters) {
         this.treeParameters = treeParameters;
     }
 

@@ -24,7 +24,8 @@ public class TreeGeneratorEditorState extends Editor3DWithEditorToolEditorState 
 
     public TreeGeneratorEditorState() {
         this.cameraLocation.set(0, 2, 0);
-        this.enableLight = EDITOR_CONFIG.getBoolean(Preferences.PREF_CAMERA_LAMP, Defaults.PREF_DEFAULT_CAMERA_LIGHT);
+        this.enableLight = EDITOR_CONFIG.getBoolean(Preferences.PREF_CAMERA_LAMP,
+                Defaults.PREF_DEFAULT_CAMERA_LIGHT);
     }
 
     /**
@@ -33,7 +34,7 @@ public class TreeGeneratorEditorState extends Editor3DWithEditorToolEditorState 
      * @param enableLight true if the light is enabled.
      */
     @FxThread
-    public void setEnableLight(final boolean enableLight) {
+    public void setEnableLight(boolean enableLight) {
         final boolean changed = isEnableLight() != enableLight;
         this.enableLight = enableLight;
         if (changed) notifyChange();

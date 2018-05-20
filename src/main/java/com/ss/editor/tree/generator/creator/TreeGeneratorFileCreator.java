@@ -12,13 +12,12 @@ import com.ss.editor.tree.generator.parameters.MaterialsParameters;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.ui.component.creator.FileCreatorDescription;
 import com.ss.editor.util.EditorUtil;
-import com.ss.rlib.util.VarTable;
-import com.ss.rlib.util.array.Array;
-import com.ss.rlib.util.array.ArrayFactory;
+import com.ss.rlib.common.util.VarTable;
+import com.ss.rlib.common.util.array.Array;
+import com.ss.rlib.common.util.array.ArrayFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -29,13 +28,8 @@ import java.nio.file.Path;
  */
 public class TreeGeneratorFileCreator extends GenericFileCreator {
 
-    /**
-     * The constant DESCRIPTION.
-     */
-    @NotNull
     public static final FileCreatorDescription DESCRIPTION = new FileCreatorDescription();
 
-    @NotNull
     private static final String PROP_PBR = "pbr";
 
     static {
@@ -47,7 +41,7 @@ public class TreeGeneratorFileCreator extends GenericFileCreator {
     @FromAnyThread
     protected @NotNull Array<PropertyDefinition> getPropertyDefinitions() {
 
-        final Array<PropertyDefinition> definitions = ArrayFactory.newArray(PropertyDefinition.class);
+        var definitions = ArrayFactory.<PropertyDefinition>newArray(PropertyDefinition.class);
         definitions.add(new PropertyDefinition(BOOLEAN, "PBR", PROP_PBR, true));
 
         return definitions;
@@ -67,11 +61,11 @@ public class TreeGeneratorFileCreator extends GenericFileCreator {
 
     @Override
     @BackgroundThread
-    protected void writeData(@NotNull final VarTable vars, @NotNull final Path resultFile) throws IOException {
+    protected void writeData(@NotNull VarTable vars, @NotNull Path resultFile) throws IOException {
         super.writeData(vars, resultFile);
 
-        final boolean pbr = vars.getBoolean(PROP_PBR);
-        final MaterialsParameters materialsParameters = new MaterialsParameters();
+        var pbr = vars.getBoolean(PROP_PBR);
+        var materialsParameters = new MaterialsParameters();
 
         if (pbr) {
             materialsParameters.loadPBR();
@@ -79,12 +73,12 @@ public class TreeGeneratorFileCreator extends GenericFileCreator {
             materialsParameters.loadDefault();
         }
 
-        final ProjectParameters parameters = new ProjectParameters(EditorUtil.getAssetManager());
+        var parameters = new ProjectParameters(EditorUtil.getAssetManager());
         parameters.setMaterialParameters(materialsParameters);
 
-        final BinaryExporter exporter = BinaryExporter.getInstance();
+        var exporter = BinaryExporter.getInstance();
 
-        try (final OutputStream out = Files.newOutputStream(resultFile)) {
+        try (var out = Files.newOutputStream(resultFile)) {
             exporter.save(parameters, out);
         }
     }
