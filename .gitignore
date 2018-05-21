@@ -5,3 +5,8 @@
 /embedded-plugins/
 /out/
 /deploy-plugin/
+/bin/
+/.settings/
+.project
+.classpath
+*.dll
