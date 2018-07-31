@@ -37,7 +37,7 @@ public class BranchesParametersTreeNode extends ParametersTreeNode<BranchesParam
         var branchesParameters = getElement();
         var treeParameters = branchesParameters.getTreeParameters();
 
-        var children = ArrayFactory.<TreeNode<?>>newArray(TreeNode.class);
+        var children = Array.<TreeNode<?>>ofType(TreeNode.class);
 
         var branches = treeParameters.getBranches();
         for (var branch : branches) {

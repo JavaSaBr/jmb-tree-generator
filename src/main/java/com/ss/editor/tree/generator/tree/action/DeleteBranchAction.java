@@ -40,7 +40,7 @@ public class DeleteBranchAction extends AbstractNodeAction<ChangeConsumer> {
         var branchesParameters = (BranchesParameters) parentNode.getElement();
         var treeParameters = branchesParameters.getTreeParameters();
 
-        notNull(getNodeTree().getChangeConsumer())
+        getNodeTree().requireChangeConsumer()
                 .execute(new RemoveBranchOperation(treeParameters, branchesParameters, branchParameters));
     }
 }

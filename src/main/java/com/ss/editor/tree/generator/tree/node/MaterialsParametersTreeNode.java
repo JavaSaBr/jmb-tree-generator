@@ -43,7 +43,7 @@ public class MaterialsParametersTreeNode extends ParametersTreeNode<MaterialsPar
         var impostorMaterial = new MaterialParameters(parameters::setImpostorMaterial, parameters::getImpostorMaterial,
                 PluginMessages.TREE_GENERATOR_EDITOR_NODE_MATERIAL_IMPOSTOR);
 
-        var children = ArrayFactory.<TreeNode<?>>newArray(TreeNode.class);
+        var children = Array.<TreeNode<?>>ofType(TreeNode.class);
         children.add(FACTORY_REGISTRY.createFor(treeMaterial));
         children.add(FACTORY_REGISTRY.createFor(leafMaterial));
         children.add(FACTORY_REGISTRY.createFor(flatMaterial));

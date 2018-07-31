@@ -3,6 +3,7 @@ package com.ss.editor.tree.generator.tree.operation;
 import com.simsilica.arboreal.BranchParameters;
 import com.simsilica.arboreal.TreeParameters;
 import com.ss.editor.annotation.FxThread;
+import com.ss.editor.annotation.JmeThread;
 import com.ss.editor.model.undo.editor.ChangeConsumer;
 import com.ss.editor.model.undo.impl.AbstractEditorOperation;
 import com.ss.editor.tree.generator.parameters.RootsParameters;
@@ -44,20 +45,30 @@ public class AddRootOperation extends AbstractEditorOperation<ChangeConsumer> {
     }
 
     @Override
-    @FxThread
-    protected void redoImpl(@NotNull ChangeConsumer editor) {
-        EXECUTOR_MANAGER.addJmeTask(() -> {
-            treeParameters.addRoot(newRoot, -1);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxAddedChild(rootsParameters, newRoot, -1, true));
-        });
+    @JmeThread
+    protected void redoInJme(@NotNull ChangeConsumer editor) {
+        super.redoInJme(editor);
+        treeParameters.addRoot(newRoot, -1);
     }
 
     @Override
     @FxThread
-    protected void undoImpl(@NotNull ChangeConsumer editor) {
-        EXECUTOR_MANAGER.addJmeTask(() -> {
-            treeParameters.removeRoot(newRoot);
-            EXECUTOR_MANAGER.addFxTask(() -> editor.notifyFxRemovedChild(rootsParameters, newRoot));
-        });
+    protected void endRedoInFx(@NotNull ChangeConsumer editor) {
+        super.endRedoInFx(editor);
+        editor.notifyFxAddedChild(rootsParameters, newRoot, -1, true);
+    }
+
+    @Override
+    @JmeThread
+    protected void undoInJme(@NotNull ChangeConsumer editor) {
+        super.undoInJme(editor);
+        treeParameters.removeRoot(newRoot);
+    }
+
+    @Override
+    @FxThread
+    protected void endUndoInFx(@NotNull ChangeConsumer editor) {
+        super.endUndoInFx(editor);
+        editor.notifyFxRemovedChild(rootsParameters, newRoot);
     }
 }

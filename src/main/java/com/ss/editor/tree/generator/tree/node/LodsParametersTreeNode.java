@@ -37,7 +37,7 @@ public class LodsParametersTreeNode extends ParametersTreeNode<LodsParameters> {
         var lodsParameters = getElement();
         var treeParameters = lodsParameters.getTreeParameters();
 
-        var children = ArrayFactory.<TreeNode<?>>newArray(TreeNode.class);
+        var children = Array.<TreeNode<?>>ofType(TreeNode.class);
 
         var lods = treeParameters.getLods();
         lods.forEach(lod -> children.add(FACTORY_REGISTRY.createFor(lod)));

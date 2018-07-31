@@ -40,7 +40,7 @@ public class DeleteLodAction extends AbstractNodeAction<ChangeConsumer> {
         var lodsParameters = (LodsParameters) parentNode.getElement();
         var treeParameters = lodsParameters.getTreeParameters();
 
-        notNull(getNodeTree().getChangeConsumer())
+        getNodeTree().requireChangeConsumer()
                 .execute(new RemoveLodOperation(treeParameters, lodsParameters, lodParameters));
     }
 }

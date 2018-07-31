@@ -15,9 +15,11 @@ import com.simsilica.arboreal.Tree;
 import com.simsilica.arboreal.TreeGenerator;
 import com.simsilica.arboreal.TreeParameters;
 import com.simsilica.arboreal.mesh.*;
+import com.ss.editor.annotation.BackgroundThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.annotation.JmeThread;
-import com.ss.editor.plugin.api.editor.part3d.AdvancedPbrWithStudioSky3DEditorPart;
+import com.ss.editor.manager.ExecutorManager;
+import com.ss.editor.plugin.api.editor.part3d.AdvancedPbrWithStudioSky3dEditorPart;
 import com.ss.editor.tree.generator.parameters.ProjectParameters;
 import com.ss.editor.util.EditorUtil;
 import com.ss.editor.util.TangentGenerator;
@@ -37,7 +39,7 @@ import java.util.function.Consumer;
  *
  * @author JavaSaBr
  */
-public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorPart<TreeGeneratorFileEditor> {
+public class TreeGeneratorEditor3dPart extends AdvancedPbrWithStudioSky3dEditorPart<TreeGeneratorFileEditor> {
 
     private static final float H_ROTATION = AngleUtils.degreeToRadians(75);
     private static final float V_ROTATION = AngleUtils.degreeToRadians(25);
@@ -67,7 +69,7 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      */
     private boolean lightEnabled;
 
-    public TreeGeneratorEditor3DPart(@NotNull TreeGeneratorFileEditor fileEditor) {
+    public TreeGeneratorEditor3dPart(@NotNull TreeGeneratorFileEditor fileEditor) {
         super(fileEditor);
 
         var editorCamera = notNull(getEditorCamera());
@@ -84,7 +86,7 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
     @JmeThread
     public void initialize(@NotNull AppStateManager stateManager, @NotNull Application application) {
         super.initialize(stateManager, application);
-        getModelNode().attachChild(treeNode);
+        modelNode.attachChild(treeNode);
     }
 
     @Override
@@ -118,10 +120,19 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      */
     @FromAnyThread
     public void open(@NotNull ProjectParameters parameters) {
-        EXECUTOR_MANAGER.addJmeTask(() -> {
-            setParameters(parameters);
-            generateImpl(getTreeNode(), true);
-        });
+        ExecutorManager.getInstance()
+                .addJmeTask(() -> openImJme(parameters));
+    }
+
+    /**
+     * Open and generate tree by the parameters in jME thread.
+     *
+     * @param parameters the parameters.
+     */
+    @JmeThread
+    private void openImJme(@NotNull ProjectParameters parameters) {
+        setParameters(parameters);
+        generateImpl(treeNode, true);
     }
 
     /**
@@ -149,7 +160,8 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      */
     @FromAnyThread
     public void generate() {
-        EXECUTOR_MANAGER.addJmeTask(() -> generateImpl(getTreeNode(), true));
+        ExecutorManager.getInstance()
+                .addJmeTask(() -> generateImpl(treeNode, true));
     }
 
     /**
@@ -159,25 +171,25 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      */
     @FromAnyThread
     public void generate(@NotNull Consumer<Node> consumer) {
-        EXECUTOR_MANAGER.addBackgroundTask(() -> {
-
-            var treeNode = new Node("Tree");
-            treeNode.addControl(new LodSwitchControl());
-
-            generateImpl(treeNode, false);
-
-            EXECUTOR_MANAGER.addFxTask(() -> consumer.accept(treeNode));
-        });
+        ExecutorManager.getInstance()
+                .addBackgroundTask(() -> generateInBackground(consumer));
     }
 
     /**
-     * Get the tree node.
+     * Generate new node with new tree in background thread.
      *
-     * @return the tree node.
+     * @param consumer the result consumer.
      */
-    @FromAnyThread
-    private @NotNull Node getTreeNode() {
-        return treeNode;
+    @BackgroundThread
+    private void generateInBackground(@NotNull Consumer<Node> consumer) {
+
+        var treeNode = new Node("Tree");
+        treeNode.addControl(new LodSwitchControl());
+
+        generateImpl(treeNode, false);
+
+        ExecutorManager.getInstance()
+                .addFxTask(() -> consumer.accept(treeNode));
     }
 
     /**
@@ -620,7 +632,8 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
      */
     @FromAnyThread
     public void updateLightEnabled(boolean enabled) {
-        EXECUTOR_MANAGER.addJmeTask(() -> updateLightEnabledImpl(enabled));
+        ExecutorManager.getInstance()
+                .addJmeTask(() -> updateLightEnabledImpl(enabled));
     }
 
     /**
@@ -650,7 +663,6 @@ public class TreeGeneratorEditor3DPart extends AdvancedPbrWithStudioSky3DEditorP
         }
 
         var light = getLightForCamera();
-        var stateNode = getStateNode();
 
         if (enabled) {
             stateNode.addLight(light);

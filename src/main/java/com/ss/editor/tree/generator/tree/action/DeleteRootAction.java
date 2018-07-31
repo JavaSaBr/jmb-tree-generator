@@ -40,7 +40,7 @@ public class DeleteRootAction extends AbstractNodeAction<ChangeConsumer> {
         var rootsParameters = (RootsParameters) parentNode.getElement();
         var treeParameters = rootsParameters.getTreeParameters();
 
-        notNull(getNodeTree().getChangeConsumer())
+        getNodeTree().requireChangeConsumer()
                 .execute(new RemoveRootOperation(treeParameters, rootsParameters, root));
     }
 }

@@ -41,7 +41,7 @@ public class CreateRootAction extends AbstractNodeAction<ChangeConsumer> {
         var newRoot = new BranchParameters();
         newRoot.setParent(treeParameters);
 
-        notNull(getNodeTree().getChangeConsumer())
+        getNodeTree().requireChangeConsumer()
                 .execute(new AddRootOperation(treeParameters, rootsParameters, newRoot));
     }
 }

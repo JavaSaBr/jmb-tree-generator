@@ -1,7 +1,9 @@
 package com.ss.editor.tree.generator;
 
+import com.ss.editor.annotation.BackgroundThread;
 import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.manager.FileIconManager;
+import com.ss.editor.manager.FileIconManager.IconFinder;
 import com.ss.editor.plugin.EditorPlugin;
 import com.ss.editor.tree.generator.creator.TreeGeneratorFileCreator;
 import com.ss.editor.tree.generator.editor.TreeGeneratorFileEditor;
@@ -13,6 +15,7 @@ import com.ss.editor.ui.control.property.builder.PropertyBuilderRegistry;
 import com.ss.editor.ui.control.tree.node.factory.TreeNodeFactoryRegistry;
 import com.ss.rlib.common.plugin.PluginContainer;
 import com.ss.rlib.common.plugin.annotation.PluginDescription;
+import com.ss.rlib.common.plugin.extension.ExtensionPointManager;
 import com.ss.rlib.common.util.FileUtils;
 import com.ss.rlib.common.util.Utils;
 import org.jetbrains.annotations.NotNull;
@@ -34,64 +37,47 @@ import java.net.URL;
 )
 public class TreeGeneratorEditorPlugin extends EditorPlugin {
 
-    @NotNull
+    private static final Class<?> CLASS = TreeGeneratorEditorPlugin.class;
+
     public static final String PROJECT_EXTENSION = "j3sa";
 
-    @NotNull
-    private static final String GRADLE_DEPENDENCIES;
+    private static final String GRADLE_DEPENDENCIES =
+            FileUtils.readFromClasspath(CLASS, "/com/ss/editor/tree/generator/dependency/gradle.html");
 
-    @NotNull
-    private static final String MAVEN_DEPENDENCIES;
-
-    static {
-        var loader = TreeGeneratorEditorPlugin.class;
-        GRADLE_DEPENDENCIES = FileUtils.read(loader.getResourceAsStream("/com/ss/editor/tree/generator/dependency/gradle.html"));
-        MAVEN_DEPENDENCIES = FileUtils.read(loader.getResourceAsStream("/com/ss/editor/tree/generator/dependency/maven.html"));
-    }
+    private static final String MAVEN_DEPENDENCIES =
+            FileUtils.readFromClasspath(CLASS, "/com/ss/editor/tree/generator/dependency/maven.html");
 
     public TreeGeneratorEditorPlugin(@NotNull PluginContainer pluginContainer) {
         super(pluginContainer);
     }
 
     @Override
-    @FromAnyThread
-    public void register(@NotNull FileCreatorRegistry registry) {
-        super.register(registry);
-        registry.register(TreeGeneratorFileCreator.DESCRIPTION);
+    @BackgroundThread
+    public void register(@NotNull ExtensionPointManager manager) {
+        super.register(manager);
+
+        manager.getExtensionPoint(PropertyBuilderRegistry.EP_BUILDERS)
+                .register(ParametersPropertyBuilder.getInstance());
+        manager.getExtensionPoint(TreeNodeFactoryRegistry.EP_FACTORIES)
+                .register(ParametersTreeNodeFactory.getInstance());
+        manager.getExtensionPoint(FileCreatorRegistry.EP_DESCRIPTORS)
+                .register(TreeGeneratorFileCreator.DESCRIPTOR);
+        manager.getExtensionPoint(EditorRegistry.EP_DESCRIPTORS)
+                .register(TreeGeneratorFileEditor.DESCRIPTOR);
+        manager.getExtensionPoint(FileIconManager.EP_ICON_FINDERS)
+                .register(makeIconFinder());
     }
 
-    @Override
     @FromAnyThread
-    public void register(@NotNull EditorRegistry registry) {
-        super.register(registry);
-        registry.register(TreeGeneratorFileEditor.DESCRIPTION);
-    }
-
-    @Override
-    @FromAnyThread
-    public void register(@NotNull TreeNodeFactoryRegistry registry) {
-        super.register(registry);
-        registry.register(ParametersTreeNodeFactory.getInstance());
-    }
-
-    @Override
-    @FromAnyThread
-    public void register(@NotNull PropertyBuilderRegistry registry) {
-        super.register(registry);
-        registry.register(ParametersPropertyBuilder.getInstance());
-    }
-
-    @Override
-    @FromAnyThread
-    public void register(@NotNull FileIconManager iconManager) {
-        iconManager.register((path, extension) -> {
+    private @NotNull IconFinder makeIconFinder() {
+        return (path, extension) -> {
 
             if (PROJECT_EXTENSION.equals(extension)) {
                 return "com/ss/editor/tree/generator/icons/tree.svg";
             }
 
             return null;
-        });
+        };
     }
 
     @Override

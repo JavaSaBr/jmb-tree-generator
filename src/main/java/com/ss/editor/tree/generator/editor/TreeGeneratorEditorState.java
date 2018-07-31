@@ -3,14 +3,14 @@ package com.ss.editor.tree.generator.editor;
 import com.ss.editor.annotation.FxThread;
 import com.ss.editor.config.DefaultSettingsProvider.Defaults;
 import com.ss.editor.config.DefaultSettingsProvider.Preferences;
-import com.ss.editor.ui.component.editor.state.impl.Editor3DWithEditorToolEditorState;
+import com.ss.editor.ui.component.editor.state.impl.Editor3dWithEditorToolEditorState;
 
 /**
  * The state of the {@link TreeGeneratorFileEditor}.
  *
  * @author JavaSaBr
  */
-public class TreeGeneratorEditorState extends Editor3DWithEditorToolEditorState {
+public class TreeGeneratorEditorState extends Editor3dWithEditorToolEditorState {
 
     /**
      * The constant serialVersionUID.
@@ -35,7 +35,7 @@ public class TreeGeneratorEditorState extends Editor3DWithEditorToolEditorState 
      */
     @FxThread
     public void setEnableLight(boolean enableLight) {
-        final boolean changed = isEnableLight() != enableLight;
+        boolean changed = isEnableLight() != enableLight;
         this.enableLight = enableLight;
         if (changed) notifyChange();
     }

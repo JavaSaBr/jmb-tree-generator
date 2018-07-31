@@ -5,9 +5,12 @@ import com.ss.editor.annotation.FromAnyThread;
 import com.ss.editor.tree.generator.parameters.MaterialParameters;
 import com.ss.editor.ui.control.tree.NodeTree;
 import com.ss.editor.ui.control.tree.node.TreeNode;
+import com.ss.rlib.common.util.ObjectUtils;
 import com.ss.rlib.common.util.array.Array;
 import com.ss.rlib.common.util.array.ArrayFactory;
 import org.jetbrains.annotations.NotNull;
+
+import static com.ss.rlib.common.util.ObjectUtils.notNull;
 
 /**
  * The implementation of presentation material parameters node in the {@link ParametersTreeNode}
@@ -29,12 +32,12 @@ public class MaterialParametersTreeNode extends ParametersTreeNode<MaterialParam
     @Override
     @FxThread
     public @NotNull Array<TreeNode<?>> getChildren(@NotNull NodeTree<?> nodeTree) {
-        return ArrayFactory.asArray(FACTORY_REGISTRY.createFor(getElement().getMaterial()));
+        return Array.of(notNull(FACTORY_REGISTRY.createFor(getElement().getMaterial())));
     }
 
     @Override
     @FxThread
-    public boolean hasChildren(@NotNull final NodeTree<?> nodeTree) {
+    public boolean hasChildren(@NotNull NodeTree<?> nodeTree) {
         return true;
     }
 }

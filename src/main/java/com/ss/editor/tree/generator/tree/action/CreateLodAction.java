@@ -41,7 +41,7 @@ public class CreateLodAction extends AbstractNodeAction<ChangeConsumer> {
         var newLod = new LevelOfDetailParameters();
         newLod.setParent(treeParameters);
 
-        notNull(getNodeTree().getChangeConsumer())
+        getNodeTree().requireChangeConsumer()
                 .execute(new AddLodOperation(treeParameters, lodsParameters, newLod));
     }
 }
